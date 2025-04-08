@@ -1,8 +1,8 @@
 
 //import { useLoginLogic } from '@/source/controller/login/login';
 import * as UI from '@/components/cobalt/importUI';
-import { useFormContextProvider,useFormContext } from '@/components/cobalt/event';
-import {  CheckIcon, ChevronDownIcon,ChevronUpIcon, CircleIcon } from '@/components/ui/icon';
+// import { useFormContextProvider,useFormContext } from '@/components/cobalt/event';
+// import {  CheckIcon, ChevronDownIcon,ChevronUpIcon, CircleIcon } from '@/components/ui/icon';
 
 const pageId='Login';
 export default function LoginScreen() {
@@ -95,8 +95,8 @@ const Menu = [
     <UI.cbImageBackground id='loginBackground' source={require('@/assets/images/login.jpg')}> 
      <UI.ScrollView contentContainerStyle={styles.scrollContent}>
       <UI.cbVStack id='VStack1'>    
-        <UI.cbInput formId={pageId} id='username'  />
-        <UI.cbInput formId={pageId} id='password'  />
+        {/* <UI.cbInput formId={pageId} id='username'  />
+        <UI.cbInput formId={pageId} id='password'  /> */}
         <UI.cbCheckBox id='rememberme'/>
         <UI.cbSelect id="department"/>
         <UI.cbRadioButton id='gender' />

@@ -9,7 +9,7 @@ import { getFormFieldData, setFormFieldData } from '@/components/redux/reducers/
 
 const pageId='Login';
 class loginUI extends useLoginLogic {
-  constructor(props:any){
+  constructor(props){
     super(props)
   }
   render() {
@@ -48,7 +48,7 @@ class loginUI extends useLoginLogic {
   }
 }
 
-const mapStateToProps = (state: RootState) => {
+const mapStateToProps = (state) => {
   // console.log(JSON.stringify(state.login.formData),"--->syayeyeyey")
   return {}
 }
