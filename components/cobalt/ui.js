@@ -43,7 +43,7 @@ class CbImage extends React.Component {
 
         return <SvgUri source={{ uri: source }} />;
       } else {
-
+ 
         return <Image alt='image' source={{ uri: source }} style={this.style} />;
       }
     } else {
@@ -51,7 +51,7 @@ class CbImage extends React.Component {
     }
   }
 }
-
+ 
 class cbButton extends React.Component {
   constructor(props) {
     super(props);
@@ -61,15 +61,15 @@ class cbButton extends React.Component {
     this.onPress = props.onPress;
     this.customStyles = props.customStyles || '';
   }
-
+ 
   render() {
-
+ 
     const buttonArray = global.controlsConfigJson.find((item) => item.id === this.id);
     const variant = buttonArray?.variant || this.variant;
     const buttonText = buttonArray?.text || this.buttonText;
     const buttonStyle = this.customStyles.buttonStyle;
     const buttonTextStyle = this.customStyles.buttontextStyle;
-
+ 
     return (
       <Button variant={variant} onPress={() => this.onPress()} style={buttonStyle}  >
         <ButtonText style={buttonTextStyle} numberOfLines={1} ellipsizeMode="tail">{buttonText}</ButtonText>
@@ -77,7 +77,7 @@ class cbButton extends React.Component {
     );
   }
 }
-
+ 
 class cbCheckBox extends React.Component {
   constructor(props) {
     super();
@@ -88,25 +88,26 @@ class cbCheckBox extends React.Component {
     this.checkBoxLabel = props.Label || '';
     this.customStyles = props.customStyles || '';
   }
-
+ 
   render() {
     const inputArray = global.controlsConfigJson.find(item => item.id === this.id);
     const checkBoxLabelprop = inputArray?.labeltext || this.checkBoxLabel;
-    const styles = this.customStyles;
-
+    const indicatorStyle = this.customStyles.CheckboxIndicator;
+    const labelStyle = this.customStyles.checkboxLabel;
+ 
     return (
-      <Checkbox size={this.size} isInvalid={this.isInvalid} isDisabled={this.isDisabled}>
-        <CheckboxIndicator >
-          <CheckboxIcon as={CheckIcon} />
+      <Checkbox size={this.size} isInvalid={this.isInvalid} isDisabled={this.isDisabled} style={{flexDirection:"row"}}>
+        <CheckboxIndicator style={{width:20,height:20,borderWidth:1,borderColor:"#fff",backgroundColor:"#fff"}}>
+          <CheckboxIcon as={CheckIcon} size='md' style={{color:"blue"}}/>
         </CheckboxIndicator>
-        <CheckboxLabel>{checkBoxLabelprop}</CheckboxLabel>
+        <CheckboxLabel  style={labelStyle}>{checkBoxLabelprop}</CheckboxLabel>
       </Checkbox>
     );
   }
 }
-
-
-
+ 
+ 
+ 
 class cbImageBackground extends React.Component {
   constructor(props) {
     super();
@@ -114,13 +115,13 @@ class cbImageBackground extends React.Component {
     this.source = props.source || null;
     this.styles = props.styles || null;
   }
-
+ 
   render() {
     const { children } = this.props;
     const inputArray = global.controlsConfigJson.find(item => item.id === this.id);
     const sourceprop = inputArray?.source || this.source;
     const styleprop = inputArray?.styles || this.styles;
-
+ 
     return (
       <ImageBackground source={sourceprop} alt='login' style={styleprop?.container} >
         {children}
@@ -128,9 +129,9 @@ class cbImageBackground extends React.Component {
     );
   }
 }
-
+ 
 class cbRadioButton extends React.Component {
-
+ 
   constructor(props) {
     super(props);
     this.id = props.id;
@@ -138,8 +139,8 @@ class cbRadioButton extends React.Component {
     this.Label = props.Label || '';
     this.options = Array.isArray(props.options) ? props.options : [];
   }
-
-
+ 
+ 
   render() {
     const inputArray = global.controlsConfigJson.find(item => item.id === this.id);
     const radiolabelprop = inputArray?.labelText || this.selectLabel;
@@ -147,7 +148,7 @@ class cbRadioButton extends React.Component {
     const alignmentprop = inputArray?.alignment || this.alignment;
     const Stack = alignmentprop === 'vertical' ? VStack : HStack;
     return (
-
+ 
       <FormControl>
         <VStack space="md">
           <FormControlLabel>
@@ -167,12 +168,10 @@ class cbRadioButton extends React.Component {
           </RadioGroup>
         </VStack >
       </FormControl>
-
+ 
     );
   }
 }
-
-
 
 class cbSelect extends React.Component {
   constructor(props) {
@@ -189,7 +188,7 @@ class cbSelect extends React.Component {
       isSelected: false
     }
   }
-
+ 
   render() {
     const inputArray = global.controlsConfigJson.find(item => item.id === this.id);
     const selectLabelprop = inputArray?.labelText || this.selectLabel;
@@ -223,10 +222,10 @@ class cbSelect extends React.Component {
     );
   }
 }
-
-
+ 
+ 
 class cbInput extends React.Component {
-
+ 
   constructor(props) {
     super(props);
     this.formId = props.formId;
@@ -246,9 +245,10 @@ class cbInput extends React.Component {
     this.numberOfLines = props.numberOfLines
     this.value = props.value
     this.getFormFieldData = typeof props.getFormFieldData === 'function' ? props.getFormFieldData : () => { }
+    this.props = props.labelRequired
   }
-
-
+ 
+ 
   render() {
     const inputArray = global.controlsConfigJson.find(item => item.id === this.id);
     const variantprop = inputArray?.variant || this.valueariant;
@@ -266,15 +266,16 @@ class cbInput extends React.Component {
       isReadOnly={isReadOnlyprop}
       isRequired={isRequiredprop}
     >
-      {labelTextprop && (
+      {(this.labelRequired && labelTextprop) && (
         <FormControlLabel>
-          <FormControlLabelText>{labelTextprop}</FormControlLabelText>
+          <FormControlLabelText>{this?.labelText}</FormControlLabelText>
         </FormControlLabel>
       )}
       <Input variant={variantprop} style={this.style}>
         <InputField
           id={this.id}
           placeholder={placeholderprop}
+          placeholderTextColor="#fff"
           type={typeprop}
           multiline={this.multiline}
           numberOfLines={this.numberOfLines}
@@ -298,22 +299,19 @@ class cbInput extends React.Component {
   }
 }
 
-
-
-
 function cbForm({ formId, setFormFieldData, children }) {
-
+ 
   const childrenWithProps = React.Children.map(children, (child) =>
     React.isValidElement(child)
       ? React.cloneElement(child, { formId, setFormFieldData })
       : child
   );
-
-
-  return <Box>{childrenWithProps}</Box>;
+ 
+ 
+  return <Box style={{width: '90%', }}>{childrenWithProps}</Box>;
 }
-
-
+ 
+ 
 class cbVStack extends React.Component {
   constructor(props) {
     super();
@@ -321,13 +319,13 @@ class cbVStack extends React.Component {
     this.children = this.props;
     this.space = props.space || 'md';
   }
-
+ 
   render() {
-
+ 
     const { children } = this.props;
     const inputArray = global.controlsConfigJson.find(item => item.id === this.id);
     const spaceprop = inputArray?.space || this.space;
-
+ 
     return (
       <VStack space={spaceprop}>
         {children}
@@ -335,7 +333,7 @@ class cbVStack extends React.Component {
     );
   }
 }
-
+ 
 class CbFlatList extends React.Component {
   constructor(props) {
     super();
@@ -404,20 +402,14 @@ class CbFlatList extends React.Component {
   }
 }
 
-
-
-
-
 const mapStateToProps = (state) => {
   return{}
 };
-
+ 
 const mapDispatchToProps = {
   setFormFieldData,
   getFormFieldData
 };
-
-
 CbImage.displayName = 'CbImage';
 cbButton.displayName = 'cbButton';
 cbInput.displayName = 'cbInput';
@@ -428,7 +420,7 @@ cbRadioButton.displayName = 'cbRadioButton';
 cbVStack.displayName = 'cbVStack';
 cbForm.displayName = 'cbForm';
 CbFlatList.displayName = "CbFlatList"
-
+ 
 export default connect(mapStateToProps, mapDispatchToProps)(cbInput);
-
+ 
 export {  cbButton, cbInput, cbCheckBox, cbSelect, cbImageBackground, cbRadioButton, cbVStack, cbForm, CbFlatList, CbImage };
