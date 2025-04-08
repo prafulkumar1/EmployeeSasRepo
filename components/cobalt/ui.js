@@ -259,7 +259,7 @@ class cbInput extends React.Component {
     const isDisabledprop = inputArray?.isDisabled === 1 || this.isDisabled;
     const isReadOnlyprop = inputArray?.isReadOnly === 1 || this.isReadOnly;
     const isRequiredprop = inputArray?.isRequired === 1 || this.isRequired;
-    const value = this.props?.getFormFieldData(this.props?.formId,this.props?.id);
+    const value = this.props?.getFormFieldData({formId:this.props?.formId,id:this.props?.id});
     return (
       <FormControl
       isDisabled={isDisabledprop}
@@ -281,7 +281,7 @@ class cbInput extends React.Component {
           style={[{ textAlignVertical: "top" }, this.style]}
           value={value?.value ? value?.value : this.value}
           onChangeText={(value) => {
-            this.props?.setFormFieldData({formId:this.props?.formId, type:'input', id:this.id, value,controlId:this.id});
+            this.props?.setFormFieldData({formId:this.props?.formId, type:'input', id:this.id,controlValue:value,controlId:this.id});
           }}
           onFocus={() => this.props?.setFormFieldData({formId:this.props?.formId, type:'input', id:this.id, value,controlId:this.id})}
         />

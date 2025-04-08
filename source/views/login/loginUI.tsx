@@ -37,7 +37,7 @@ class loginUI extends useLoginLogic {
         <UI.cbCheckBox id='rememberme' customStyles={{  CheckIcon:{color:'white'}, }}/>
         <UI.cbSelect id="department"/>
         <UI.cbRadioButton id='gender' />
-        <UI.cbButton id='login' variant='solid' text='signin' onPress = {() => this.handleLogin(this.props)}/>
+        <UI.cbButton id='login' variant='solid' text='signin' onPress = {() => this.handleValidation()}/>
         <UI.cbButton id='cancel' variant='link'/>
     </UI.cbVStack>
         </UI.cbForm>
@@ -49,7 +49,7 @@ class loginUI extends useLoginLogic {
 }
 
 const mapStateToProps = (state: RootState) => {
-  console.log(JSON.stringify(state),"--->syayeyeyey")
+  // console.log(JSON.stringify(state.login.formData),"--->syayeyeyey")
   return {}
 }
 const mapDispatchToProps = {

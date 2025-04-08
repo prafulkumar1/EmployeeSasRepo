@@ -26,6 +26,7 @@ const loginSlice = createSlice({
     },
     setFormFieldData(state, action) {
         const {formId, controlType, controlId, controlValue, isInvalid} = action.payload
+        console.log(action.payload,"--->setFormFieldData")
         state.formData = {
           ...state.formData,
           [formId + '_' + controlId]: {
@@ -37,7 +38,9 @@ const loginSlice = createSlice({
     getFormFieldData(state, action) {
       if(action.payload){
         const {formId, controlId,} = action.payload
-        state.formData[formId + '_' + controlId] || { value: '', isInvalid: false };
+        console.log(state.formData,"---->formdataaaa111111111")
+        return state.formData?.[formId + '_' + controlId] || { value: '', isInvalid: false };
+        // state.formData = state.formData[formId + '_' + controlId] || { value: '', isInvalid: false };
       }
     }
   }
