@@ -10,19 +10,6 @@ import { createSlice } from '@reduxjs/toolkit'
 //     password:string
 // }
 
-// const setFormFieldData = (formId, controlType, controlId, controlValue, isInvalid) => {
-//   setFormData((prevFormData) => ({
-//     ...prevFormData,
-//     [formId + '_' + controlId]: {
-//       value: controlValue,
-//       isInvalid: isInvalid ?? false,
-//     },
-//   }));
-// };
-
-// const getFormFieldData = (formId, controlId) => {
-//   return formData[formId + '_' + controlId] || { value: '', isInvalid: false };
-// };
 const initialState = {
     loginDetails : [],
     loading:false,
@@ -39,7 +26,6 @@ const loginSlice = createSlice({
     },
     setFormFieldData(state, action) {
         const {formId, controlType, controlId, controlValue, isInvalid} = action.payload
-        console.log(action.payload,"--->>>11111")
         state.formData = {
           ...state.formData,
           [formId + '_' + controlId]: {
@@ -49,8 +35,10 @@ const loginSlice = createSlice({
         }
     },
     getFormFieldData(state, action) {
-      const {formId, controlId} = action.payload
-      return state.formData[formId + '_' + controlId] || { value: '', isInvalid: false };
+      if(action.payload){
+        const {formId, controlId,} = action.payload
+        state.formData[formId + '_' + controlId] || { value: '', isInvalid: false };
+      }
     }
   }
 })

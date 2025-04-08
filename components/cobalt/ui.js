@@ -17,17 +17,11 @@ import { VStack } from '@/components/ui/vstack';
 import { HStack } from '@/components/ui/hstack';
 import { Icon } from '@/components/ui/icon';
 import { Text } from '@/components/ui/text';
-import { Divider } from '@/components/ui/divider';
 import { Radio, RadioGroup, RadioIndicator, RadioLabel, RadioIcon } from '@/components/ui/radio';
-import { Accordion, AccordionItem, AccordionHeader, AccordionTrigger, AccordionTitleText, AccordionContentText, AccordionIcon, AccordionContent, } from '@/components/ui/accordion';
 import { styles } from './style';
-import { FormContext } from './event';
-import { navigateToScreen } from '@/source/constants/Navigations';
 import SvgUri from 'react-native-svg-uri';
-import { handleSearchClick, handleClearClick, handleCloseClick } from "./event";
 import { postApiCall } from '@/source/utlis/api';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { getFormFieldData, setFormFieldData } from '../redux/reducers/login';
+import { getFormFieldData, setFormFieldData } from '../redux/reducers/loginReducer';
 import { connect } from 'react-redux';
 
 class CbImage extends React.Component {
@@ -40,8 +34,6 @@ class CbImage extends React.Component {
   }
 
   render() {
-    //const inputArray = global.controlsConfigJson.find(item => item.id === this.id);
-    //const source = inputArray?.source  || this.source;'
     const jsx = this.imageJsx;
     const source = this.source;
 
@@ -267,9 +259,7 @@ class cbInput extends React.Component {
     const isDisabledprop = inputArray?.isDisabled === 1 || this.isDisabled;
     const isReadOnlyprop = inputArray?.isReadOnly === 1 || this.isReadOnly;
     const isRequiredprop = inputArray?.isRequired === 1 || this.isRequired;
-    //const {getFormFieldData}= useFormContext();
-    const value = this.getFormFieldData(this.formId,this.id); 
-    console.log(value,"--->value")
+    const value = this.props?.getFormFieldData(this.props?.formId,this.props?.id);
     return (
       <FormControl
       isDisabled={isDisabledprop}
@@ -291,9 +281,9 @@ class cbInput extends React.Component {
           style={[{ textAlignVertical: "top" }, this.style]}
           value={value?.value ? value?.value : this.value}
           onChangeText={(value) => {
-            this.setFormFieldData(this.formId, 'input', this.id, value);
+            this.props?.setFormFieldData({formId:this.props?.formId, type:'input', id:this.id, value,controlId:this.id});
           }}
-          onFocus={() => this.setFormFieldData(this.formId, 'input', this.id, value?.value)}
+          onFocus={() => this.props?.setFormFieldData({formId:this.props?.formId, type:'input', id:this.id, value,controlId:this.id})}
         />
       </Input>
       {isRequiredprop && errorMessageprop && (
@@ -419,7 +409,6 @@ class CbFlatList extends React.Component {
 
 
 const mapStateToProps = (state) => {
-  console.log(state,"---ui one")
   return{}
 };
 

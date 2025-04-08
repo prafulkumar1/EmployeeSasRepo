@@ -1,44 +1,7 @@
-// import {useFormContext } from '@/components/cobalt/event';
-// import { navigateToScreen } from '@/source/constants/Navigations';
-// const pageId='Login';
-// export const useLoginLogic = () => {
-
-//     // const {getFormFieldData,setFormFieldData }= useFormContext();
-   
-//   // const handleValidation = () => {
-//   //   const usernameField = getFormFieldData(pageId, 'username');
-//   //   const passwordField = getFormFieldData(pageId, 'password');
-  
-//   //   let isValid = true;
-  
-//   //   if (!usernameField.value) {
-//   //     setFormFieldData(pageId, 'input', 'username', usernameField.value, true);
-//   //     isValid = false;
-//   //   } else {
-//   //     setFormFieldData(pageId, 'input', 'username', usernameField.value, false);
-//   //   }
-//   //   if (!passwordField.value) {
-//   //     setFormFieldData(pageId, 'input', 'password', passwordField.value, true);
-//   //     isValid = false;
-//   //   } else {
-//   //     setFormFieldData(pageId, 'input', 'password', passwordField.value, false);
-//   //   }
-  
-//   //   return isValid;
-//   // };
-  
-
-//   const handleLogin = (props) => {
-  
-//     navigateToScreen(props,"MenuOrder",true)
-//   };
-
-//   return {
-//     handleLogin,
-//   };
-// };
-
+import { navigateToScreen } from '@/source/constants/Navigations';
 import { Component } from 'react'
+
+const pageId='Login';
 
 export default class useLoginLogic extends Component<any,any,any> {
     constructor(props:any){
@@ -47,5 +10,31 @@ export default class useLoginLogic extends Component<any,any,any> {
         loading:false
       }
     }
+    handleLogin = (props:any) => {
+    navigateToScreen(props,"DashboardUI",true,{})
+    };
+
+    handleValidation = () => {
+    const usernameField = this.props?.getFormFieldData(pageId, 'username');
+    const passwordField = this.props?.getFormFieldData(pageId, 'password');
+  
+    let isValid = true;
+  
+    if (!usernameField.value) {
+      this.props?.setFormFieldData(pageId, 'input', 'username', usernameField.value, true);
+      isValid = false;
+    } else {
+      this.props?.setFormFieldData(pageId, 'input', 'username', usernameField.value, false);
+    }
+    if (!passwordField.value) {
+      this.props?.setFormFieldData(pageId, 'input', 'password', passwordField.value, true);
+      isValid = false;
+    } else {
+      this.props?.setFormFieldData(pageId, 'input', 'password', passwordField.value, false);
+    }
+  
+    return isValid;
+  };
+  
 }
 

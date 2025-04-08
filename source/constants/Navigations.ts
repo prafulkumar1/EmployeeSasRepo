@@ -6,7 +6,7 @@ export const navigateToScreen = (props: any, screenName: string, isHomeEnabled: 
   }
   if (props.navigation) {
     const updatedParams = params || {};
-    props.navigation.navigate(screenName, { showHomeButton: isHomeEnabled, title: screenName, ...updatedParams });
+    props?.navigation?.navigate(screenName, { showHomeButton: isHomeEnabled, title: screenName, ...updatedParams });
   } else {
     console.warn("Navigation object is missing.");
   }
