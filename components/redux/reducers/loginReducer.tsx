@@ -1,15 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
 
-// interface InitialState {
-//     loginDetails : {
-//         login:string,
-//         password:string
-//     }[],
-//     loading:boolean,
-//     logintxt:string,
-//     password:string
-// }
-
 const initialState = {
     loginDetails : [],
     loading:false,
@@ -26,7 +16,6 @@ const loginSlice = createSlice({
     },
     setFormFieldData(state, action) {
         const {formId, controlType, controlId, controlValue, isInvalid} = action.payload
-        console.log(action.payload,"--->setFormFieldData")
         state.formData = {
           ...state.formData,
           [formId + '_' + controlId]: {
@@ -36,15 +25,19 @@ const loginSlice = createSlice({
         }
     },
     getFormFieldData(state, action) {
-      if(action.payload){
-        const {formId, controlId,} = action.payload
-        console.log(state.formData,"---->formdataaaa111111111")
-        return state.formData?.[formId + '_' + controlId] || { value: '', isInvalid: false };
-        // state.formData = state.formData[formId + '_' + controlId] || { value: '', isInvalid: false };
-      }
+      console.log(action.payload,"---->>>>!111111")
+      console.log(state.formData,"---->>>>!222222")
+      // if(action.payload){
+      //   const {formId, controlId,} = action.payload
+      //   return state.formData?.[formId + '_' + controlId] || { value: '', isInvalid: false };
+      // }
     }
   }
 })
 
 export const { handlePassword,setFormFieldData,getFormFieldData } = loginSlice.actions
 export default loginSlice.reducer
+
+export const getFormFieldDataSelector = (state:any, formId:string, controlId:string) => {
+  return state?.[formId + '_' + controlId] || { value: '', isInvalid: false };
+};

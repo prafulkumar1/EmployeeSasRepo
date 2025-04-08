@@ -1,29 +1,18 @@
 
 import * as UI from '@/components/cobalt/importUI';
-import {useFormContext } from '@/components/cobalt/event';
-import { Component } from 'react';
-import useLoginLogic from '@/source/controller/login/login';
-import { RootState } from '@/components/redux/store';
 import { connect } from 'react-redux';
 import { getFormFieldData, setFormFieldData } from '@/components/redux/reducers/loginReducer';
+import useAdvanceLoginLogic from '@/AdvancedSource/controller/login/login';
 
-const pageId='Login';
-class loginUI extends useLoginLogic {
+const pageId='AdvanceLogin';
+class AdvanceLoginUI extends useAdvanceLoginLogic {
+  constructor(props){
+    super(props)
+  }
   render() {
     const {setFormFieldData,getFormFieldData} = this.props
     let pageConfigJson = global.appConfigJsonArray.find(item => item.PageId === pageId);
     global.controlsConfigJson = pageConfigJson && pageConfigJson.Controlls ? pageConfigJson.Controlls : [];
-    const departments = [
-      { label: 'Dining', value: 'dining' },
-      { label: 'Golf', value: 'golf' },
-      { label: 'Tennis', value: 'tennis' },
-      { label: 'Pool', value: 'pool' },
-    ];
-    const genderOptions = [
-      { label: 'Male', value: 'male' },
-      { label: 'FeMale', value: 'female' },
-      { label: 'Others', value: 'others' },
-    ]
     return (
       <UI.cbImageBackground id='loginBackground' source={require('@/assets/images/loginapp.png')}> 
        <UI.ScrollView contentContainerStyle={styles.scrollContent}>
@@ -46,18 +35,14 @@ class loginUI extends useLoginLogic {
 }
 
 const mapStateToProps = (state) => {
-   const formData = state.login.formData || {};  // Ensure formData is not undefined
-  console.log(JSON.stringify(formData), "--->syayeyeyey");
-  return {
-    formData :state.login.formData
-  }
+  return {}
 }
 const mapDispatchToProps = {
   setFormFieldData,
   getFormFieldData
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(loginUI)
+export default connect(mapStateToProps, mapDispatchToProps)(AdvanceLoginUI)
 
 const styles = UI.StyleSheet.create({
  

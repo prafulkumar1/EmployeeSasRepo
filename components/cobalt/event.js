@@ -1,8 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
 import { createContext,  useContext } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { postApiCall } from '@/source/utlis/api';
+// import { postApiCall } from '@/components/utlis/api';
 import { Keyboard } from 'react-native';
+import { postApiCall } from '../utlis/api';
  
 export const FormContext = createContext();
  

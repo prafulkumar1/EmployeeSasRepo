@@ -20,7 +20,7 @@ import { Text } from '@/components/ui/text';
 import { Radio, RadioGroup, RadioIndicator, RadioLabel, RadioIcon } from '@/components/ui/radio';
 import { styles } from './style';
 import SvgUri from 'react-native-svg-uri';
-import { postApiCall } from '@/source/utlis/api';
+import { postApiCall } from '@/components/utlis/api';
 import { getFormFieldData, setFormFieldData } from '../redux/reducers/loginReducer';
 import { connect } from 'react-redux';
 

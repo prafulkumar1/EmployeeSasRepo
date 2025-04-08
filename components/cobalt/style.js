@@ -1,6 +1,6 @@
-import { horizontalScale, isPlatformAndroid, isPlatformIos } from "@/source/constants/Matrices";
 import { StyleSheet } from "react-native";
 import { responsiveWidth,responsiveHeight, responsiveFontSize } from "react-native-responsive-dimensions";
+import { horizontalScale, isPlatformAndroid, isPlatformIos } from "../constants/Matrices";
 
 export const styles = StyleSheet.create({
   subContainer: {
@@ -131,7 +131,6 @@ export const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     alignSelf: "center",
-    alignSelf: "center",
     borderRadius: 5,
     width: 115,
     height: 40,
@@ -143,7 +142,6 @@ export const styles = StyleSheet.create({
     alignSelf: "center",
     width: 115,
     height: 40,
-    alignSelf: "center",
     marginHorizontal: 5,
     borderRadius: 5,
     opacity: 0.5

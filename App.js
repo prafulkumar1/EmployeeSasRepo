@@ -7,6 +7,7 @@ import { Platform, StyleSheet} from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import LoginScreen from '@/source/views/login/loginUI';
+
 // import { UseFormContextProvider } from '@/components/cobalt/event';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { Provider } from 'react-redux'
@@ -14,6 +15,8 @@ import * as Font from 'expo-font';
 import CbLoader from './components/cobalt/cobaltLoader';
 import { store } from './components/redux/store';
 import DashboardUI from './source/views/dashboard/dashboardUI';
+import AdvanceDashboardUI from './AdvancedSource/views/dashboard/dashboardUI';
+import AdvanceLoginUI from '@/AdvancedSource/views/login/loginUI'
 // Global Configurations
 const appConfigJson = '[{"PageId":"Login","Controlls":[{"type":"backgroundImage","id":"loginBackground","styles":{"container":{"flex":1,"resizeMode":"cover","justifyContent":"center","alignItems":"center"}}},{"type":"VStack","id":"VStack1","space":"lg"},{"type":"text","id":"username","placeholder":"User Name/Member ID","labelText":"User Name","variant":"outline","errorMessage":"User Name is Requried.","isDisabled":0,"isInvalid":0,"isReadOnly":0,"isRequired":1},{"type":"password","id":"password","placeholder":"Password","labelText":"Password","variant":"underlined","errorMessage":"Password is Requried.","isDisabled":0,"isInvalid":0,"isReadOnly":0,"isRequired":1},{"type":"checkbox","id":"rememberme","labeltext":"Remember Me"},{"type":"select","id":"department","placeholder":"Department","labelText":"Select Department","options":[{"label":"Dining","value":"dining"},{"label":"Golf","value":"golf"},{"label":"Tennis","value":"tennis"},{"label":"Pool","value":"pool"}]},{"type":"radioButton","id":"gender","alignment":"Horizontal","labelText":"Gender","options":[{"label":"Male","value":"male"},{"label":"Female","value":"female"},{"label":"Others","value":"others"}]},{"type":"button","id":"login","text":"Login","variant":"","backgroundColor":"white","borderRadius":"40"},{"id":"cancel","text":"Cancel","variant":"","backgroundColor":"white","borderRadius":"40"}]}]';
 global.appConfigJsonArray = typeof appConfigJson === 'string' ? JSON.parse(appConfigJson) : appConfigJson;
@@ -72,6 +75,16 @@ export default function App(props) {
               <Stack.Screen
                 name="DashboardUI"
                 component={DashboardUI}
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="AdvanceLogin"
+                component={AdvanceLoginUI}
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="AdvanceDashboard"
+                component={AdvanceDashboardUI}
                 options={{ headerShown: false }}
               />
           </Stack.Navigator>
