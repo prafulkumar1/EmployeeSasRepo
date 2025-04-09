@@ -1,19 +1,16 @@
 import * as UI from '@/components/cobalt/importUI';
-import { useFormContext } from '@/components/cobalt/event';
-import { Animated, Image, StyleSheet, Text, View, TextInput, TouchableOpacity, ImageBackground, Modal, Alert, ActivityIndicator, Platform } from 'react-native';
-import { Component } from 'react';
+import { Image, View, TouchableOpacity, ImageBackground } from 'react-native';
 import useLoginLogic from '@/source/controller/login/login';
-import { RootState } from '@/components/redux/store';
 import { connect } from 'react-redux';
 import { getFormFieldData, setFormFieldData } from '@/components/redux/reducers/loginReducer';
 
 import { Dimensions } from 'react-native';
-import { CheckboxIndicator } from '@/components/ui/checkbox';
+import { RootState } from '@/components/redux/store';
 const { width, height } = Dimensions.get('window');
 
 const pageId = 'Login';
 class loginUI extends useLoginLogic {
-  constructor(props) {
+  constructor(props:any) {
     super(props)
   }
   screenWidth=width
@@ -36,13 +33,18 @@ class loginUI extends useLoginLogic {
     return (
       <ImageBackground id='loginBackground' source={require('@/assets/images/login.jpg')} style={{ overflow:"hidden", width: "100%", height: "100%", justifyContent: "center", alignItems: "center" }}>
         {/* <UI.ScrollView contentContainerStyle={styles.scrollContent}> */}
-        <Image source={require('../../../assets/images/Logo1.png')} style={styles.club_logo} resizeMode="cover" />
+        <Image source={require('../../../assets/images/Logo1.png')} style={{
+    height: 60,
+    width: 210,
+    position: 'absolute',
+    top: width * 0.05,
+  }} resizeMode="cover" />
         <View style={{ width: "100%", justifyContent: "center", alignItems: "center" }}>
           {/* <View style={styles.devDiv}>
             <UI.Text style={styles.devText}>This is a Dev App</UI.Text>
           </View> */}
          <View style={{width:600,justifyContent:"center",alignItems:"center"}}>
-          <UI.ConnectedCbForm formId={pageId} setFormFieldData={setFormFieldData}>
+          <UI.ConnectedCbForm formId={pageId}>
             {/* <UI.cbVStack id='VStack1'> */}
               {/* <View style={{ width: "100%",justifyContent:"center",alignItems:"center",}}> */}
               <View style={{ flexDirection: "row", marginBottom: 20, width: "100%" }}>
@@ -55,7 +57,12 @@ class loginUI extends useLoginLogic {
                   <Image
                     source={require('../../../assets/images/tooltip_icon.png')}
                     resizeMode="contain"
-                    style={styles.icon}
+                    style={ {
+                      width: 25,
+                      height: 25,
+                      marginLeft: 10,
+                      resizeMode: "contain"
+                    }}
                   />
                 </UI.TouchableOpacity>
               </View>
@@ -74,7 +81,12 @@ class loginUI extends useLoginLogic {
                       require('../../../assets/images/pwd_visible.png')
                       // : require('../../../assets/images/Hide_pass.png')
                     }
-                    style={styles.icon}
+                    style={ {
+                      width: 25,
+                      height: 25,
+                      marginLeft: 10,
+                      resizeMode: "contain"
+                    }}
                     resizeMode="contain"
                   />
                 </TouchableOpacity>
@@ -119,7 +131,7 @@ class loginUI extends useLoginLogic {
   }
 }
 
-const mapStateToProps = (state) => {
+const mapStateToProps = (state:RootState) => {
   const formData = state.login.formData || {};
  return {
    formData :state.login.formData
@@ -142,7 +154,6 @@ const styles = UI.StyleSheet.create({
     width: "100%"
   },
   club_logo: {
-    justifyContent: 'center', alignItems: 'center',
     height: 60,
     width: 210,
     position: 'absolute',
@@ -162,9 +173,7 @@ const styles = UI.StyleSheet.create({
     height: 40,
     width: '100%',
     borderColor: '#fff',
-    borderBottomWidth: 1,
     marginBottom: 15,
-    color: '#fff',
     fontSize: 16,
     backgroundColor: 'transparent',
     paddingHorizontal: 5
@@ -188,7 +197,7 @@ const styles = UI.StyleSheet.create({
   forgot_passText: {
     color: '#fff',
     fontSize: 16,
-    fontWeight: 450,
+    fontWeight: '400',
     textAlign: "right",
   },
   login: {
@@ -208,7 +217,7 @@ const styles = UI.StyleSheet.create({
 
   login_text: {
     color: '#0D92F4', fontSize: 16,
-    fontWeight: '450', width: '100%'
+    fontWeight: '400', width: '100%'
   },
   finger_print: {
     marginTop: 20,

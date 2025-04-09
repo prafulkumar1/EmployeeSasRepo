@@ -4,6 +4,8 @@ import { connect } from 'react-redux';
 import { getFormFieldData, setFormFieldData, showPassword } from '@/components/redux/reducers/loginReducer';
 import { CheckboxIndicator } from '@/components/ui/checkbox';
 import { styles } from '@/source/styles/loginStyle';
+import {Image} from "react-native"
+import { RootState } from '@/components/redux/store';
 const pageId = 'Login';
 class loginUI extends useLoginLogic {
   constructor(props) {
@@ -11,7 +13,7 @@ class loginUI extends useLoginLogic {
   }
   render() {
     const { setFormFieldData, getFormFieldData } = this.props
-    let pageConfigJson = global.appConfigJsonArray.find(item => item.PageId === pageId);
+    let pageConfigJson = global.appConfigJsonArray?.find((item: { PageId: string; }) => item.PageId === pageId);
     global.controlsConfigJson = pageConfigJson && pageConfigJson.Controlls ? pageConfigJson.Controlls : [];
     const departments = [
       { label: 'Dining', value: 'dining' },
@@ -26,12 +28,17 @@ class loginUI extends useLoginLogic {
     ]
     return (
       <UI.ConnectedCbImageBackground id='loginBackground' source={require('@/assets/images/loginapp.png')}>
-        <UI.Image source={require('../../../assets/images/Logo1.png')} style={styles.club_logo} resizeMode="cover" />
-        <UI.Box style={styles.devDiv}>
-          <UI.Text style={styles.devText}>This is a Dev App</UI.Text>
-        </UI.Box>
+        <Image source={require('../../../assets/images/Logo1.png')} style={ {
+      justifyContent: 'center',
+      alignItems: 'center',
+      height: 60,
+      width: 210,
+      position: 'absolute',
+      top: "16%",
+    }} resizeMode="cover" />
+        <UI.Box style={styles.devDiv}/>
 
-        <UI.ConnectedCbForm formId={pageId} setFormFieldData={setFormFieldData}>
+        <UI.ConnectedCbForm formId={pageId}>
           <UI.ConnectedCbVStack id='VStack1'>
 
             <UI.Box style={{ flexDirection: "row", marginBottom: 20, }}>
@@ -101,7 +108,7 @@ class loginUI extends useLoginLogic {
   }
 }
 
-const mapStateToProps = (state) => {
+const mapStateToProps = (state:RootState) => {
   return {
     formData: state.login.formData,
     isPasswordVisible:state.login.isPasswordVisible

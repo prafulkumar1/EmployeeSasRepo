@@ -18,7 +18,6 @@ import { HStack } from '@/components/ui/hstack';
 import { Icon } from '@/components/ui/icon';
 import { Text } from '@/components/ui/text';
 import { Radio, RadioGroup, RadioIndicator, RadioLabel, RadioIcon } from '@/components/ui/radio';
-import { styles } from './style';
 import SvgUri from 'react-native-svg-uri';
 import { postApiCall } from '@/components/utlis/api';
 import { getFormFieldData, setFormFieldData } from '../redux/reducers/loginReducer';

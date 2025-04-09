@@ -1,9 +1,7 @@
-import * as UI from '@/components/cobalt/importUI';
-import { Dimensions } from 'react-native';
+import { Dimensions,StyleSheet } from 'react-native';
 const { width, height } = Dimensions.get('window');
 
-export const styles = UI.StyleSheet.create({
-
+export const styles = StyleSheet.create({
     scrollContent: {
       padding: 20,
       alignSelf: "center",
@@ -17,7 +15,7 @@ export const styles = UI.StyleSheet.create({
       height: 60,
       width: 210,
       position: 'absolute',
-      top: "16%"
+      top: "16%",
     },
     devDiv: {
       marginTop: height * 0.4,
@@ -34,10 +32,8 @@ export const styles = UI.StyleSheet.create({
       height: 40,
       width: '100%',
       borderColor: '#fff',
-      borderBottomWidth: 1,
       borderRadius: 5,
       marginBottom: 15,
-      color: '#fff',
       fontSize: 16,
       backgroundColor: 'transparent',
       paddingHorizontal: 5
@@ -61,7 +57,7 @@ export const styles = UI.StyleSheet.create({
     forgot_passText: {
       color: '#fff',
       fontSize: 16,
-      fontWeight: 450,
+      fontWeight: "400",
     },
     login: {
       backgroundColor: '#fff',
@@ -80,7 +76,7 @@ export const styles = UI.StyleSheet.create({
   
     login_text: {
       color: '#0D92F4', fontSize: 16,
-      fontWeight: '450', width: '100%'
+      fontWeight: "400", width: '100%'
     },
     finger_print: {
       marginTop: 20,

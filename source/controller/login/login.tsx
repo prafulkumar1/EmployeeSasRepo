@@ -4,7 +4,20 @@ import { Component } from 'react'
 
 const pageId='Login';
 
-export default class useLoginLogic extends Component<any,any,any> {
+interface IState{
+  loading:boolean
+  isPasswordVisible:boolean
+}
+interface IProps{
+  formData:Object,
+  setFormFieldData:({formId, controlType, controlId, controlValue, isInvalid}) => void
+  showPassword:() =>void
+  getFormFieldData:() => void
+  isPasswordVisible:boolean
+}
+interface SS{}
+
+export default class useLoginLogic extends Component<IProps,IState,SS> {
     constructor(props:any){
       super(props)
       this.state ={
@@ -22,16 +35,17 @@ export default class useLoginLogic extends Component<any,any,any> {
     let isValid = true;
   
     if (!usernameField.value) {
-      this.props?.setFormFieldData(pageId, 'input', 'username', usernameField.value, true);
+      this.props?.setFormFieldData({formId:pageId, controlType:'input', controlId:'username',controlValue: usernameField.value,isInvalid: true});
       isValid = false;
     } else {
-      this.props?.setFormFieldData(pageId, 'input', 'username', usernameField.value, false);
+      this.props?.setFormFieldData({formId:pageId, controlType:'input', controlId:'username',controlValue: usernameField.value,isInvalid: false});
+
     }
     if (!passwordField.value) {
-      this.props?.setFormFieldData(pageId, 'input', 'password', passwordField.value, true);
+      this.props?.setFormFieldData({formId:pageId, controlType:'input', controlId:'password',controlValue: passwordField.value,isInvalid: true});
       isValid = false;
     } else {
-      this.props?.setFormFieldData(pageId, 'input', 'password', passwordField.value, false);
+      this.props?.setFormFieldData({formId:pageId, controlType:'input', controlId:'password',controlValue: passwordField.value,isInvalid: false});
     }
 
     if(isValid){

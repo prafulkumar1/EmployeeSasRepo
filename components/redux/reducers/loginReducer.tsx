@@ -37,7 +37,7 @@ const loginSlice = createSlice({
   },
 })
 
-export const { handlePassword,setFormFieldData,getFormFieldData,showPassword } = loginSlice.actions
+export const { handlePassword,setFormFieldData,getFormFieldData,showPassword }:any = loginSlice.actions
 export default loginSlice.reducer
 
 export const getFormFieldDataSelector = (state:any, formId:string, controlId:string) => {
