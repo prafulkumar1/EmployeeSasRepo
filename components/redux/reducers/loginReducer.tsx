@@ -6,6 +6,7 @@ const initialState = {
     logintxt:"",
     password:"",
     formData:{},
+    isPasswordVisible:false
 }
 const loginSlice = createSlice({
   name: 'login',
@@ -31,11 +32,14 @@ const loginSlice = createSlice({
       //   const {formId, controlId,} = action.payload
       //   return state.formData?.[formId + '_' + controlId] || { value: '', isInvalid: false };
       // }
-    }
-  }
+    },
+    showPassword(state, action) {
+      state.isPasswordVisible = !state.isPasswordVisible
+    },
+  },
 })
 
-export const { handlePassword,setFormFieldData,getFormFieldData } = loginSlice.actions
+export const { handlePassword,setFormFieldData,getFormFieldData,showPassword } = loginSlice.actions
 export default loginSlice.reducer
 
 export const getFormFieldDataSelector = (state:any, formId:string, controlId:string) => {

@@ -8,7 +8,8 @@ export default class useLoginLogic extends Component<any,any,any> {
     constructor(props:any){
       super(props)
       this.state ={
-        loading:false
+        loading:false,
+        isPasswordVisible:false
       }
     }
     handleLogin = () => {
@@ -40,8 +41,11 @@ export default class useLoginLogic extends Component<any,any,any> {
     if(isValid){
       this.handleLogin()
     }
-    // return isValid;
   };
+
+  showPassword = () => {
+    this.setState({isPasswordVisible:!this.state.isPasswordVisible})
+  }
   
 }
 

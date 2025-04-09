@@ -246,6 +246,7 @@ class cbInput extends React.Component {
     this.value = props.value
     this.getFormFieldData = typeof props.getFormFieldData === 'function' ? props.getFormFieldData : () => { }
     this.props = props.labelRequired
+    this.isPasswordVisible = props.isPasswordVisible
   }
  
  
@@ -271,12 +272,12 @@ class cbInput extends React.Component {
           <FormControlLabelText>{this?.labelText}</FormControlLabelText>
         </FormControlLabel>
       )}
-      <Input variant={variantprop} style={this.style}>
+      <Input variant={variantprop}>
         <InputField
           id={this.id}
           placeholder={placeholderprop}
           placeholderTextColor="#fff"
-          type={typeprop}
+          type={!this.props?.isPasswordVisible?typeprop:"text"}
           multiline={this.multiline}
           numberOfLines={this.numberOfLines}
           style={[{ textAlignVertical: "top" }, this.style]}
@@ -403,24 +404,48 @@ class CbFlatList extends React.Component {
 }
 
 const mapStateToProps = (state) => {
-  return{}
+  return{
+    formData: state.login,
+  }
 };
  
 const mapDispatchToProps = {
   setFormFieldData,
   getFormFieldData
 };
-CbImage.displayName = 'CbImage';
-cbButton.displayName = 'cbButton';
-cbInput.displayName = 'cbInput';
-cbCheckBox.displayName = 'cbCheckBox';
-cbSelect.displayName = 'cbSelect';
-cbImageBackground.displayName = 'cbImageBackground';
-cbRadioButton.displayName = 'cbRadioButton';
-cbVStack.displayName = 'cbVStack';
-cbForm.displayName = 'cbForm';
-CbFlatList.displayName = "CbFlatList"
+CbImage.displayName = 'ConnectedCbImage';
+cbButton.displayName = 'ConnectedCbButton';
+cbInput.displayName = 'ConnectedCbInput';
+cbCheckBox.displayName = 'ConnectedCbCheckBox';
+cbSelect.displayName = 'ConnectedCbSelect';
+cbImageBackground.displayName = 'ConnectedCbImageBackground';
+cbRadioButton.displayName = 'ConnectedCbRadioButton';
+cbVStack.displayName = 'ConnectedCbVStack';
+cbForm.displayName = 'ConnectedCbForm';
+CbFlatList.displayName = "ConnectedCbFlatList"
  
-export default connect(mapStateToProps, mapDispatchToProps)(cbInput);
+
+const ConnectedCbInput = connect(mapStateToProps, mapDispatchToProps)(cbInput);
+const ConnectedCbButton = connect(mapStateToProps, mapDispatchToProps)(cbButton);
+const ConnectedCbCheckBox = connect(mapStateToProps, mapDispatchToProps)(cbCheckBox);
+const ConnectedCbSelect = connect(mapStateToProps, mapDispatchToProps)(cbSelect);
+const ConnectedCbImageBackground = connect(mapStateToProps, mapDispatchToProps)(cbImageBackground);
+const ConnectedCbRadioButton = connect(mapStateToProps, mapDispatchToProps)(cbRadioButton);
+const ConnectedCbVStack = connect(mapStateToProps, mapDispatchToProps)(cbVStack);
+const ConnectedCbForm = connect(mapStateToProps, mapDispatchToProps)(cbForm);
+const ConnectedCbFlatList = connect(mapStateToProps, mapDispatchToProps)(CbFlatList);
+const ConnectedCbImage = connect(mapStateToProps, mapDispatchToProps)(CbImage);
+export { 
+  ConnectedCbButton, 
+  ConnectedCbInput, 
+  ConnectedCbCheckBox, 
+  ConnectedCbSelect, 
+  ConnectedCbImageBackground, 
+  ConnectedCbRadioButton, 
+  ConnectedCbVStack, 
+  ConnectedCbForm, 
+  ConnectedCbFlatList, 
+  ConnectedCbImage 
+};
  
-export {  cbButton, cbInput, cbCheckBox, cbSelect, cbImageBackground, cbRadioButton, cbVStack, cbForm, CbFlatList, CbImage };
+// export {  cbButton, cbInput, cbCheckBox, cbSelect, cbImageBackground, cbRadioButton, cbVStack, cbForm, CbFlatList, CbImage };
