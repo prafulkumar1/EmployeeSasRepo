@@ -16,6 +16,7 @@ class loginUI extends useLoginLogic {
   constructor(props) {
     super(props)
   }
+  screenWidth=width
   render() {
     const { setFormFieldData, getFormFieldData } = this.props
     let pageConfigJson = global.appConfigJsonArray.find(item => item.PageId === pageId);
@@ -30,86 +31,90 @@ class loginUI extends useLoginLogic {
       { label: 'Male', value: 'male' },
       { label: 'FeMale', value: 'female' },
       { label: 'Others', value: 'others' },
+      console.log(width,"AAAAAAAAAAAA")
     ]
     return (
-      <UI.cbImageBackground id='loginBackground' source={require('@/assets/images/login.jpg')} style={{ flex: 1, width: "100%", height: "100%" }}>
+      <ImageBackground id='loginBackground' source={require('@/assets/images/login.jpg')} style={{ overflow:"hidden", width: "100%", height: "100%", justifyContent: "center", alignItems: "center" }}>
+        {/* <UI.ScrollView contentContainerStyle={styles.scrollContent}> */}
         <Image source={require('../../../assets/images/Logo1.png')} style={styles.club_logo} resizeMode="cover" />
-        <UI.Box style={styles.devDiv}>
-          <UI.Text style={styles.devText}>This is a Dev App</UI.Text>
-        </UI.Box>
-
-        <UI.cbForm formId={pageId} setFormFieldData={setFormFieldData}>
-          <UI.cbVStack id='VStack1'>
-
-            <UI.Box style={{ flexDirection: "row", marginBottom: 20, }}>
-              <UI.Box style={{ width: "100%" }}>
-                <UI.cbInput labelRequired={false} id='username' formId={pageId} setFormFieldData={setFormFieldData} getFormFieldData={getFormFieldData} labelText="" style={styles.inputs} />
-              </UI.Box>
-              <UI.TouchableOpacity
-                // onPress={handleIconPress}
-                style={styles.iconborder}>
-                <Image
-                  source={require('../../../assets/images/tooltip_icon.png')}
-                  resizeMode="contain"
-                  style={styles.icon}
+        <View style={{ width: "100%", justifyContent: "center", alignItems: "center" }}>
+          {/* <View style={styles.devDiv}>
+            <UI.Text style={styles.devText}>This is a Dev App</UI.Text>
+          </View> */}
+         <View style={{width:600,justifyContent:"center",alignItems:"center"}}>
+          <UI.ConnectedCbForm formId={pageId} setFormFieldData={setFormFieldData}>
+            {/* <UI.cbVStack id='VStack1'> */}
+              {/* <View style={{ width: "100%",justifyContent:"center",alignItems:"center",}}> */}
+              <View style={{ flexDirection: "row", marginBottom: 20, width: "100%" }}>
+                <UI.Box style={{ width: "100%" }}>
+                  <UI.ConnectedCbInput labelRequired={false} id='username' formId={pageId} setFormFieldData={setFormFieldData} getFormFieldData={getFormFieldData} labelText="" style={styles.inputs} />
+                </UI.Box>
+                <UI.TouchableOpacity
+                  // onPress={handleIconPress}
+                  style={styles.iconborder}>
+                  <Image
+                    source={require('../../../assets/images/tooltip_icon.png')}
+                    resizeMode="contain"
+                    style={styles.icon}
+                  />
+                </UI.TouchableOpacity>
+              </View>
+ 
+ 
+              <View style={{ flexDirection: "row", marginBottom: 20, width: "100%" }}>
+                <UI.Box style={{ width: "100%" }}>
+                  <UI.ConnectedCbInput labelRequired={false} id='password' formId={pageId} setFormFieldData={setFormFieldData} getFormFieldData={getFormFieldData} style={styles.inputs} />
+                </UI.Box>
+                <TouchableOpacity
+                  // onPress={() => setIsPasswordVisible(!isPasswordVisible)}
+                  style={styles.iconborder}>
+                  <Image
+                    source={
+                      // isPasswordVisible ?
+                      require('../../../assets/images/pwd_visible.png')
+                      // : require('../../../assets/images/Hide_pass.png')
+                    }
+                    style={styles.icon}
+                    resizeMode="contain"
+                  />
+                </TouchableOpacity>
+              </View>
+ 
+ 
+              <View style={{ flexDirection: "row", width: "100%" }}>
+                <UI.ConnectedCbCheckBox
+                  id="rememberme"
+                  customStyles={{
+                    CheckboxIndicator: { width: 20, height: 20, borderWidth: 1, borderColor: "#fff", backgroundColor: "#fff" },
+                    checkboxLabel: { color: '#fff', marginLeft: 10, fontSize: 16 },
+                  }}
                 />
-              </UI.TouchableOpacity>
-            </UI.Box>
-
-
-
-
-            <UI.Box style={{ flexDirection: "row", marginBottom: 20, }}>
-              <UI.Box style={{ width: "100%" }}>
-                <UI.cbInput labelRequired={false} id='password' formId={pageId} setFormFieldData={setFormFieldData} getFormFieldData={getFormFieldData} style={styles.inputs} />
-              </UI.Box>
-              <TouchableOpacity
-                // onPress={() => setIsPasswordVisible(!isPasswordVisible)}
-                style={styles.iconborder}>
-                <Image
-                  source={
-                    // isPasswordVisible ?
-                    require('../../../assets/images/pwd_visible.png')
-                    // : require('../../../assets/images/Hide_pass.png')w
-                  }
-                  style={styles.icon}
-                  resizeMode="contain"
-                />
-              </TouchableOpacity>
-            </UI.Box>
-
-            <UI.Box style={{ flexDirection: "row", justifyContent: "space-between" }}>
-              <UI.cbCheckBox
-                id="rememberme"
-                customStyles={{
-                  CheckboxIndicator: { width: 10, height: 10 },
-                  checkboxLabel: { color: '#fff', marginLeft: 10, fontSize: 16 },
-                }}
-              />
-
-              <UI.TouchableOpacity
-              // onPress={openModal}
-              >
-                <UI.Text style={styles.forgot_passText}>Forgot Password?</UI.Text>
-              </UI.TouchableOpacity>
-            </UI.Box>
-
-
-            {/* <UI.cbSelect id="department" /> */}
-            {/* <UI.cbRadioButton id='gender' /> */}
-
-            <UI.cbButton id='login' variant='solid' buttonText='Login' onPress={() => this.handleValidation()} customStyles={{ buttonStyle: styles.login, }} />
-          </UI.cbVStack>
-        </UI.cbForm>
-
-        <UI.Box>
-          <UI.Text style={styles.poweredPolicyText}>Powered by Cobalt Software™</UI.Text>
-          <UI.Text style={styles.poweredPolicyText}>Privacy Policy | Terms of Use</UI.Text>
-        </UI.Box>
-
+ 
+                <UI.TouchableOpacity
+                  // onPress={openModal}
+                  style={{ justifyContent: "flex-end", width: "76%", backgroundColor: "RED" }}
+                >
+                  <UI.Text style={styles.forgot_passText}>Forgot Password?</UI.Text>
+                </UI.TouchableOpacity>
+              </View>
+              <UI.ConnectedCbButton id='login' variant='solid' buttonText='Login' onPress={() => this.handleValidation()} customStyles={{ buttonStyle: styles.login, }} />
+              {/* </View> */}
+            {/* </UI.cbVStack> */}
+          </UI.ConnectedCbForm>
+          </View>
+          {/* <UI.TouchableOpacity>
+          <Image source={require('../../../assets/images/finger_print.png')} style={styles.finger_print} />
+        </UI.TouchableOpacity> */}
+ 
+          <View >
+            <UI.Text style={styles.poweredPolicyText}>Powered by Cobalt Software™</UI.Text>
+            <UI.Text style={styles.poweredPolicyText}>Privacy Policy | Terms of Use</UI.Text>
+          </View>
+        </View>
+ 
         {/* </UI.ScrollView> */}
-      </UI.cbImageBackground>
-
+      </ImageBackground>
+ 
     );
   }
 }
@@ -141,10 +146,9 @@ const styles = UI.StyleSheet.create({
     height: 60,
     width: 210,
     position: 'absolute',
-    top: "16%"
+    top: width * 0.05,
   },
   devDiv: {
-    marginTop: height * 0.4,
     marginBottom: 20,
   },
   devText: {
@@ -159,7 +163,6 @@ const styles = UI.StyleSheet.create({
     width: '100%',
     borderColor: '#fff',
     borderBottomWidth: 1,
-    borderRadius: 5,
     marginBottom: 15,
     color: '#fff',
     fontSize: 16,
@@ -186,6 +189,7 @@ const styles = UI.StyleSheet.create({
     color: '#fff',
     fontSize: 16,
     fontWeight: 450,
+    textAlign: "right",
   },
   login: {
     backgroundColor: '#fff',
@@ -195,7 +199,7 @@ const styles = UI.StyleSheet.create({
     color: '#0D92F4',
     textAlign: 'center',
     marginHorizontal: "auto",
-    width: '70%',
+    width: '30%',
     marginBottom: 10,
     justifyContent: "center",
     alignSelf: "center",

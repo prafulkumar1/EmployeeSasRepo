@@ -17,11 +17,8 @@ export default class useLoginLogic extends Component<any,any,any> {
     };
 
     handleValidation = () => {
-    console.log(this.props?.formData,"--->props")
     const usernameField = getFormFieldDataSelector(this.props?.formData,pageId,'username');
     const passwordField = getFormFieldDataSelector(this.props?.formData,pageId,'password');
-    console.log(usernameField,"--->11111")
-    console.log(passwordField,"--->22222")
     let isValid = true;
   
     if (!usernameField.value) {
@@ -37,7 +34,6 @@ export default class useLoginLogic extends Component<any,any,any> {
       this.props?.setFormFieldData(pageId, 'input', 'password', passwordField.value, false);
     }
 
-    console.log(isValid,"--->what")
     if(isValid){
       this.handleLogin()
     }

@@ -102,8 +102,6 @@ class loginUI extends useLoginLogic {
 }
 
 const mapStateToProps = (state) => {
-  const formData = state.login.formData || {};
-  console.log(JSON.stringify(formData), "--->syayeyeyey");
   return {
     formData: state.login.formData,
     isPasswordVisible:state.login.isPasswordVisible
