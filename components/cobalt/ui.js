@@ -92,14 +92,15 @@ class cbCheckBox extends React.Component {
   render() {
     const inputArray = global.controlsConfigJson.find(item => item.id === this.id);
     const checkBoxLabelprop = inputArray?.labeltext || this.checkBoxLabel;
-    const styles = this.customStyles;
+    const indicatorStyle = this.customStyles.CheckboxIndicator;
+    const labelStyle = this.customStyles.checkboxLabel;
 
     return (
-      <Checkbox size={this.size} isInvalid={this.isInvalid} isDisabled={this.isDisabled}>
-        <CheckboxIndicator >
-          <CheckboxIcon as={CheckIcon} />
+      <Checkbox size={this.size} isInvalid={this.isInvalid} isDisabled={this.isDisabled} style={{flexDirection:"row",width:"50%",}}>
+        <CheckboxIndicator style={indicatorStyle}>
+          <CheckboxIcon as={CheckIcon} size='md'/>
         </CheckboxIndicator>
-        <CheckboxLabel>{checkBoxLabelprop}</CheckboxLabel>
+        <CheckboxLabel  style={labelStyle}>{checkBoxLabelprop}</CheckboxLabel>
       </Checkbox>
     );
   }
@@ -246,6 +247,7 @@ class cbInput extends React.Component {
     this.numberOfLines = props.numberOfLines
     this.value = props.value
     this.getFormFieldData = typeof props.getFormFieldData === 'function' ? props.getFormFieldData : () => { }
+    this.props = props.labelRequired
   }
 
 
@@ -266,15 +268,16 @@ class cbInput extends React.Component {
       isReadOnly={isReadOnlyprop}
       isRequired={isRequiredprop}
     >
-      {labelTextprop && (
+      {(this.labelRequired && labelTextprop) && (
         <FormControlLabel>
-          <FormControlLabelText>{labelTextprop}</FormControlLabelText>
+          <FormControlLabelText>{this?.labelText}</FormControlLabelText>
         </FormControlLabel>
       )}
-      <Input variant={variantprop} style={this.style}>
+      <Input variant={variantprop} >
         <InputField
           id={this.id}
           placeholder={placeholderprop}
+          placeholderTextColor="#fff" 
           type={typeprop}
           multiline={this.multiline}
           numberOfLines={this.numberOfLines}
@@ -310,7 +313,7 @@ function cbForm({ formId, setFormFieldData, children }) {
   );
 
 
-  return <Box>{childrenWithProps}</Box>;
+  return <Box style={{width: '90%', }}>{childrenWithProps}</Box>;
 }
 
 
