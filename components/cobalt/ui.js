@@ -18,12 +18,10 @@ import { HStack } from '@/components/ui/hstack';
 import { Icon } from '@/components/ui/icon';
 import { Text } from '@/components/ui/text';
 import { Radio, RadioGroup, RadioIndicator, RadioLabel, RadioIcon } from '@/components/ui/radio';
-import { styles } from './style';
-import SvgUri from 'react-native-svg-uri';
 import { postApiCall } from '@/components/utlis/api';
 import { getFormFieldData, setFormFieldData } from '../redux/reducers/loginReducer';
 import { connect } from 'react-redux';
-
+import { SvgUri } from 'react-native-svg';
 class CbImage extends React.Component {
   constructor(props) {
     super(props);
@@ -41,7 +39,7 @@ class CbImage extends React.Component {
 
       if (source.endsWith('.svg')) {
 
-        return <SvgUri source={{ uri: source }} />;
+        return <SvgUri  uri={source}/>;
       } else {
  
         return <Image alt='image' source={{ uri: source }} style={this.style} />;

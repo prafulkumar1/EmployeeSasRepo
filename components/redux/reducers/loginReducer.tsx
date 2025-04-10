@@ -1,4 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
+import { store } from '../store'
 
 const initialState = {
     loginDetails : [],
@@ -30,20 +31,11 @@ const loginSlice = createSlice({
     },
     
     getFormFieldData(state, action) {
-      console.log(action.payload,"---->>>>!111111")
-      console.log(state.formData,"---->>>>!222222")
       // if(action.payload){
       //   const {formId, controlId,} = action.payload
       //   return state.formData?.[formId + '_' + controlId] || { value: '', isInvalid: false };
       // }
     },
-    toggleFlag(state, action) {
-      const key = action.payload;
-      if (key in state && typeof state[key] === 'boolean') {
-        state[key] = !state[key];
-      }
-    },
-    
     showPassword(state, action) {
       state.isPasswordVisible = !state.isPasswordVisible
     },

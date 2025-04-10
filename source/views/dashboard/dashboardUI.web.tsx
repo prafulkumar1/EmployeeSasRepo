@@ -1,20 +1,30 @@
+
+//import { useLoginLogic } from '@/source/controller/login/login';
 import * as UI from '@/components/cobalt/importUI';
-import { connect } from 'react-redux';
 import { RootState } from '@/components/redux/store';
 import useDashboardLogic from '@/source/controller/dashboard/dashboard';
-import { styles } from '@/source/styles/dashboardStyle';
-const pageId = 'Dashboard';
+import { ReactNode } from 'react';
+import { connect } from 'react-redux';
+
+const pageId='Dashboard';
 class DashboardUI extends useDashboardLogic {
   render() {
-    let pageConfigJson = global.appConfigJsonArray?.find((item: { PageId: string; }) => item.PageId === pageId);
+    let pageConfigJson = global.appConfigJsonArray.find(item => item?.PageId === pageId);
     global.controlsConfigJson = pageConfigJson && pageConfigJson.Controlls ? pageConfigJson.Controlls : [];
     return (
-      <UI.View style={styles.mainContainer}>
-        <UI.Text>Dashboard</UI.Text>
+      <UI.View>
+        <UI.Text>Dashboard screen</UI.Text>
       </UI.View>
     );
   }
 }
+const styles = UI.StyleSheet.create({
+ 
+  scrollContent: {
+    padding: 20,
+  },
+ 
+});
 
 const mapStateToProps = (state:RootState) => {
   return {

@@ -4,8 +4,21 @@ import { Component } from 'react'
 
 const pageId='Login';
 
-export default class useLoginLogic extends Component<any,any,any> {
-    constructor(props:any){
+interface IState{
+  loading:boolean
+  isPasswordVisible:boolean
+}
+interface IProps{
+  formData:Object,
+  setFormFieldData:({formId, controlType, controlId, controlValue, isInvalid}) => void
+  showPassword:() =>void
+  getFormFieldData:() => void
+  isPasswordVisible:boolean
+}
+interface SS{}
+
+export default class useLoginLogic extends Component<IProps,IState,SS> {
+    constructor(props:IProps){
       super(props)
       this.state ={
         loading:false,
