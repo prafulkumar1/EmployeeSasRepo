@@ -96,8 +96,8 @@ class cbCheckBox extends React.Component {
     const labelStyle = this.customStyles.checkboxLabel;
  
     return (
-      <Checkbox size={this.size} isInvalid={this.isInvalid} isDisabled={this.isDisabled} style={{flexDirection:"row"}}>
-        <CheckboxIndicator style={{width:20,height:20,borderWidth:1,borderColor:"#fff",backgroundColor:"#fff"}}>
+      <Checkbox size={this.size} isInvalid={this.isInvalid} isDisabled={this.isDisabled} style={{flexDirection:"row",width:"50%"}}>
+        <CheckboxIndicator style={indicatorStyle}>
           <CheckboxIcon as={CheckIcon} size='md' style={{color:"blue"}}/>
         </CheckboxIndicator>
         <CheckboxLabel  style={labelStyle}>{checkBoxLabelprop}</CheckboxLabel>
