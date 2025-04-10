@@ -2,7 +2,6 @@ import * as UI from '@/components/cobalt/importUI';
 import useLoginLogic from '@/source/controller/login/login';
 import { connect } from 'react-redux';
 import { getFormFieldData, setFormFieldData, showPassword } from '@/components/redux/reducers/loginReducer';
-import { CheckboxIndicator } from '@/components/ui/checkbox';
 import { styles } from '@/source/styles/loginStyle';
 import {Image} from "react-native"
 import { RootState } from '@/components/redux/store';
@@ -25,20 +24,13 @@ class loginUI extends useLoginLogic {
     ]
     return (
       <UI.ConnectedCbImageBackground id='loginBackground' source={require('@/assets/images/loginapp.png')}>
-        <Image source={require('../../../assets/images/Logo1.png')} style={ {
-      justifyContent: 'center',
-      alignItems: 'center',
-      height: 60,
-      width: 210,
-      position: 'absolute',
-      top: "16%",
-    }} resizeMode="cover" />
+        <Image source={require('../../../assets/images/Logo1.png')} style={styles.club_logo} resizeMode="cover" />
         <UI.Box style={styles.devDiv}/>
 
         <UI.ConnectedCbForm formId={pageId}>
           <UI.ConnectedCbVStack id='VStack1'>
 
-            <UI.Box style={{ flexDirection: "row", marginBottom: 20, }}>
+            <UI.Box style={styles.subContainer}>
               <UI.Box style={{ width: "100%" }}>
                 <UI.ConnectedCbInput labelRequired={false} id='username' formId={pageId} setFormFieldData={setFormFieldData} getFormFieldData={getFormFieldData} labelText="" style={styles.inputs} />
               </UI.Box>
@@ -56,12 +48,12 @@ class loginUI extends useLoginLogic {
 
 
 
-            <UI.Box style={{ flexDirection: "row", marginBottom: 20, }}>
+            <UI.Box style={styles.bottomContainer}>
               <UI.Box style={{ width: "100%" }}>
                 <UI.ConnectedCbInput labelRequired={false} id='password' isPasswordVisible={this.props.isPasswordVisible}  formId={pageId} setFormFieldData={setFormFieldData} getFormFieldData={getFormFieldData} style={styles.inputs} />
               </UI.Box>
               <UI.TouchableOpacity
-                onPress={this.props.showPassword}
+                onPress={this.props?.showPassword}
                 style={styles.iconborder}>
                 <UI.Image
                   source={
@@ -75,7 +67,7 @@ class loginUI extends useLoginLogic {
               </UI.TouchableOpacity>
             </UI.Box>
 
-            <UI.Box style={{ flexDirection: "row", justifyContent: "space-between", width: "100%" }}>
+            <UI.Box style={styles.checkBox}>
               <UI.ConnectedCbCheckBox id='rememberme' customStyles={{ CheckboxIndicator: { width: 10, height: 10 }, checkboxLabel: { color: '#fff', marginLeft: 10, fontSize: 16, } }} />
               <UI.Box>
                 <UI.TouchableOpacity

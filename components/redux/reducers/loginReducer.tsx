@@ -27,8 +27,8 @@ const loginSlice = createSlice({
         }
     },
     getFormFieldData(state, action) {
-      const loadScreen = store.getState().dashboard.loading
-      console.log(loadScreen,"--->screen")
+      // const loadScreen = store.getState().dashboard.loading
+      // console.log(loadScreen,"--->screen")
     },
     showPassword(state, action) {
       state.isPasswordVisible = !state.isPasswordVisible

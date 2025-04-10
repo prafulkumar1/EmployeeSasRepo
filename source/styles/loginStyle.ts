@@ -59,6 +59,12 @@ export const styles = StyleSheet.create({
       fontSize: 16,
       fontWeight: "400",
     },
+    forgot_passText_web: {
+      color: '#fff',
+      fontSize: 16,
+      fontWeight: "400",
+      textAlign:"right"
+    },
     login: {
       backgroundColor: '#fff',
       paddingVertical: 5,
@@ -90,4 +96,22 @@ export const styles = StyleSheet.create({
       fontSize: height * 0.018,
       margin: 5,
     },
+    subContainer:{ flexDirection: "row", marginBottom: 20, },
+    bottomContainer:{ flexDirection: "row", marginBottom: 20, },
+    checkBox:{ flexDirection: "row", justifyContent: "space-between", width: "100%" },
+    webLogo:{
+        height: 60,
+        width: 210,
+        position: 'absolute',
+        top: width * 0.05,
+      },
+    mainImageLogo:{ overflow:"hidden", width: "100%", height: "100%", justifyContent: "center", alignItems: "center" },
+    subWebContainer:{ width: "100%", justifyContent: "center", alignItems: "center" },
+    topBox:{width:600,justifyContent:"center",alignItems:"center"},
+    inputContainer:{ flexDirection: "row", marginBottom: 20, width: "100%" },
+    pwdContainer:{ flexDirection: "row", marginBottom: 20, width: "100%" },
+    checkBoxWeb:{ flexDirection: "row", width: "100%" },
+    forgotPwdWeb:{ justifyContent: "flex-end", width: "76%", },
+    rememberMe:{ width: 20, height: 20, borderWidth: 1, borderColor: "#fff", backgroundColor: "#fff" },
+    labelCheckBox:{ color: '#fff', marginLeft: 10, fontSize: 16 }
   });
