@@ -1,4 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
+import { store } from '../store'
 
 const initialState = {
     loginDetails : [],
@@ -26,10 +27,8 @@ const loginSlice = createSlice({
         }
     },
     getFormFieldData(state, action) {
-      // if(action.payload){
-      //   const {formId, controlId,} = action.payload
-      //   return state.formData?.[formId + '_' + controlId] || { value: '', isInvalid: false };
-      // }
+      const loadScreen = store.getState().dashboard.loading
+      console.log(loadScreen,"--->screen")
     },
     showPassword(state, action) {
       state.isPasswordVisible = !state.isPasswordVisible
@@ -37,7 +36,7 @@ const loginSlice = createSlice({
   },
 })
 
-export const { handlePassword,setFormFieldData,getFormFieldData,showPassword }:any = loginSlice.actions
+export const { handlePassword,setFormFieldData,getFormFieldData,showPassword, }:any = loginSlice.actions
 export default loginSlice.reducer
 
 export const getFormFieldDataSelector = (state:any, formId:string, controlId:string) => {

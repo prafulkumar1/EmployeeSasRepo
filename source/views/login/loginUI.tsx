@@ -8,9 +8,6 @@ import {Image} from "react-native"
 import { RootState } from '@/components/redux/store';
 const pageId = 'Login';
 class loginUI extends useLoginLogic {
-  constructor(props) {
-    super(props)
-  }
   render() {
     const { setFormFieldData, getFormFieldData } = this.props
     let pageConfigJson = global.appConfigJsonArray?.find((item: { PageId: string; }) => item.PageId === pageId);
@@ -110,8 +107,8 @@ class loginUI extends useLoginLogic {
 
 const mapStateToProps = (state:RootState) => {
   return {
-    formData: state.login.formData,
-    isPasswordVisible:state.login.isPasswordVisible
+    formData: state.login?.formData,
+    isPasswordVisible:state.login?.isPasswordVisible
   }
 }
 const mapDispatchToProps = {

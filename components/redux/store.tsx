@@ -1,9 +1,10 @@
 import { Action, configureStore, ThunkAction } from '@reduxjs/toolkit'
 import login from  "./reducers/loginReducer"
-
+import dashboard from  "./reducers/dashboardReducer"
 export const store = configureStore({
   reducer: {
-    login: login,
+    login,
+    dashboard
   }
 })
 

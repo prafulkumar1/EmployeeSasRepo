@@ -18,7 +18,7 @@ interface IProps{
 interface SS{}
 
 export default class useLoginLogic extends Component<IProps,IState,SS> {
-    constructor(props:any){
+    constructor(props:IProps){
       super(props)
       this.state ={
         loading:false,
