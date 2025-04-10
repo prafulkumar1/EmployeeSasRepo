@@ -1,8 +1,8 @@
 import * as UI from '@/components/cobalt/importUI';
-import { Image, View, TouchableOpacity, ImageBackground } from 'react-native';
+import { Image, View, TouchableOpacity, ImageBackground, Modal } from 'react-native';
 import useLoginLogic from '@/source/controller/login/login';
 import { connect } from 'react-redux';
-import { getFormFieldData, setFormFieldData, showPassword } from '@/components/redux/reducers/loginReducer';
+import { forgetPassModal, getFormFieldData, setFormFieldData, showPassword } from '@/components/redux/reducers/loginReducer';
 
 import { Dimensions } from 'react-native';
 import { RootState } from '@/components/redux/store';
@@ -40,9 +40,13 @@ class loginUI extends useLoginLogic {
               <View style={styles.inputContainer}>
                 <UI.Box style={{ width: "100%" }}>
                   <UI.ConnectedCbInput labelRequired={false} id='username' formId={pageId} setFormFieldData={setFormFieldData} getFormFieldData={getFormFieldData} labelText="" style={styles.inputs} />
+                  {this.props?.formData?.[pageId + '_username']?.isInvalid && (
+                    <UI.Text style={{ color: 'red', fontSize: 12, marginTop: 2 }}>
+                      {this.props?.formData?.[pageId + '_username']?.errorMessage}
+                    </UI.Text>
+                  )}
                 </UI.Box>
                 <UI.TouchableOpacity
-                  // onPress={handleIconPress}
                   style={styles.iconborder}>
                   <Image
                     source={require('../../../assets/images/tooltip_icon.png')}
@@ -56,6 +60,11 @@ class loginUI extends useLoginLogic {
               <View style={styles.pwdContainer}>
                 <UI.Box style={{ width: "100%" }}>
                   <UI.ConnectedCbInput labelRequired={false} id='password' isPasswordVisible={this.props?.isPasswordVisible} formId={pageId} setFormFieldData={setFormFieldData} getFormFieldData={getFormFieldData} style={styles.inputs} />
+                  {this.props?.formData?.[pageId + '_password']?.isInvalid && (
+                    <UI.Text style={{ color: 'red', fontSize: 12, marginTop: 2 }}>
+                      {this.props?.formData?.[pageId + '_password']?.errorMessage}
+                    </UI.Text>
+                  )}
                 </UI.Box>
                 <TouchableOpacity
                   onPress={this.props?.showPassword}
@@ -83,7 +92,7 @@ class loginUI extends useLoginLogic {
                 />
  
                 <UI.TouchableOpacity
-                  // onPress={openModal}
+                  onPress={this.props.forgetPassModal}
                   style={styles.forgotPwdWeb}
                 >
                   <UI.Text style={styles.forgot_passText_web}>Forgot Password?</UI.Text>
@@ -98,6 +107,42 @@ class loginUI extends useLoginLogic {
             <UI.Text style={styles.poweredPolicyText}>Privacy Policy | Terms of Use</UI.Text>
           </View>
         </View>
+
+        <Modal
+          transparent={true}
+          visible={this.props.isModalVisible}
+          onRequestClose={this.props.forgetPassModal}
+        >
+          <View style={styles.modalOverlay}>
+            <View
+              style={[
+                styles.modalContentWeb,
+                {
+                  height: this.state.screenWidth < 1640 ? '70%' : '50%',
+                  width: this.state.screenWidth < 780 ? '90%' : "50%",
+                },
+              ]}
+            >
+              <UI.TouchableOpacity onPress={this.props.forgetPassModal} style={styles.cross}>
+                <Image source={require('../../../assets/images/icons/Close3x.png')} style={{ width: 20, height: 20 }} />
+              </UI.TouchableOpacity>
+              { }
+              <Image source={require('../../../assets/images/icons/icon_lock.png')} style={styles.lock_img} />
+              <UI.Text style={styles.modalTitle}>Forgot Your Password?</UI.Text>
+              <UI.Text style={styles.inputLabel}>Enter your username*</UI.Text>
+              <UI.ConnectedCbInput labelRequired={false} id='username' formId={pageId} setFormFieldData={setFormFieldData} getFormFieldData={getFormFieldData} labelText="" style={styles.modalInput} />
+
+              <UI.Text style={{ fontSize: 16, marginBottom: 40, textAlign: 'center' }}>
+                If you do not remember which username you registered with our system, please contact info@mycobaltsoftware.com
+              </UI.Text>
+              <UI.TouchableOpacity style={styles.modalButton}
+                onPress={this.props.forgetPassModal}
+              >
+                <UI.Text style={styles.modalButtonText}>Send</UI.Text>
+              </UI.TouchableOpacity>
+            </View>
+          </View>
+        </Modal>
  
       </ImageBackground>
  
@@ -107,14 +152,16 @@ class loginUI extends useLoginLogic {
 
 const mapStateToProps = (state:RootState) => {
  return {
-   formData :state.login?.formData,
-   isPasswordVisible:state.login?.isPasswordVisible
+  formData: state.login?.formData,
+  isPasswordVisible:state.login?.isPasswordVisible,
+  isModalVisible:state.login.isModalVisible,
  }
 }
 const mapDispatchToProps = {
   setFormFieldData,
   getFormFieldData,
-  showPassword
+  showPassword,
+  forgetPassModal
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(loginUI)
