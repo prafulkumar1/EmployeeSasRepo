@@ -13,6 +13,7 @@ interface IState{
 interface IProps{
   formData:Object,
   setFormFieldData:({formId, controlType, controlId, controlValue, isInvalid,errorMessage}) => void
+  resentFormData:({formId, controlType, controlId, controlValue, isInvalid,errorMessage}) => void
   showPassword:() =>void
   getFormFieldData:() => void
   isPasswordVisible:boolean
@@ -45,22 +46,6 @@ export default class useLoginLogic extends Component<IProps,IState,SS> {
     };
   handleLogin = () => {
     navigateToScreen(this.props, "DashboardUI", true, {})
-    this.props?.setFormFieldData({
-      formId: pageId,
-      controlType: 'input',
-      controlId: 'username',
-      controlValue: "",
-      isInvalid: false,
-      errorMessage: '',
-    });
-    this.props?.setFormFieldData({
-      formId: pageId,
-      controlType: 'input',
-      controlId: 'password',
-      controlValue: "",
-      isInvalid: false,
-      errorMessage: '',
-    });
   };
 
   handleValidation = () => {
@@ -137,7 +122,7 @@ export default class useLoginLogic extends Component<IProps,IState,SS> {
     }
  
     if (isValid) {
-      this.props?.setFormFieldData({
+      this.props?.resentFormData({
         formId: pageId,
         controlType: 'input',
         controlId: 'username',
@@ -146,7 +131,7 @@ export default class useLoginLogic extends Component<IProps,IState,SS> {
         errorMessage: '',
       });
  
-      this.props?.setFormFieldData({
+      this.props?.resentFormData({
         formId: pageId,
         controlType: 'input',
         controlId: 'password',

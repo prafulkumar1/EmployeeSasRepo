@@ -15,11 +15,8 @@ export default class useAdvanceLoginLogic extends Component<any,any,any> {
     };
 
     handleValidation = () => {
-    // const usernameField = this.props?.getFormFieldData(pageId, 'username');
-    // const passwordField = this.props?.getFormFieldData(pageId, 'password');
     const usernameField = this.props?.getFormFieldData({formId:pageId,id:'username'});
     const passwordField = this.props?.getFormFieldData({formId:pageId,id:'password'});
-    console.log(usernameField,passwordField,"--->values")
     let isValid = true;
   
     if (!usernameField.value) {

@@ -19,7 +19,7 @@ import { Icon } from '@/components/ui/icon';
 import { Text } from '@/components/ui/text';
 import { Radio, RadioGroup, RadioIndicator, RadioLabel, RadioIcon } from '@/components/ui/radio';
 import { postApiCall } from '@/components/utlis/api';
-import { getFormFieldData, setFormFieldData } from '../redux/reducers/loginReducer';
+import { getFormFieldData, getFormFieldDataSelector, setFormFieldData } from '../redux/reducers/loginReducer';
 import { connect } from 'react-redux';
 import { SvgUri } from 'react-native-svg';
 class CbImage extends React.Component {
@@ -258,7 +258,7 @@ class cbInput extends React.Component {
     const isDisabledprop = inputArray?.isDisabled === 1 || this.isDisabled;
     const isReadOnlyprop = inputArray?.isReadOnly === 1 || this.isReadOnly;
     const isRequiredprop = inputArray?.isRequired === 1 || this.isRequired;
-    const value = this.props?.getFormFieldData({formId:this.props?.formId,id:this.props?.id});
+    const value = getFormFieldDataSelector(this.props?.formData, this.props?.formId, this.props?.id);
     return (
       <FormControl
       isDisabled={isDisabledprop}
@@ -403,7 +403,7 @@ class CbFlatList extends React.Component {
 
 const mapStateToProps = (state) => {
   return{
-    formData: state.login,
+    formData: state.login.formData,
   }
 };
  

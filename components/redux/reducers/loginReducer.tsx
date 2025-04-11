@@ -41,10 +41,20 @@ const loginSlice = createSlice({
     forgetPassModal(state, action) {
       state.isModalVisible = !state.isModalVisible
     },
+    resentFormData(state,action){
+      const { formId, controlType, controlId, controlValue, isInvalid, errorMessage } = action.payload;
+      state.formData = {
+        [formId + '_' + controlId]: {
+          value: "",
+          isInvalid: isInvalid ?? false,
+          errorMessage: errorMessage ?? '',
+        },
+      };
+    }
   },
 })
 
-export const { handlePassword,setFormFieldData,getFormFieldData,showPassword ,showToolTip ,forgetPassModal}:any = loginSlice.actions
+export const { handlePassword,setFormFieldData,getFormFieldData,showPassword ,showToolTip ,forgetPassModal,resentFormData}:any = loginSlice.actions
 export default loginSlice.reducer
 
 export const getFormFieldDataSelector = (state: any, formId: string, controlId: string) => {

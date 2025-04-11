@@ -1,7 +1,7 @@
 import * as UI from '@/components/cobalt/importUI';
 import useLoginLogic from '@/source/controller/login/login';
 import { connect } from 'react-redux';
-import { forgetPassModal, getFormFieldData, setFormFieldData, showPassword } from '@/components/redux/reducers/loginReducer';
+import { forgetPassModal, getFormFieldData, getFormFieldDataSelector, resentFormData, setFormFieldData, showPassword } from '@/components/redux/reducers/loginReducer';
 import { styles } from '@/source/styles/loginStyle';
 import {Image, Modal} from "react-native"
 import { RootState } from '@/components/redux/store';
@@ -9,6 +9,8 @@ const pageId = 'Login';
 class loginUI extends useLoginLogic {
   render() {
     const { setFormFieldData, getFormFieldData } = this.props
+    const pwdValue = getFormFieldDataSelector(this.props?.formData, pageId, "password");
+    const userNameValue = getFormFieldDataSelector(this.props?.formData, pageId, "username");
     let pageConfigJson = global.appConfigJsonArray?.find((item: { PageId: string; }) => item.PageId === pageId);
     global.controlsConfigJson = pageConfigJson && pageConfigJson.Controlls ? pageConfigJson.Controlls : [];
     const departments = [
@@ -32,7 +34,7 @@ class loginUI extends useLoginLogic {
 
             <UI.Box style={styles.subContainer}>
               <UI.Box style={{ width: "100%" }}>
-                <UI.ConnectedCbInput labelRequired={false} id='username' value={""} formId={pageId} setFormFieldData={setFormFieldData} getFormFieldData={getFormFieldData} labelText="" style={styles.inputs} />
+                <UI.ConnectedCbInput placeholder={"User Name/Member ID"} labelRequired={false} id='username' formId={pageId} setFormFieldData={setFormFieldData} getFormFieldData={getFormFieldData} labelText="" style={styles.inputs} />
                 {this.props?.formData?.[pageId + '_username']?.isInvalid && (
                   <UI.Text style={styles.errorMsgTxt}>
                     {this.props?.formData?.[pageId + '_username']?.errorMessage}
@@ -54,7 +56,7 @@ class loginUI extends useLoginLogic {
 
             <UI.Box style={styles.bottomContainer}>
               <UI.Box style={{ width: "100%" }}>
-                <UI.ConnectedCbInput labelRequired={false} id='password' value={""} isPasswordVisible={this.props.isPasswordVisible}  formId={pageId} setFormFieldData={setFormFieldData} getFormFieldData={getFormFieldData} style={styles.inputs} />
+                <UI.ConnectedCbInput labelRequired={false} placeholder={"Password"} id='password' isPasswordVisible={this.props.isPasswordVisible}  formId={pageId} setFormFieldData={setFormFieldData} getFormFieldData={getFormFieldData} style={styles.inputs} />
                 {this.props?.formData?.[pageId + '_password']?.isInvalid && (
                   <UI.Text style={styles.errorMsgTxt}>
                     {this.props?.formData?.[pageId + '_password']?.errorMessage}
@@ -143,7 +145,8 @@ const mapDispatchToProps = {
   setFormFieldData,
   getFormFieldData,
   showPassword,
-  forgetPassModal
+  forgetPassModal,
+  resentFormData
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(loginUI)
