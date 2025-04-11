@@ -32,9 +32,9 @@ class loginUI extends useLoginLogic {
 
             <UI.Box style={styles.subContainer}>
               <UI.Box style={{ width: "100%" }}>
-                <UI.ConnectedCbInput labelRequired={false} id='username' formId={pageId} setFormFieldData={setFormFieldData} getFormFieldData={getFormFieldData} labelText="" style={styles.inputs} />
+                <UI.ConnectedCbInput labelRequired={false} id='username' value={""} formId={pageId} setFormFieldData={setFormFieldData} getFormFieldData={getFormFieldData} labelText="" style={styles.inputs} />
                 {this.props?.formData?.[pageId + '_username']?.isInvalid && (
-                  <UI.Text style={{ color: 'red', fontSize: 12, marginTop: 2 }}>
+                  <UI.Text style={styles.errorMsgTxt}>
                     {this.props?.formData?.[pageId + '_username']?.errorMessage}
                   </UI.Text>
                 )}
@@ -54,9 +54,9 @@ class loginUI extends useLoginLogic {
 
             <UI.Box style={styles.bottomContainer}>
               <UI.Box style={{ width: "100%" }}>
-                <UI.ConnectedCbInput labelRequired={false} id='password' isPasswordVisible={this.props.isPasswordVisible}  formId={pageId} setFormFieldData={setFormFieldData} getFormFieldData={getFormFieldData} style={styles.inputs} />
+                <UI.ConnectedCbInput labelRequired={false} id='password' value={""} isPasswordVisible={this.props.isPasswordVisible}  formId={pageId} setFormFieldData={setFormFieldData} getFormFieldData={getFormFieldData} style={styles.inputs} />
                 {this.props?.formData?.[pageId + '_password']?.isInvalid && (
-                  <UI.Text style={{ color: 'red', fontSize: 12, marginTop: 2 }}>
+                  <UI.Text style={styles.errorMsgTxt}>
                     {this.props?.formData?.[pageId + '_password']?.errorMessage}
                   </UI.Text>
                 )}
@@ -108,13 +108,13 @@ class loginUI extends useLoginLogic {
           <UI.Box style={styles.modalOverlay}>
             <UI.Box style={styles.modalContent}>
               <UI.TouchableOpacity onPress={this.props.forgetPassModal} style={styles.cross}>
-                <Image source={require('../../../assets/images/icons/Close3x.png')} style={{ width: 20, height: 20 }} />
+                <Image source={require('../../../assets/images/icons/Close3x.png')} style={styles.closeIcon} />
               </UI.TouchableOpacity>
               <Image source={require('../../../assets/images/icons/icon_lock.png')} style={styles.lock_img} />
               <UI.Text style={styles.modalTitle}>Forgot Your Password?</UI.Text>
               <UI.Text style={styles.inputLabel}>Enter your username*</UI.Text>
               <UI.ConnectedCbInput labelRequired={false} id='username' formId={pageId} setFormFieldData={setFormFieldData} getFormFieldData={getFormFieldData} labelText="" style={styles.modalInput} />
-              <UI.Text style={{ fontSize: 10, marginBottom: 40, textAlign: 'center' }}>
+              <UI.Text style={styles.rememberMeTxt}>
                 If you do not remember which username you registered with our system, please contact info@mycobaltsoftware.com
               </UI.Text>
               <UI.TouchableOpacity style={styles.modalButton}

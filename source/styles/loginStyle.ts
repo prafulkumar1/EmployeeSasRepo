@@ -183,4 +183,8 @@ export const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  errorMsgTxt:{ color: 'red', fontSize: 12, marginTop: 2 },
+  closeIcon:{ width: 20, height: 20 },
+  rememberMeTxt:{ fontSize: 10, marginBottom: 40, textAlign: 'center' },
+  rememberMeTxtWeb:{ fontSize: 16, marginBottom: 40, textAlign: 'center' }
 });
