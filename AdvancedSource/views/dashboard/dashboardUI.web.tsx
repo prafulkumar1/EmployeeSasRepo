@@ -1,5 +1,6 @@
 
 import useAdvanceDashboardLogic from '@/AdvancedSource/controller/dashboard/dashboard';
+import { styles } from '@/AdvancedSource/styles/dashbboard/dashboardStyle.web';
 import * as UI from '@/components/cobalt/importUI';
 import { RootState } from '@/components/redux/store';
 import { connect } from 'react-redux';
@@ -10,8 +11,8 @@ class AdvanceDashboardUI extends useAdvanceDashboardLogic {
     let pageConfigJson = global.appConfigJsonArray.find(item => item?.PageId === pageId);
     global.controlsConfigJson = pageConfigJson && pageConfigJson.Controlls ? pageConfigJson.Controlls : [];
     return (
-      <UI.View>
-        <UI.Text>Dashboard screen web</UI.Text>
+      <UI.View style={styles.mainContainer}>
+        <UI.Text>Advance Dashboard Web</UI.Text>
       </UI.View>
     );
   }

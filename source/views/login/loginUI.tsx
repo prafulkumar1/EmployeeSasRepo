@@ -1,10 +1,10 @@
 import * as UI from '@/components/cobalt/importUI';
 import useLoginLogic from '@/source/controller/login/login';
 import { connect } from 'react-redux';
-import { forgetPassModal, getFormFieldData, getFormFieldDataSelector, resentFormData, setFormFieldData, showPassword } from '@/components/redux/reducers/loginReducer';
-import { styles } from '@/source/styles/loginStyle';
+import { forgetPassModal, getFormFieldData, getFormFieldDataSelector, getProfitCenterData, resentFormData, setFormFieldData, showPassword } from '@/components/redux/reducers/loginReducer';
 import {Image, Modal} from "react-native"
 import { RootState } from '@/components/redux/store';
+import { styles } from '@/source/styles/login/loginStyle';
 const pageId = 'Login';
 class loginUI extends useLoginLogic {
   render() {
@@ -146,7 +146,8 @@ const mapDispatchToProps = {
   getFormFieldData,
   showPassword,
   forgetPassModal,
-  resentFormData
+  resentFormData,
+  getProfitCenterData
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(loginUI)

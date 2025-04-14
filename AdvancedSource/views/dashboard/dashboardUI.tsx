@@ -1,8 +1,8 @@
 import * as UI from '@/components/cobalt/importUI';
 import { connect } from 'react-redux';
 import { RootState } from '@/components/redux/store';
-import { styles } from '@/source/styles/dashboardStyle';
 import useAdvanceDashboardLogic from '@/AdvancedSource/controller/dashboard/dashboard';
+import { styles } from '@/AdvancedSource/styles/dashbboard/dashboardStyle';
 const pageId = 'AdvanceDashboard';
 class AdvanceDashboardUI extends useAdvanceDashboardLogic {
   render() {
@@ -10,7 +10,7 @@ class AdvanceDashboardUI extends useAdvanceDashboardLogic {
     global.controlsConfigJson = pageConfigJson && pageConfigJson.Controlls ? pageConfigJson.Controlls : [];
     return (
       <UI.View style={styles.mainContainer}>
-        <UI.Text>AdvanceDashboardUI</UI.Text>
+        <UI.Text>Advance Dashboard Mobile</UI.Text>
       </UI.View>
     );
   }

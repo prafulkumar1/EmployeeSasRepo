@@ -6,8 +6,8 @@ import { forgetPassModal, getFormFieldData, getFormFieldDataSelector, resentForm
 
 import { Dimensions } from 'react-native';
 import { RootState } from '@/components/redux/store';
-import { styles } from '@/source/styles/loginStyle';
 import useAdvanceLoginLogic from '@/AdvancedSource/controller/login/login';
+import { styles } from '@/AdvancedSource/styles/login/loginStyle.web';
 const { width, height } = Dimensions.get('window');
 
 const pageId = 'Login';

@@ -1,4 +1,5 @@
-import { createSlice } from '@reduxjs/toolkit'
+import { postApiCall } from '@/components/utlis/api';
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 
 const initialState = {
     loginDetails : [],
@@ -8,8 +9,37 @@ const initialState = {
     formData:{},
     isPasswordVisible:false,
     isTooltipVisible:false,
-    isModalVisible:false
+    isModalVisible:false,
+    profitCenterResp : null,
+    errorMessage:""
 }
+
+export const getProfitCenterData = createAsyncThunk(
+  'getProfitCenterData',
+  async (
+    _,
+    { getState, rejectWithValue, fulfillWithValue },
+  ) => {
+    console.log("calleeddd")
+    const params = {
+      FilterDate: "",
+      FilterTime: "",
+    };
+    const profitCenterResponseData = await postApiCall("PROFIT_CENTER","GET_PROFIT_CENTERS",params)
+    if (profitCenterResponseData) {
+      if(profitCenterResponseData.statusCode === 200){
+        if (profitCenterResponseData.response) {
+          return fulfillWithValue(profitCenterResponseData.response);
+        } else {
+          return rejectWithValue(profitCenterResponseData.response);
+        }
+      }else{
+        return rejectWithValue(profitCenterResponseData.response);
+      }
+    }
+  },
+);
+
 const loginSlice = createSlice({
   name: 'login',
   initialState: initialState,
@@ -51,6 +81,22 @@ const loginSlice = createSlice({
         },
       };
     }
+  },
+  extraReducers: builder => {
+    builder
+    .addCase(getProfitCenterData.pending, (state, action) => {
+      console.log(action.payload,"--->pending")
+      state.loading = true;
+     })
+    .addCase(getProfitCenterData.fulfilled, (state, action) => {
+      state.loading = false;
+      state.profitCenterResp = action.payload
+    })
+    .addCase(getProfitCenterData.rejected, (state, action:any) => {
+      console.log(action.payload,"--->rejected")
+      state.loading = false;
+      state.errorMessage = action?.payload?.ResponseMessage
+    });
   },
 })
 

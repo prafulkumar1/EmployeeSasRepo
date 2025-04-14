@@ -3,6 +3,7 @@
 import * as UI from '@/components/cobalt/importUI';
 import { RootState } from '@/components/redux/store';
 import useDashboardLogic from '@/source/controller/dashboard/dashboard';
+import { styles } from '@/source/styles/dashbboard/dashboardStyle.web';
 import { ReactNode } from 'react';
 import { connect } from 'react-redux';
 
@@ -12,19 +13,12 @@ class DashboardUI extends useDashboardLogic {
     let pageConfigJson = global.appConfigJsonArray.find(item => item?.PageId === pageId);
     global.controlsConfigJson = pageConfigJson && pageConfigJson.Controlls ? pageConfigJson.Controlls : [];
     return (
-      <UI.View>
-        <UI.Text>Dashboard screen</UI.Text>
+      <UI.View style={styles.mainContainer}>
+        <UI.Text>Dashboard For Web</UI.Text>
       </UI.View>
     );
   }
 }
-const styles = UI.StyleSheet.create({
- 
-  scrollContent: {
-    padding: 20,
-  },
- 
-});
 
 const mapStateToProps = (state:RootState) => {
   return {

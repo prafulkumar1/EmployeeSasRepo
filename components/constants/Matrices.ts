@@ -20,3 +20,7 @@ export const isPlatformAndroid = () => {
 export const isPlatformIos = () => {
   return Platform.OS == "ios"
 }
+
+export const isPlatformWeb = () => {
+  return Platform.OS == "web"
+}

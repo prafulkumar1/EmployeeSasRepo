@@ -3,7 +3,7 @@ import { getFormFieldDataSelector } from '@/components/redux/reducers/loginReduc
 import { Component } from 'react'
 import { Dimensions } from 'react-native';
 const { width, height } = Dimensions.get('window');
-const pageId='AdvanceLogin';
+const pageId='Login';
 
 interface IState{
   loading:boolean
@@ -45,7 +45,7 @@ export default class useAdvanceLoginLogic extends Component<IProps,IState,SS> {
       this.setState({ screenWidth: window.width });
     };
   handleLogin = () => {
-    navigateToScreen(this.props, "DashboardUI", true, {})
+    navigateToScreen(this.props, "AdvanceDashboard", true, {})
   };
 
   handleValidation = () => {
@@ -54,7 +54,7 @@ export default class useAdvanceLoginLogic extends Component<IProps,IState,SS> {
  
     let isValid = true;
  
-    const usernameRegex = /^[a-zA-Z0-9]{4,15}$/;
+    const usernameRegex = /^[a-zA-Z0-9]{4,20}$/;
     const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@#$!%*?&])[A-Za-z\d@#$!%*?&]{8,}$/;
  
  
@@ -75,7 +75,7 @@ export default class useAdvanceLoginLogic extends Component<IProps,IState,SS> {
         controlId: 'username',
         controlValue: usernameField.value,
         isInvalid: true,
-        errorMessage: 'Username must be 4-15 alphanumeric characters',
+        errorMessage: 'Username must be 4-20 alphanumeric characters',
       });
       isValid = false;
     } else {

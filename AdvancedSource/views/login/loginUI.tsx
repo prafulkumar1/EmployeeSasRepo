@@ -4,7 +4,7 @@ import { forgetPassModal, getFormFieldData, getFormFieldDataSelector, resentForm
 import {Image, Modal} from "react-native"
 import { RootState } from '@/components/redux/store';
 import useAdvanceLoginLogic from '@/AdvancedSource/controller/login/login';
-import { styles } from '@/AdvancedSource/styles/loginStyle';
+import { styles } from '@/AdvancedSource/styles/login/loginStyle';
 const pageId = 'Login';
 class AdvanceLoginUI extends useAdvanceLoginLogic {
   render() {

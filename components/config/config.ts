@@ -5,7 +5,7 @@
 import { isPlatformAndroid } from "../constants/Matrices";
 
 // https://cobaltportal.mycobaltsoftware.com/cssi.cobalt.member.wrapper.EngDev/api/   ---------->>> Dev url
-export const baseURL = isPlatformAndroid()?"https://cobaltportal.mycobaltsoftware.com/MemberAppService.Wrapper.CobaltTest/API/":global.apiURL;
+export const baseURL = isPlatformAndroid()?"https://cobaltportal.mycobaltsoftware.com/cssi.cobalt.member.wrapper.EngDev/api/":global.apiURL;
 
 export const endpoints = {
     UI_CONFIGURATIONS:{

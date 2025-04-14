@@ -2,7 +2,7 @@ import * as UI from '@/components/cobalt/importUI';
 import { connect } from 'react-redux';
 import { RootState } from '@/components/redux/store';
 import useDashboardLogic from '@/source/controller/dashboard/dashboard';
-import { styles } from '@/source/styles/dashboardStyle';
+import { styles } from '@/source/styles/dashbboard/dashboardStyle';
 const pageId = 'Dashboard';
 class DashboardUI extends useDashboardLogic {
   render() {
@@ -10,7 +10,7 @@ class DashboardUI extends useDashboardLogic {
     global.controlsConfigJson = pageConfigJson && pageConfigJson.Controlls ? pageConfigJson.Controlls : [];
     return (
       <UI.View style={styles.mainContainer}>
-        <UI.Text>Dashboard</UI.Text>
+        <UI.Text>Dashboard For Mobile</UI.Text>
       </UI.View>
     );
   }

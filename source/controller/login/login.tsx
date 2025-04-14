@@ -1,5 +1,5 @@
 import { navigateToScreen } from '@/components/constants/Navigations';
-import { getFormFieldDataSelector } from '@/components/redux/reducers/loginReducer';
+import { getFormFieldDataSelector, getProfitCenterData } from '@/components/redux/reducers/loginReducer';
 import { Component } from 'react'
 import { Dimensions } from 'react-native';
 const { width, height } = Dimensions.get('window');
@@ -19,6 +19,7 @@ interface IProps{
   isPasswordVisible:boolean
   isModalVisible:boolean
   forgetPassModal:()=>void
+  getProfitCenterData:() =>void
 }
 interface SS{}
 
@@ -33,6 +34,7 @@ export default class useLoginLogic extends Component<IProps,IState,SS> {
       }
     }
     componentDidMount() {
+      // this.props.getProfitCenterData()
       this.dimensionListener = Dimensions.addEventListener('change', this.handleResize);
     }
    
