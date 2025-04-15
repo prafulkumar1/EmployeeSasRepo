@@ -1,3 +1,4 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Dimensions, Platform } from "react-native";
  
 export const { width, height } = Dimensions.get("window");
@@ -23,4 +24,11 @@ export const isPlatformIos = () => {
 
 export const isPlatformWeb = () => {
   return Platform.OS == "web"
+}
+
+export const setApiUrl = async() => {
+  const baseApiUrl = await AsyncStorage.getItem("apiURL")
+  if(baseApiUrl !== null){
+    return baseApiUrl
+  }
 }

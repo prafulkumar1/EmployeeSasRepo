@@ -1,6 +1,7 @@
 import axios from "axios";
 import { baseURL, endpoints } from "../config/config";
 import * as DeviceInfo from 'expo-device';
+import { setApiUrl } from "../constants/Matrices";
  
 const api = axios.create({
     baseURL,
@@ -59,8 +60,9 @@ export const postApiCall = async (screenName: string, endpoint: string, params: 
       "UserId":"00026 - 00",
     };
     const finalParams = { ...commonParams, ...params };
-    console.log('Params', commonParams);
-
+    console.log('Params', commonParams); 
+    const baseURL = await setApiUrl()
+    console.log(baseURL,"---->>>>>>urllll")
     let responseData = await api.post(
       `${baseURL}${endpoints[screenName][endpoint]}`,
       finalParams,

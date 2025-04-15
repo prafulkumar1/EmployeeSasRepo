@@ -6,6 +6,7 @@ import useDashboardLogic from '@/source/controller/dashboard/dashboard';
 import { styles } from '@/source/styles/dashbboard/dashboardStyle.web';
 import { ReactNode } from 'react';
 import { connect } from 'react-redux';
+import {Image} from "react-native"
 
 const pageId='Dashboard';
 class DashboardUI extends useDashboardLogic {
@@ -15,6 +16,7 @@ class DashboardUI extends useDashboardLogic {
     return (
       <UI.View style={styles.mainContainer}>
         <UI.Text>Dashboard For Web</UI.Text>
+           <Image source={{ uri: "https://cobaltportal.mycobaltsoftware.com:4430/codesync.test/assets/images/svg/Dashboard_CalendarofEvents.svg" }} style={styles.icons} />
       </UI.View>
     );
   }

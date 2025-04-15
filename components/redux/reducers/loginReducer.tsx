@@ -20,7 +20,6 @@ export const getProfitCenterData = createAsyncThunk(
     _,
     { getState, rejectWithValue, fulfillWithValue },
   ) => {
-    console.log("calleeddd")
     const params = {
       FilterDate: "",
       FilterTime: "",
@@ -85,7 +84,6 @@ const loginSlice = createSlice({
   extraReducers: builder => {
     builder
     .addCase(getProfitCenterData.pending, (state, action) => {
-      console.log(action.payload,"--->pending")
       state.loading = true;
      })
     .addCase(getProfitCenterData.fulfilled, (state, action) => {
@@ -93,7 +91,6 @@ const loginSlice = createSlice({
       state.profitCenterResp = action.payload
     })
     .addCase(getProfitCenterData.rejected, (state, action:any) => {
-      console.log(action.payload,"--->rejected")
       state.loading = false;
       state.errorMessage = action?.payload?.ResponseMessage
     });
