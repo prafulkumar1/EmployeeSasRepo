@@ -25,7 +25,7 @@ class DashboardUI extends useDashboardLogic {
           </UI.TouchableOpacity>
           <UI.Box style={styles.subContainer}>
             <UI.TouchableOpacity>
-              <UI.Text style={styles.profileLabel}>Hi, {this.props.dashboardResponse?.FullName}</UI.Text>
+              <UI.Text style={styles.profileLabel}>Hi, {this.props.dashboardResponse?.MemberNameDisplay}</UI.Text>
               <UI.Text  style={styles.profileTxt}>Profile</UI.Text>
             </UI.TouchableOpacity>
             <UI.Box>
