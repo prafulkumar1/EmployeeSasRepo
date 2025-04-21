@@ -4,6 +4,7 @@ const { width, height } = Dimensions.get('window');
 export const styles = StyleSheet.create({
     mainContainer: {
       flex: 1,
+      backgroundColor:"#fff"
     },
     subContainer:{paddingHorizontal:10,paddingVertical:10,position:"absolute",bottom:0,flexDirection:"row",justifyContent:"space-between",width:"100%"},
     profileLabel:{
@@ -12,7 +13,7 @@ export const styles = StyleSheet.create({
       color:"#fff"
     },
     profileTxt:{
-      fontFamily:"SourceSansPro_Regular",
+      fontFamily:"SourceSansPro_Italic",
       fontSize:14,
       color:"#fff"
     },
