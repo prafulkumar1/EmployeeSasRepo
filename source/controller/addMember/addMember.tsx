@@ -67,7 +67,6 @@ export default class useAddMemberLogic extends Component<IProps, IState> {
 
   registerBackgroundTask = async () => {
     TaskManager.defineTask(BACKGROUND_TASK, async () => {
-      console.log('Background task running...');
       this.updateTimerInBackground();
 
     });
@@ -77,7 +76,6 @@ export default class useAddMemberLogic extends Component<IProps, IState> {
       stopOnTerminate: false,
       startOnBoot: true,
     });
-    console.log(status);
   };
 
   unregisterBackgroundTask = async () => {

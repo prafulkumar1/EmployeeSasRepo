@@ -1,4 +1,6 @@
+import { isPlatformAndroid } from '@/components/constants/Matrices';
 import { Dimensions, StyleSheet } from 'react-native';
+import { responsiveHeight } from 'react-native-responsive-dimensions';
 const { width, height } = Dimensions.get('window');
 
 export const styles = StyleSheet.create({
@@ -76,7 +78,7 @@ export const styles = StyleSheet.create({
     fontSize: 20,
     fontFamily:"SourceSansPro_Regular",
   },
-  bellIcon:{width: 25, height: 25,position:"absolute" ,left:40,top:12,zIndex:1},
+  bellIcon:{width: 25, height: 25,position:"absolute" ,left:isPlatformAndroid()?40:30,top:isPlatformAndroid()?12:14,zIndex:1},
   iconStyle:{ width: 18, height: 18, resizeMode: "contain", tintColor: "#565c5f" },
   profileLogo:{ 
     width: 40, 
@@ -100,5 +102,34 @@ export const styles = StyleSheet.create({
   },
   memberContainer:{ backgroundColor: "#fff", paddingHorizontal: 15 },
   profileBtn:{ flexDirection: "row", alignItems: "center", marginVertical: 25 },
-  horizontalLine:{ width: "100%", height: 1.5, backgroundColor: "#e7e7e7" }
+  horizontalLine:{ width: "100%", height: 1.5, backgroundColor: "#e7e7e7" },
+  submitBtn:{
+    alignSelf:"center",
+    width:160,
+    height:40,
+    borderRadius:60,
+    justifyContent:"center",
+    alignItems:"center",
+    marginTop:40,
+    backgroundColor:"#08c3f8",
+    marginBottom:40
+  },
+  submitTxt:{
+    fontFamily:"SourceSansPro_SemiBold",
+    fontSize:20,
+    color:"#fff",
+  },
+  emptyListContainer: {
+    justifyContent: "center",
+    alignItems: "center",
+    alignSelf: "center",
+    height: responsiveHeight(60),
+  },
+  emptyMealTxt: {
+    fontFamily: "SourceSansPro_Regular",
+    alignSelf: "center",
+    marginTop: responsiveHeight(3),
+    fontSize:18,
+    color:"#565c5f"
+  },
 });

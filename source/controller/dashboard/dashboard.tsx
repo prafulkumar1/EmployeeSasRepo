@@ -87,7 +87,6 @@ export default class useDashboardLogic extends Component<IProps,IState,SS> {
    getBaseUrl = async () => {
       const baseURL = await setApiUrl()
       this.setState({baseUrl:baseURL})
-      console.log(baseURL,"--->url pf testing")
     }
     componentDidMount(): void {
       this.getBaseUrl()

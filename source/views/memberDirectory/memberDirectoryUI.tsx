@@ -13,6 +13,7 @@ import { RootState } from "@/components/redux/store";
 import { styles } from "@/source/styles/memberDirectory/memberDirectoryStyle";
 import { Icon  } from '@/components/ui/icon';
 import { getMemberList } from "@/components/redux/reducers/memberDirectoryReducer";
+import CbLoader from "@/components/cobalt/cobaltLoader";
 
 const pageId = 'MemberDirectory';
 class MemberDirectoryUI extends useMemberDirectoryLogic {
@@ -31,6 +32,9 @@ class MemberDirectoryUI extends useMemberDirectoryLogic {
   };
 
   render() {
+    if(this.props.loading){
+      return <CbLoader />
+    }
     return (
       <UI.Box style={styles.mainContainer}>
         <UI.Box style={styles.subContainer}>
@@ -75,7 +79,26 @@ class MemberDirectoryUI extends useMemberDirectoryLogic {
           </UI.TouchableOpacity>
         </UI.Box>
         <UI.FlatList
-          data={this.props.memberList?.Members}
+          data={this.props.memberListPerBatch}
+          ListFooterComponent={() => {
+            const currentValue = this.membersMock[this.state.activeTab]
+            if(this.props.memberListPerBatch.length !== 0 && currentValue.id === "All"){
+              return(
+                <UI.TouchableOpacity style={styles.submitBtn} onPress={this.loadMoreData}>
+                <UI.Text style={styles.submitTxt}>Submit</UI.Text>
+              </UI.TouchableOpacity>
+              )
+            }
+          }}
+          ListEmptyComponent={() => {
+            return (
+              <UI.Box style={styles.emptyListContainer}>
+                <UI.Text style={styles.emptyMealTxt}>
+                  No Record Found
+                </UI.Text>
+              </UI.Box>
+            );
+          }}
           renderItem={({item,index}) => {
             return (
               <UI.Box style={styles.memberContainer}>
@@ -102,9 +125,10 @@ class MemberDirectoryUI extends useMemberDirectoryLogic {
 
 const mapStateToProps = (state: RootState) => {
   return {
-    loading: state.dashboard.loading,
+    loading: state.memberDirectory.loading,
     memberList: state.memberDirectory.memberList,
-    errorMessage: state.dashboard.errorMessage
+    errorMessage: state.dashboard.errorMessage,
+    memberListPerBatch:state.memberDirectory.memberListPerBatch
   }
 }
 const mapDispatchToProps = {

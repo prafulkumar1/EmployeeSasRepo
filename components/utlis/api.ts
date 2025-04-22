@@ -88,7 +88,6 @@ export const postApiCall = async (screenName: string, endpoint: string, params: 
     };
     const finalParams = { ...commonParams, ...params };
     console.log('Params', commonParams); 
-    console.log(baseURL,"---->>>>>>urllll")
     let responseData = await api.post(
       `${baseURL}${endpoints[screenName][endpoint]}`,
       finalParams,

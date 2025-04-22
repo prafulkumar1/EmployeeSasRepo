@@ -86,7 +86,6 @@ class DashboardUI extends useDashboardLogic {
 }
 
 const mapStateToProps = (state:RootState) => {
-  console.log(state.dashboard.dashboardResponse,"responseeeee---->>>>>Response")
   return {
     loading:state.dashboard.loading,
     dashboardResponse:state.dashboard.dashboardResponse,

@@ -4,9 +4,9 @@ import React, { Component } from 'react';
 const pageId='MemberDirectory';
 
 interface IProps {
-  getMemberList:()=>void
+  getMemberList:({pageCount,searchChar})=>void
   memberList:{
-    "IsLoadMore": 1,
+    "IsLoadMore": number
     "Members": {
       "DefaultTransportaionType": string
       "DietaryRestrictions": string
@@ -29,10 +29,28 @@ interface IProps {
     "ResponseMessage": string
     "TotalRecords": number
   }
+  memberListPerBatch:{
+    "DefaultTransportaionType": string
+    "DietaryRestrictions": string
+    "DisplayName": string
+    "FirstName": string
+    "ID": string
+    "IsMemberNotAllowed": number
+    "IsSpouse":number
+    "LastName":string
+    "MemberID": string
+    "MemberName":string
+    "ModifyDietary": number
+    "ParentID": string
+    "ProfilePic": string
+    "RequestedBy": string
+  }[]
+  loading:boolean
 }
  
 interface IState {
     activeTab: number;
+    pageCount:number
 }
 interface SS{}
  
@@ -73,13 +91,13 @@ export default class useMemberDirectoryLogic extends Component<IProps, IState,SS
   constructor(props: IProps) {
     super(props);
     this.state = {
- 
         activeTab: 0,
+        pageCount:1
     };
   }
 
   componentDidMount(): void {
-    this.props.getMemberList()
+    this.props.getMemberList({pageCount:1,searchChar:"All"})
   }
  
     scrollLeft = () => {
@@ -104,8 +122,15 @@ export default class useMemberDirectoryLogic extends Component<IProps, IState,SS
         animated: true,
         viewPosition: 0.5,
       });
+      const currentValue = membersMock[index]
+      this.props.getMemberList({pageCount:1,searchChar:currentValue.id})
     };
     navigateToReservation = () => {
       navigateToScreen(this.props,"AddMemberUI",true,{})
+    }
+    loadMoreData = () => {
+      this.setState({pageCount:this.state.pageCount+1},() => {
+        this.props.getMemberList({pageCount:this.state.pageCount,searchChar:"All"})
+      })
     }
 }

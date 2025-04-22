@@ -4,23 +4,24 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 const initialState = {
     loading:false,
     memberList:null,
-    errorMessage:""
+    errorMessage:"",
+    memberListPerBatch:[]
 }
 
 export const getMemberList = createAsyncThunk(
   'getMemberList',
   async (
-    _,
+    {pageCount,searchChar}:{pageCount:number,searchChar:string},
     { getState, rejectWithValue, fulfillWithValue },
   ) => {
     const params = {
         "SearchBy": "",
-        "SearchChar": "All",
+        "SearchChar": searchChar?.toLowerCase(),
         "RecordsPerPage": 25,
-        "PageCount": 1,
+        "PageCount": pageCount,
     };
+    console.log(JSON.stringify(params))
     const memberListResponse = await postApiCall("MEMBER_DIRECTORY","GET_MEMBER_DIRECTORY",params)
-    console.log(memberListResponse,"--->>>>list")
     if (memberListResponse) {
       if(memberListResponse.statusCode === 200){
         if (memberListResponse.response) {
@@ -50,6 +51,7 @@ const memberDirectorySlice = createSlice({
       .addCase(getMemberList.fulfilled, (state, action) => {
         state.loading = false;
         state.memberList = action.payload
+        state.memberListPerBatch = action.payload?.Members
       })
       .addCase(getMemberList.rejected, (state, action:any) => {
         state.loading = false;
