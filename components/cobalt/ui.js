@@ -245,6 +245,7 @@ class cbInput extends React.Component {
     this.getFormFieldData = typeof props.getFormFieldData === 'function' ? props.getFormFieldData : () => { }
     this.props = props.labelRequired
     this.isPasswordVisible = props.isPasswordVisible
+    this.placeholderTextColor = props.placeholderTextColor
   }
  
  
@@ -274,7 +275,7 @@ class cbInput extends React.Component {
         <InputField
           id={this.id}
           placeholder={placeholderprop}
-          placeholderTextColor="#fff"
+          placeholderTextColor={this.placeholderTextColor}
           type={!this.props?.isPasswordVisible?typeprop:"text"}
           multiline={this.multiline}
           numberOfLines={this.numberOfLines}

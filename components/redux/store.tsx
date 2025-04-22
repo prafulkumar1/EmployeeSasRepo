@@ -2,11 +2,14 @@ import { Action, configureStore, ThunkAction } from '@reduxjs/toolkit'
 import login from  "./reducers/loginReducer"
 import dashboard from  "./reducers/dashboardReducer"
 import addMember from  "./reducers/addMemberReducer"
+import memberDirectory from  "./reducers/memberDirectoryReducer"
+
 export const store = configureStore({
   reducer: {
     login,
     dashboard,
-    addMember
+    addMember,
+    memberDirectory
   }
 })
 

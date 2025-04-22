@@ -39,29 +39,55 @@ export const postApiCall = async (screenName: string, endpoint: string, params: 
     //   "Role": "Full Access",
     //   "UserId":global.userID,
     // };
+    // const commonParams = {
+    //   "MemberID": "EBC475B2-369A-496E-B8B2-AE7F4E846781",
+    //   "ID": "EBC475B2-369A-496E-B8B2-AE7F4E846781",
+    //   "ParentID": "78F8EE9D-CF86-441D-86F8-29F8B9161B9F",
+    //   "DeviceInfo": [
+    //     {
+    //       "DeviceType": DeviceInfo.deviceType,
+    //       "OSVersion": DeviceInfo.osVersion,
+    //       "OriginatingIP": "183.82.116.84",
+    //       "SessionID": "iedtpmh83f860p0daqq75bhf76kbmmlt",
+    //       "Browser": DeviceInfo.osName,
+    //       "HostName": "183.82.116.84.actcorp.in",
+    //       "SourcePortNo": "50189"
+    //     }
+    //   ],
+    //   "IsAdmin": "0",
+    //   "UserName": "Wesselman, Bob",
+    //   "Role": "Full Access",
+    //   "UserId":"00026 - 00",
+    // };
     const commonParams = {
-      "MemberID": "EBC475B2-369A-496E-B8B2-AE7F4E846781",
-      "ID": "EBC475B2-369A-496E-B8B2-AE7F4E846781",
-      "ParentID": "78F8EE9D-CF86-441D-86F8-29F8B9161B9F",
+      "EventID": "",
+      "RequestId": "",
+      "ReservationRequestTime": "04:00 AM",
       "DeviceInfo": [
         {
-          "DeviceType": DeviceInfo.deviceType,
-          "OSVersion": DeviceInfo.osVersion,
-          "OriginatingIP": "183.82.116.84",
-          "SessionID": "iedtpmh83f860p0daqq75bhf76kbmmlt",
-          "Browser": DeviceInfo.osName,
-          "HostName": "183.82.116.84.actcorp.in",
-          "SourcePortNo": "50189"
+          "AppVersion": "2.8.3",
+          "Browser": "Android",
+          "DeviceModel": "vivo I2202",
+          "DeviceType": "Android",
+          "OSVersion": "14",
+          "OriginatingIP": "100.71.128.227",
+          "SessionID": "ebb06aa698d1538d",
+          "SourcePortNo": "0"
         }
       ],
-      "IsAdmin": "0",
-      "UserName": "Wesselman, Bob",
-      "Role": "Full Access",
-      "UserId":"00026 - 00",
+      "ID": "57987FB5-35B6-4025-8D94-31076D833A56",
+      "MemberID": "1438",
+      "ParentID": "7A890369-C6B1-4E64-B128-EED9FCC96048",
+      "Type": "Golf",
+      "PreferedSpaceDetailId": "",
+      "ReservationRequestDate": [
+        {
+          "RequestDate": "2025-04-24"
+        }
+      ],
     };
     const finalParams = { ...commonParams, ...params };
     console.log('Params', commonParams); 
-    const baseURL = await setApiUrl()
     console.log(baseURL,"---->>>>>>urllll")
     let responseData = await api.post(
       `${baseURL}${endpoints[screenName][endpoint]}`,

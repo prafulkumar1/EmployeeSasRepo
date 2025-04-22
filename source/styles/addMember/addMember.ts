@@ -93,7 +93,7 @@ export const styles = StyleSheet.create({
     addMemberContainer:{ alignSelf: "center", justifyContent: "center", alignItems: "center" },
     addMemberTxt:{ fontFamily: "SourceSansPro_Regular", fontSize: 18, color: "#565c5f" },
     memberCountBtn:{ marginHorizontal:5,borderWidth: 1, width: 50, height: 50, borderRadius: 25, padding: 6, justifyContent: "center", alignItems: "center", borderColor: "#2a4e7d", marginTop: 10 },
-    memberCountTxt:{ fontFamily: "SourceSansPro_Regular", fontSize: 26, color: "#2a4e7d" },
+    memberCountTxt:{ fontFamily: "SourceSansPro_Regular", fontSize: 26 },
     addMessageTxt:{ fontFamily: "SourceSansPro_Italic", fontSize: 14, marginTop: 20, marginBottom: 20, color: "#565c5f" },
     labelMember:{ fontFamily: "SourceSansPro_SemiBold", fontSize: 20, color: "#000" },
     addedMemberList:{flexDirection:"row",justifyContent:"space-between",alignItems:"center",borderWidth:1,paddingVertical:15,borderRadius:8,paddingLeft:25,paddingRight:20,marginTop:20,borderColor:"#cbcbcb",backgroundColor:"#fff"},
@@ -119,7 +119,7 @@ export const styles = StyleSheet.create({
       height:240
     },
     modalBtn:{backgroundColor: '#f2f2f2', width: '100%', marginBottom: 10 ,paddingVertical:5},
-    modalBtnTxt:{textAlign: 'center', paddingVertical: 10, fontSize: 18, fontWeight: 'bold', color: '#666' },
+    modalBtnTxt:{textAlign: 'center', paddingVertical: 10, fontSize: 18, color: '#666' },
     headerContainer:{flexDirection:"row",justifyContent:"space-between",alignItems:"center",marginTop:30,marginHorizontal:15},
     iconStyle:{ width: 20, height: 20, resizeMode: "contain", tintColor: "#fff" },
     overLay: {
@@ -127,4 +127,37 @@ export const styles = StyleSheet.create({
       backgroundColor: "rgba(0, 0, 0, 0.1)",
       zIndex: 1,
     },
+    timeOutModal: {
+      width: '95%',
+      position:"absolute",
+      top:"40%",
+      backgroundColor: 'white',
+      borderRadius: 10,
+      padding: 30,
+      alignItems: 'center',
+      margin:10
+    },
+    timeOutTxt:{
+      fontFamily:"SourceSansPro_SemiBold",
+      fontSize:18,
+      color:"#000",
+      textAlign:"center"
+    },
+    timeOutBtn:{
+      alignSelf:"center",
+      width:"80%",
+      height:40,
+      borderRadius:60,
+      justifyContent:"center",
+      alignItems:"center",
+      marginTop:40,
+      backgroundColor:"#5773a2"
+    },
+    okTxt:{
+      fontFamily:"SourceSansPro_SemiBold",
+      fontSize:18,
+      color:"#fff",
+      textAlign:"center"
+    },
+    timeOutIcon:{width:50,height:50,resizeMode:"contain",marginBottom:20}
   });
