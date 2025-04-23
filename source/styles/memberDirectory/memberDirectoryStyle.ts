@@ -105,19 +105,21 @@ export const styles = StyleSheet.create({
   horizontalLine:{ width: "100%", height: 1.5, backgroundColor: "#e7e7e7" },
   submitBtn:{
     alignSelf:"center",
-    width:160,
+    width:140,
     height:40,
     borderRadius:60,
     justifyContent:"center",
     alignItems:"center",
     marginTop:40,
-    backgroundColor:"#08c3f8",
-    marginBottom:40
+    marginBottom:80,
+    borderColor:"#5773a2",
+    borderWidth:1,
+    marginHorizontal:10
   },
   submitTxt:{
     fontFamily:"SourceSansPro_SemiBold",
-    fontSize:20,
-    color:"#fff",
+    fontSize:22,
+    color:"#5773a2",
   },
   emptyListContainer: {
     justifyContent: "center",
@@ -131,5 +133,21 @@ export const styles = StyleSheet.create({
     marginTop: responsiveHeight(3),
     fontSize:18,
     color:"#565c5f"
+  },
+  loaderTrans:{ position: "absolute", alignSelf: "center", flex: 1, top: responsiveHeight(50),backgroundColor:"red" },
+  addMemberBtn:{ flexDirection: "row", backgroundColor: "#cbcbcb", width: "100%", position: "absolute", bottom: 0,height:70,justifyContent:"center",alignItems:"center" },
+  bottomBtns:{
+    alignSelf:"center",
+    width:140,
+    height:40,
+    borderRadius:60,
+    justifyContent:"center",
+    alignItems:"center",
+    marginTop:40,
+    marginBottom:40,
+    borderColor:"#5773a2",
+    borderWidth:1,
+    marginHorizontal:10,
+    backgroundColor:"#fff"
   },
 });

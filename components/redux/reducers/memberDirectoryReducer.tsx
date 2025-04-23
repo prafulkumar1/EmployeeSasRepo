@@ -11,21 +11,21 @@ const initialState = {
 export const getMemberList = createAsyncThunk(
   'getMemberList',
   async (
-    {pageCount,searchChar}:{pageCount:number,searchChar:string},
+    {pageCount,searchChar,searchBy}:{pageCount:number,searchChar:string,searchBy:string},
     { getState, rejectWithValue, fulfillWithValue },
   ) => {
     const params = {
-        "SearchBy": "",
+        "SearchBy": searchBy?searchBy:"",
         "SearchChar": searchChar?.toLowerCase(),
         "RecordsPerPage": 25,
         "PageCount": pageCount,
     };
-    console.log(JSON.stringify(params))
+    console.log(JSON.stringify(params),"--->>>member params")
     const memberListResponse = await postApiCall("MEMBER_DIRECTORY","GET_MEMBER_DIRECTORY",params)
     if (memberListResponse) {
       if(memberListResponse.statusCode === 200){
         if (memberListResponse.response) {
-          return fulfillWithValue(memberListResponse.response);
+          return fulfillWithValue({response:memberListResponse.response,searchChar});
         } else {
           return rejectWithValue(memberListResponse.response);
         }
@@ -51,7 +51,7 @@ const memberDirectorySlice = createSlice({
       .addCase(getMemberList.fulfilled, (state, action) => {
         state.loading = false;
         state.memberList = action.payload
-        state.memberListPerBatch = action.payload?.Members
+        state.memberListPerBatch = action.payload?.searchChar === "All" ?[...state.memberListPerBatch,...action.payload?.response?.Members] :  action.payload?.response?.Members
       })
       .addCase(getMemberList.rejected, (state, action:any) => {
         state.loading = false;

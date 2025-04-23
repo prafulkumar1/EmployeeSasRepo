@@ -15,6 +15,7 @@ import { Icon  } from '@/components/ui/icon';
 import { getMemberList } from "@/components/redux/reducers/memberDirectoryReducer";
 import CbLoader from "@/components/cobalt/cobaltLoader";
 
+
 const pageId = 'MemberDirectory';
 class MemberDirectoryUI extends useMemberDirectoryLogic {
   renderAlfabet = ({ item, index }: any) => {
@@ -30,24 +31,42 @@ class MemberDirectoryUI extends useMemberDirectoryLogic {
       </UI.TouchableOpacity>
     );
   };
+  renderMemberList = ({item,index}) => {
+    return (
+      <UI.Box style={styles.memberContainer}>
+        <UI.TouchableOpacity style={styles.profileBtn} onPress={this.navigateToReservation}>
+          <UI.Box style={styles.profileLogo}>
+            <UI.Image source={require("@/assets/images/profile.png")} style={styles.profileIcon}/>
+          </UI.Box>
+          <UI.Box>
+            <UI.Text style={styles.profileName}>{item.MemberName}</UI.Text>
+            <UI.Text style={styles.memberAddress}>{item.MemberID}</UI.Text>
+          </UI.Box>
+        </UI.TouchableOpacity>
+        <UI.Box style={styles.horizontalLine} />
+      </UI.Box>
+    )
+  }
+  renderLoadMoreBtn = () => {
+    const currentValue = this.membersMock[this.state.activeTab]
+    if(this.props.memberListPerBatch.length !== 0 && currentValue.id === "All"){
+      return(
+        <UI.TouchableOpacity style={styles.submitBtn} onPress={this.loadMoreData}>
+        <UI.Text style={styles.submitTxt}>Show More</UI.Text>
+      </UI.TouchableOpacity>
+      )
+    }
+  }
 
   render() {
-    if(this.props.loading){
-      return <CbLoader />
-    }
+    const ITEM_HEIGHT = 100
     return (
       <UI.Box style={styles.mainContainer}>
         <UI.Box style={styles.subContainer}>
-          {/* <UI.ConnectedCbInput
-            labelRequired={false}
-            placeholder="Search by Member Last Name"
-            placeholderTextColor="#000"
-            style={styles.inputs}
-          /> */}
           <UI.TouchableOpacity style={styles.bellIcon}>
             <UI.Image source={require("@/assets/images/icons/Search3x.png")} style={styles.iconStyle} />
           </UI.TouchableOpacity>
-          <UI.ConnectedCbInput labelRequired={false} style={styles.commentsBox} multiline={true} formId={pageId} placeholder="Search by Member Last Name" placeholderTextColor="#565c5f" />
+          <UI.ConnectedCbInput id="Search" labelRequired={false} style={styles.commentsBox} multiline={true} formId={pageId} placeholder="Search by Member Last Name" placeholderTextColor="#565c5f" />
         </UI.Box>
 
         <UI.Box style={styles.checkBoxWrapper}>
@@ -78,45 +97,45 @@ class MemberDirectoryUI extends useMemberDirectoryLogic {
           <Icon as={ChevronRightIcon} size="xl" color="#1dc6ff" />
           </UI.TouchableOpacity>
         </UI.Box>
-        <UI.FlatList
-          data={this.props.memberListPerBatch}
-          ListFooterComponent={() => {
-            const currentValue = this.membersMock[this.state.activeTab]
-            if(this.props.memberListPerBatch.length !== 0 && currentValue.id === "All"){
-              return(
-                <UI.TouchableOpacity style={styles.submitBtn} onPress={this.loadMoreData}>
-                <UI.Text style={styles.submitTxt}>Submit</UI.Text>
-              </UI.TouchableOpacity>
-              )
-            }
-          }}
-          ListEmptyComponent={() => {
-            return (
-              <UI.Box style={styles.emptyListContainer}>
-                <UI.Text style={styles.emptyMealTxt}>
-                  No Record Found
-                </UI.Text>
-              </UI.Box>
-            );
-          }}
-          renderItem={({item,index}) => {
-            return (
-              <UI.Box style={styles.memberContainer}>
-                <UI.TouchableOpacity style={styles.profileBtn} onPress={this.navigateToReservation}>
-                  <UI.Box style={styles.profileLogo}>
-                    <UI.Image source={require("@/assets/images/profile.png")} style={styles.profileIcon}/>
-                  </UI.Box>
-                  <UI.Box>
-                    <UI.Text style={styles.profileName}>{item.MemberName}</UI.Text>
-                    <UI.Text style={styles.memberAddress}>{item.MemberID}</UI.Text>
-                  </UI.Box>
-                </UI.TouchableOpacity>
-                <UI.Box style={styles.horizontalLine} />
-              </UI.Box>
-            )
-          }}
-        />
+        {
+          this.props.memberListPerBatch.length > 0 ?
+            <UI.FlatList
+              data={this.props.memberListPerBatch}
+              ListFooterComponent={this.renderLoadMoreBtn}
+              style={{ opacity: this.props.loading ? 0.5 : 1 }}
+              renderItem={this.renderMemberList}
+              removeClippedSubviews={true}
+              updateCellsBatchingPeriod={100}
+              windowSize={21}
+              getItemLayout={(_, index) => ({
+                length: ITEM_HEIGHT,
+                offset: ITEM_HEIGHT * index,
+                index,
+              })}
+            /> : <UI.Box style={styles.emptyListContainer}>
+              <UI.Text style={styles.emptyMealTxt}>
+                No Record Found
+              </UI.Text>
+            </UI.Box>
+        }
 
+        <UI.Box style={styles.addMemberBtn}>
+          <UI.TouchableOpacity style={styles.bottomBtns} onPress={this.loadMoreData}>
+            <UI.Text style={styles.submitTxt}>Add</UI.Text>
+          </UI.TouchableOpacity>
+
+          <UI.TouchableOpacity style={styles.bottomBtns} onPress={this.loadMoreData}>
+            <UI.Text style={styles.submitTxt}>Cancel</UI.Text>
+          </UI.TouchableOpacity>
+        </UI.Box>
+       
+        {
+          this.props.loading && 
+          <UI.Box style={styles.loaderTrans}>
+          <CbLoader />
+        </UI.Box>
+        }
+       
       </UI.Box>
     );
   }
@@ -128,7 +147,8 @@ const mapStateToProps = (state: RootState) => {
     loading: state.memberDirectory.loading,
     memberList: state.memberDirectory.memberList,
     errorMessage: state.dashboard.errorMessage,
-    memberListPerBatch:state.memberDirectory.memberListPerBatch
+    memberListPerBatch:state.memberDirectory.memberListPerBatch,
+    formData: state.login?.formData,
   }
 }
 const mapDispatchToProps = {

@@ -1,10 +1,11 @@
 import { navigateToScreen } from '@/components/constants/Navigations';
+import { getFormFieldDataSelector } from '@/components/redux/reducers/loginReducer';
 import React, { Component } from 'react';
  
 const pageId='MemberDirectory';
 
 interface IProps {
-  getMemberList:({pageCount,searchChar})=>void
+  getMemberList:({pageCount,searchChar,searchBy})=>void
   memberList:{
     "IsLoadMore": number
     "Members": {
@@ -46,6 +47,8 @@ interface IProps {
     "RequestedBy": string
   }[]
   loading:boolean
+  formData:Object,
+
 }
  
 interface IState {
@@ -97,7 +100,18 @@ export default class useMemberDirectoryLogic extends Component<IProps, IState,SS
   }
 
   componentDidMount(): void {
-    this.props.getMemberList({pageCount:1,searchChar:"All"})
+    this.props.getMemberList({pageCount:1,searchChar:"All",searchBy:""})
+  }
+
+  componentDidUpdate(prevProps: Readonly<IProps>, prevState: Readonly<IState>, snapshot?: SS): void {
+    if(prevProps.formData !== this.props.formData){
+      const searchValue = getFormFieldDataSelector(this.props?.formData, pageId, 'Search');
+      if(searchValue.value !==undefined){
+        setTimeout(() => {
+          this.props.getMemberList({pageCount:this.state.pageCount,searchChar:"",searchBy:searchValue?.value})
+        }, 1000);
+      }
+    }
   }
  
     scrollLeft = () => {
@@ -123,14 +137,14 @@ export default class useMemberDirectoryLogic extends Component<IProps, IState,SS
         viewPosition: 0.5,
       });
       const currentValue = membersMock[index]
-      this.props.getMemberList({pageCount:1,searchChar:currentValue.id})
+      this.props.getMemberList({pageCount:1,searchChar:currentValue.id,searchBy:""})
     };
     navigateToReservation = () => {
       navigateToScreen(this.props,"AddMemberUI",true,{})
     }
     loadMoreData = () => {
       this.setState({pageCount:this.state.pageCount+1},() => {
-        this.props.getMemberList({pageCount:this.state.pageCount,searchChar:"All"})
+        this.props.getMemberList({pageCount:this.state.pageCount,searchChar:"All",searchBy:""})
       })
     }
 }
