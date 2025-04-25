@@ -1,0 +1,283 @@
+import { Dimensions, StyleSheet } from 'react-native';
+const { width, height } = Dimensions.get('window');
+
+export const styles = StyleSheet.create({
+  mainContainer: {
+    flex: 1,
+    backgroundColor: '#fff',
+    padding: 20,
+  },
+  container: {
+    paddingHorizontal: 16,
+    paddingBottom: 35,
+    backgroundColor: '#f5f5f5',
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: '#d1d5db',
+  },
+  scrollBox: {
+    flex: 1,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    padding: 8,
+    marginBottom: 10,
+  },
+  title: {
+    fontFamily: "SourceSansPro_SemiBold",
+    fontSize: 16,
+    marginBottom: 8,
+  },
+  mainRow: {
+    alignItems: 'center',
+    gap: 12,
+  },
+  scrollRow: {
+    flexDirection: 'row',
+    gap: 8,
+  },
+  dateBox: {
+    backgroundColor: '#fff',
+    paddingVertical: 10,
+    paddingHorizontal: 14,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#ccc',
+    minWidth: 70,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  dateBoxSelected: {
+    backgroundColor: '#00bfff',
+  },
+  dayText: {
+    fontSize: 12,
+    fontWeight: 'bold',
+    color: '#555',
+  },
+  dateText: {
+    fontSize: 14,
+    fontWeight: 'bold',
+    color: '#000',
+  },
+  textSelected: {
+    color: '#fff',
+  },
+  calendarBox: {
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    backgroundColor: "#fff",
+    elevation: 5,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 10,
+    paddingVertical: 8,
+    borderWidth: 1,
+    borderColor: '#d1d5db',
+    marginLeft: 8,
+    maxWidth: '15%',
+    borderRadius: 3,
+    marginRight: 40,
+  },
+  calendarIcon: {
+    width: 20, height: 20, borderWidth: 1, paddingHorizontal: 8
+  },
+  calendarText: {
+    marginLeft: 5,
+    fontSize: 12,
+    color: '#000',
+    fontFamily: "SourceSansPro_SemiBold",
+  },
+
+  row: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  dateItem: {
+    height: 60,
+    width: 100,
+    maxHeight: 100,
+    marginHorizontal: 4,
+    paddingHorizontal: 12,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 4,
+    backgroundColor: '#fff',
+  },
+  dateText1: {
+    fontSize: 14,
+    color: '#333',
+  },
+  selectedText: {
+    color: '#fff',
+    fontWeight: 'bold',
+  },
+  selectedItem: {
+    backgroundColor: '#00C2FF',
+  },
+  calendar: {
+    position: "absolute",
+    top: 60,
+    right: 10,
+    width: 250,
+    height: 280,
+    backgroundColor: "#2470bd",
+    // borderRadius: 10,
+    overflow: "hidden",
+    elevation: 10,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+    zIndex: 99,
+  },
+  RadioContainer: {
+    flex:0.5,
+    flexDirection :'row',
+    justifyContent:'flex-start',
+    alignItems:'center',
+    paddingHorizontal: 10,
+    marginVertical: 20,
+    zIndex:-1,
+  },
+  optionContainer: {
+    flex:1,
+    flexDirection: "row",
+    alignItems: "center",
+    marginHorizontal: 40,
+  },
+  radioOuter: {
+    height: 26,
+    width: 26,
+    borderRadius: 12,
+    borderWidth: 2,
+    borderColor: "#ccc",
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#fff",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.2,
+    shadowRadius: 2,
+    elevation: 3,
+  },
+  radioInner: {
+    height: 12,
+    width: 12,
+    borderRadius: 6,
+    backgroundColor: "#00AEEF",
+  },
+
+  label: {
+    marginLeft: 10,
+    fontSize: 16,
+    color: "#6D6D6D",
+  },
+  //selector
+  selectorcontainer:{
+    justifyContent: "center", alignItems: "center" 
+  },
+  selectorcustomstyle: {
+    width: "40%",
+    marginVertical: 10,
+    position: 'relative',
+    borderWidth: 1,
+    borderRadius: 5,
+    borderColor: '#ccc',
+    zIndex:1
+  },
+  providerText :{
+    fontSize :16, color: '#000',  fontFamily: "SourceSansPro_Italic", 
+  },
+  //time
+  gridContainer: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+  },
+  slot: {
+    backgroundColor: "#fff",
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    borderRadius: 8,
+    flex: 1,
+    alignItems: "center",
+    margin: 5,
+    elevation: 2,
+  },
+  selectedSlot: {
+    backgroundColor: "#00c6ff",
+  },
+
+  slotText: {
+    fontSize: 16,
+    color: "#000",
+  },
+  disabledText: {
+    color: "#aaa",
+  },
+  addMemberBtn: {
+    borderWidth: 1,
+    borderColor: "#00c6ff",
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 25,
+    padding:10,
+  },
+  addMemberBtnTxt: {
+    color: "#00c6ff",
+    fontSize: 20,
+    fontFamily: "SourceSansPro_SemiBold",
+    paddingVertical: 10,
+    paddingHorizontal: 50,
+  },
+  timePeriodContainer: {
+    flex :0.8,
+    paddingBottom: 20,
+    paddingRight: 12,
+    alignItems: "center",
+    flexWrap :'wrap',
+    justifyContent :'flex-start'
+  },
+  timePeriodTxt: {
+    fontSize: 18,
+    textAlign: "center",
+    paddingVertical:5,
+  },
+  timeSlotsBtn: {
+    borderWidth: 0.2,
+    borderColor: "#ccc",
+    padding: 10,
+    borderRadius: 3,
+    elevation: 1,
+    shadowOffset: { width: 1, height: 1 },
+    shadowOpacity: 1,
+    shadowRadius: 3,
+    marginVertical:10,
+  },
+  timePeriodBtnTxt: {
+    fontSize: 15.5,
+    textAlign: "center",
+  },
+  slotBox: {
+    flexDirection :'row',
+    width: "10%",
+    // aspectRatio: 2.5,
+    margin: 3,
+    paddingVertical: 8,
+    borderWidth: 0.2,
+    borderColor: "#fff",
+    padding: 10,
+    borderRadius: 3,
+    elevation: 1,
+    shadowOffset: { width: 1, height: 1 },
+    shadowOpacity: 1,
+    shadowRadius: 3,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  slotTimeContainer:{ width :'87%', flexDirection: "row", justifyContent :'center' , alignSelf :'center' ,flexWrap :'wrap', zIndex:-2 }
+});

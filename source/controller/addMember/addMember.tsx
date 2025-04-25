@@ -1,7 +1,8 @@
 import { navigateToScreen } from '@/components/constants/Navigations';
 import * as BackgroundFetch from 'expo-background-fetch';
 import * as TaskManager from 'expo-task-manager';
-import { Component } from 'react';
+import { Component, createRef } from 'react';
+import { FlatList } from 'react-native';
 
 const pageId = 'AddMember';
 
@@ -16,16 +17,48 @@ interface IState {
     number:number
     isCountActive:boolean
     id:string
-  }[]
+  }[],
+  currentIndex:number,
+  selectedIndex:number,
+  showCalendar: boolean;
+  
 }
 
-interface IProps {}
+const mappedDates = [
+  { id: '1', title: 'Item 1' },
+  { id: '2', title: 'Item 2' },
+  { id: '3', title: 'Item 3' },
+  { id: '4', title: 'Item 4' },
+  { id: '5', title: 'Item 5' },
+  { id: '6', title: 'Item 5' },
+  { id: '7', title: 'Item 5' },
+  { id: '8', title: 'Item 5' },
+  { id: '9', title: 'Item 5' },
+  { id: '10', title: 'Item 5' },
+  { id: '11', title: 'Item 5' },
+  { id: '12', title: 'Item 5' },
+  { id: '13', title: 'Item 5' },
+  { id: '14', title: 'Item 5' },
+  { id: '15', title: 'Item 5' },
+  { id: '16', title: 'Item 5' },
+  { id: '17', title: 'Item 5' },
+  { id: '18', title: 'Item 5' },
+];
+const dropdownOptions = [
+  { label: "Couple Massage - 1hr", value: "massage_1hr" },
+  { label: "Deep Cleansing", value: "deep_cleansing" },
+  { label: "Hydra Facial Treatment", value: "hydra_facial" },
+];
+
+interface IProps {
+}
 
 const BACKGROUND_TASK = 'background-timer-task';
 
 export default class useAddMemberLogic extends Component<IProps, IState> {
   private interval: NodeJS.Timeout | null;
-
+  dummydata:any
+  dropdownOptions:any
   constructor(props: IProps) {
     super(props);
     this.state = {
@@ -36,10 +69,14 @@ export default class useAddMemberLogic extends Component<IProps, IState> {
       membersCount:4,
       membersCountList:[],
       isTimeOutModal:false,
+      currentIndex :0,
+      selectedIndex :0,
+      showCalendar: false,
     };
     this.interval = null;
+    this.dummydata = mappedDates
   }
-
+  flatListRef = createRef<FlatList<string>>();
   componentDidMount(): void {
     const updateCountList = Array.from(
       { length: this.state.membersCount },
@@ -153,6 +190,37 @@ export default class useAddMemberLogic extends Component<IProps, IState> {
   }
   resetTimeOutModal = () => {
     this.setState({isTimeOutModal:!this.state.isTimeOutModal})
+  }
+
+   scrollToIndex = (index : number) => {
+    this.flatListRef.current.scrollToIndex({ animated: true, index });
+    // setCurrentIndex(index);
+    this.setState({ currentIndex: index, });
+  };
+
+   handleNext = () => {
+    if (this.state.currentIndex <  this.dummydata.length - 1) {
+      this.scrollToIndex(this.state.currentIndex + 1);
+    }
+  };
+
+   handlePrevious = () => {
+    if (this.state.currentIndex > 0) {
+      this.scrollToIndex(this.state.currentIndex - 1);
+    }
+  };
+   handleItemPress = (index : number) => {
+    this.setState({ selectedIndex: index, });
+  };
+  toggleCalendar = () => {
+    this.setState((prevState) => ({
+      showCalendar: !prevState.showCalendar,
+    }));
+  };
+
+  onDateChange = () =>{
+    console.log('date');
+    
   }
 
 }
