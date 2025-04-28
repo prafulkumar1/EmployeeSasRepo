@@ -135,7 +135,7 @@ export const styles = StyleSheet.create({
     color:"#565c5f"
   },
   loaderTrans:{ position: "absolute", alignSelf: "center", flex: 1, top: responsiveHeight(50),backgroundColor:"red" },
-  addMemberBtn:{ flexDirection: "row", backgroundColor: "#cbcbcb", width: "100%", position: "absolute", bottom: 0,height:70,justifyContent:"center",alignItems:"center" },
+  addMemberBtn:{ flexDirection: "row", backgroundColor: "#e0e0e0", width: "100%", position: "absolute", bottom: 0,height:70,justifyContent:"center",alignItems:"center" },
   bottomBtns:{
     alignSelf:"center",
     width:140,
@@ -150,4 +150,25 @@ export const styles = StyleSheet.create({
     marginHorizontal:10,
     backgroundColor:"#fff"
   },
+  checkbox: {
+    width: 20,
+    height: 20,
+    borderWidth: 2,
+    borderColor: '#000',
+    borderRadius: 4,
+    marginRight: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  checked: {
+    width: 16,
+    height: 16,
+    backgroundColor: 'green',
+  },
+  unchecked: {
+    width: 16,
+    height: 16,
+  },
+  checkItem:{flexDirection:"row",alignItems:"center"},
+  checkIcon:{ width: 20, height: 20 }
 });

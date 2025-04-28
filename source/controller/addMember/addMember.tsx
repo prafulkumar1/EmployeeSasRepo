@@ -10,16 +10,24 @@ interface IState {
   timeLeft: number;
   timerRunning: boolean;
   isTimeOutModal:boolean
-  membersList:{memberName:string}[]
   membersCount:any
   membersCountList:{
     number:number
     isCountActive:boolean
     id:string
   }[]
+  selectedId:string
 }
 
-interface IProps {}
+interface IProps {
+  resetLoadedScreen:() => void
+  isScreenLoaded:boolean
+  selectedId:string
+  handleSelectedMember:(id:string) => void
+  setMembersList:(memberCount:number) => void
+  membersList:{isMemberSelected:boolean,id:string,memberName:string}[]
+  removeMembersFromList:(id:string) =>void
+}
 
 const BACKGROUND_TASK = 'background-timer-task';
 
@@ -32,10 +40,10 @@ export default class useAddMemberLogic extends Component<IProps, IState> {
       isModalVisible: false,
       timeLeft: 220,
       timerRunning: false,
-      membersList:[],
       membersCount:4,
       membersCountList:[],
       isTimeOutModal:false,
+      selectedId:"",
     };
     this.interval = null;
   }
@@ -45,8 +53,7 @@ export default class useAddMemberLogic extends Component<IProps, IState> {
       { length: this.state.membersCount },
       (_, index) => ({ number: index + 1,isCountActive:false ,id:`${Date.now()}_${Math.random().toString(36).substring(2, 9)}`})
     );
-    
-  this.setState({ membersCountList: updateCountList });
+    this.setState({ membersCountList: updateCountList });
     this.startTimer();
     this.registerBackgroundTask();
   }
@@ -95,17 +102,21 @@ export default class useAddMemberLogic extends Component<IProps, IState> {
     }
   };
 
-  toggleModal = (): void => {
+  toggleModal = (id:string) => {
+    this.props.handleSelectedMember(id)
     this.setState((prevState) => ({
       isModalVisible: !prevState.isModalVisible,
+      selectedId:id
     }));
   };
 
-  navigateToMember = (): void => {
-    navigateToScreen(this.props,"MemberDirectoryUI",true,{})
+  navigateToMember = () => {
+    this.setState({isModalVisible:!this.state.isModalVisible},() => {
+      this.props.resetLoadedScreen()
+    })
   };
 
-  startTimer = (): void => {
+  startTimer = () => {
     if (this.state.timerRunning) return;
 
     this.setState({ timerRunning: true });
@@ -128,7 +139,7 @@ export default class useAddMemberLogic extends Component<IProps, IState> {
     this.setState({ timeLeft: 180, timerRunning: false });
   };
 
-  formatTime = (timeInSeconds: number): string => {
+  formatTime = (timeInSeconds: number) => {
     const minutes = Math.floor(timeInSeconds / 60);
     const seconds = timeInSeconds % 60;
     return `${minutes.toString().padStart(2, '0')}:${seconds
@@ -143,13 +154,8 @@ export default class useAddMemberLogic extends Component<IProps, IState> {
         isCountActive: item.id === id ? !item.isCountActive : false
       }))
     }));
-
-    const updateCountList = Array.from(
-      { length: memberCount },
-      (_, index) => ({ number: index + 1,memberName:"Reservation",id:`${Date.now()}_${Math.random().toString(36).substring(2, 9)}`})
-    );
     
-    this.setState({ membersList: updateCountList });
+    this.props.setMembersList(memberCount)
   }
   resetTimeOutModal = () => {
     this.setState({isTimeOutModal:!this.state.isTimeOutModal})

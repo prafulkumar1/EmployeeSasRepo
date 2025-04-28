@@ -48,12 +48,34 @@ interface IProps {
   }[]
   loading:boolean
   formData:Object,
-
+  resetLoadedScreen:() =>void
+  singleMemberDetails:any
+  addMembersForReservation:() =>void
+  addMemberList:any
 }
  
 interface IState {
     activeTab: number;
     pageCount:number
+    checked:boolean
+    updatedMembersListData:{
+      "isMemberSelected": boolean;
+      "DefaultTransportaionType": string
+      "DietaryRestrictions": string
+      "DisplayName": string
+      "FirstName": string
+      "ID": string
+      "IsMemberNotAllowed": number
+      "IsSpouse":number
+      "LastName":string
+      "MemberID": string
+      "MemberName":string
+      "ModifyDietary": number
+      "ParentID": string
+      "ProfilePic": string
+      "RequestedBy": string
+    }[]
+    singleMemberDetails:null|any
 }
 interface SS{}
  
@@ -95,7 +117,10 @@ export default class useMemberDirectoryLogic extends Component<IProps, IState,SS
     super(props);
     this.state = {
         activeTab: 0,
-        pageCount:1
+        pageCount:1,
+        checked: false,
+        updatedMembersListData:[],
+        singleMemberDetails:null
     };
   }
 
@@ -104,11 +129,29 @@ export default class useMemberDirectoryLogic extends Component<IProps, IState,SS
   }
 
   componentDidUpdate(prevProps: Readonly<IProps>, prevState: Readonly<IState>, snapshot?: SS): void {
+    if(prevProps.memberListPerBatch !== this.props.memberListPerBatch){  
+      const updatedData = this.props.memberListPerBatch?.map((items) => {
+        const matchingMember = this.props.addMemberList?.find((item: any) => item?.singleMemberDetails?.ID === items?.ID);
+        if (matchingMember) {
+          return {
+            ...items,
+            isMemberSelected: true,
+          };
+        } else {
+          return {
+            ...items,
+            isMemberSelected: false,
+          };
+        }
+      });
+        this.setState({updatedMembersListData:updatedData})
+    }
+  
     if(prevProps.formData !== this.props.formData){
       const searchValue = getFormFieldDataSelector(this.props?.formData, pageId, 'Search');
-      if(searchValue.value !==undefined){
+      if(searchValue.value !== undefined){
         setTimeout(() => {
-          this.props.getMemberList({pageCount:this.state.pageCount,searchChar:"",searchBy:searchValue?.value})
+          this.props.getMemberList({pageCount: this.state.pageCount, searchChar: "", searchBy: searchValue?.value});
         }, 1000);
       }
     }
@@ -140,11 +183,40 @@ export default class useMemberDirectoryLogic extends Component<IProps, IState,SS
       this.props.getMemberList({pageCount:1,searchChar:currentValue.id,searchBy:""})
     };
     navigateToReservation = () => {
-      navigateToScreen(this.props,"AddMemberUI",true,{})
+      this.props.resetLoadedScreen()
     }
     loadMoreData = () => {
       this.setState({pageCount:this.state.pageCount+1},() => {
         this.props.getMemberList({pageCount:this.state.pageCount,searchChar:"All",searchBy:""})
       })
+    }
+    toggleCheckbox = () => {
+      this.setState(prevState => ({
+        checked: !prevState.checked,
+      }));
+    };
+
+    addMemberForReservation = () => {
+      this.props.resetLoadedScreen()
+      this.props.addMembersForReservation()
+    }
+  
+    selectedMember = (memberData) => {
+      this.props.singleMemberDetails(memberData);
+      
+      const updatedData = this.state.updatedMembersListData.map((items) => {
+        if (items.ID === memberData?.ID) {
+          return {
+            ...items,
+            isMemberSelected: !items.isMemberSelected,
+          };
+        }
+        return items;
+      });
+    
+      this.setState({ 
+        updatedMembersListData: updatedData, 
+        singleMemberDetails: memberData 
+      });
     }
 }

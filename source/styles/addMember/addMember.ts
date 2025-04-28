@@ -97,7 +97,7 @@ export const styles = StyleSheet.create({
     addMessageTxt:{ fontFamily: "SourceSansPro_Italic", fontSize: 14, marginTop: 20, marginBottom: 20, color: "#565c5f" },
     labelMember:{ fontFamily: "SourceSansPro_SemiBold", fontSize: 20, color: "#000" },
     addedMemberList:{flexDirection:"row",justifyContent:"space-between",alignItems:"center",borderWidth:1,paddingVertical:15,borderRadius:8,paddingLeft:25,paddingRight:20,marginTop:20,borderColor:"#cbcbcb",backgroundColor:"#fff"},
-    memberName:{fontSize:20,fontFamily:"SourceSansPro_Regular",color:"#565c5f"},
+    memberName:{fontSize:20,fontFamily:"SourceSansPro_Regular"},
     addOrRemoveBtn:{flexDirection:"row",alignItems:"center",width:70,justifyContent:"space-between"},
     commentTxt:{ fontFamily: "SourceSansPro_SemiBoldItalic", fontSize: 20, color: "#515659",marginBottom:12 },
     modalOverlay: {
@@ -118,8 +118,8 @@ export const styles = StyleSheet.create({
       alignItems: 'center',
       height:240
     },
-    modalBtn:{backgroundColor: '#f2f2f2', width: '100%', marginBottom: 10 ,paddingVertical:5},
-    modalBtnTxt:{textAlign: 'center', paddingVertical: 10, fontSize: 18, color: '#666' },
+    modalBtn:{backgroundColor: '#f2f2f2', width: "100%", marginBottom: 10 ,paddingVertical:5},
+    modalBtnTxt:{textAlign: 'center', paddingVertical: 10, fontSize: 18, color: '#666', fontFamily: "SourceSansPro_SemiBold" },
     headerContainer:{flexDirection:"row",justifyContent:"space-between",alignItems:"center",marginTop:30,marginHorizontal:15},
     iconStyle:{ width: 20, height: 20, resizeMode: "contain", tintColor: "#fff" },
     overLay: {

@@ -260,7 +260,6 @@ class cbInput extends React.Component {
     const isReadOnlyprop = inputArray?.isReadOnly === 1 || this.isReadOnly;
     const isRequiredprop = inputArray?.isRequired === 1 || this.isRequired;
     const value = getFormFieldDataSelector(this.props?.formData, this.props?.formId, this.props?.id);
-    console.log(value,"---->>>>valuessssssssssssss")
     return (
       <FormControl
       isDisabled={isDisabledprop}

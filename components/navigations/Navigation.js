@@ -12,7 +12,7 @@ const PremiumClubStack = createNativeStackNavigator();
 export const NormalClubNavigation = () => {
     return (
       <NormalCubStack.Navigator
-        initialRouteName="MemberDirectoryUI"
+        initialRouteName="AddMemberUI"
       >
         <NormalCubStack.Screen
           name="Login"

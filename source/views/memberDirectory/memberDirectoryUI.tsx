@@ -14,6 +14,7 @@ import { styles } from "@/source/styles/memberDirectory/memberDirectoryStyle";
 import { Icon  } from '@/components/ui/icon';
 import { getMemberList } from "@/components/redux/reducers/memberDirectoryReducer";
 import CbLoader from "@/components/cobalt/cobaltLoader";
+import { addMembersForReservation, resetLoadedScreen, singleMemberDetails } from "@/components/redux/reducers/addMemberReducer";
 
 
 const pageId = 'MemberDirectory';
@@ -33,8 +34,8 @@ class MemberDirectoryUI extends useMemberDirectoryLogic {
   };
   renderMemberList = ({item,index}) => {
     return (
-      <UI.Box style={styles.memberContainer}>
-        <UI.TouchableOpacity style={styles.profileBtn} onPress={this.navigateToReservation}>
+      <UI.Box style={[styles.memberContainer,{backgroundColor:item?.isMemberSelected?"#e0e0e0":"#fff"}]}>
+        <UI.TouchableOpacity style={styles.profileBtn} onPress={() => this.selectedMember(item)}>
           <UI.Box style={styles.profileLogo}>
             <UI.Image source={require("@/assets/images/profile.png")} style={styles.profileIcon}/>
           </UI.Box>
@@ -70,14 +71,14 @@ class MemberDirectoryUI extends useMemberDirectoryLogic {
         </UI.Box>
 
         <UI.Box style={styles.checkBoxWrapper}>
-          <UI.Box style={styles.checkBoxContainer}>
-            <Checkbox size="md" isInvalid={false} isDisabled={false} style={styles.checkBox} value={""}>
-              <CheckboxIndicator style={styles.checkBoxIndicator}>
-                <CheckboxIcon as={CheckIcon} color="#08c3f8" size="md" />
-              </CheckboxIndicator>
-              <CheckboxLabel style={styles.checkboxLabel}>Add to My Buddy List</CheckboxLabel>
-            </Checkbox>
-          </UI.Box>
+          <UI.TouchableOpacity  onPress={this.toggleCheckbox}  style={styles.checkBoxContainer}>
+             <UI.Box style={styles.checkItem}>
+              <UI.TouchableOpacity onPress={this.toggleCheckbox} style={styles.checkbox}>
+                {this.state.checked ? <UI.Image source={require("@/assets/images/Check.png")} style={styles.checkIcon} /> : <UI.Image source={require("@/assets/images/uncheck.png")} style={styles.checkIcon} />}
+              </UI.TouchableOpacity>
+              <UI.Text style={styles.checkboxLabel}>Add to My Buddy List</UI.Text>
+             </UI.Box>
+          </UI.TouchableOpacity>
         </UI.Box>
 
         <UI.Box style={styles.topBar}>
@@ -98,9 +99,9 @@ class MemberDirectoryUI extends useMemberDirectoryLogic {
           </UI.TouchableOpacity>
         </UI.Box>
         {
-          this.props.memberListPerBatch.length > 0 ?
+          this.state.updatedMembersListData.length > 0 ?
             <UI.FlatList
-              data={this.props.memberListPerBatch}
+              data={this.state.updatedMembersListData}
               ListFooterComponent={this.renderLoadMoreBtn}
               style={{ opacity: this.props.loading ? 0.5 : 1 }}
               renderItem={this.renderMemberList}
@@ -120,11 +121,11 @@ class MemberDirectoryUI extends useMemberDirectoryLogic {
         }
 
         <UI.Box style={styles.addMemberBtn}>
-          <UI.TouchableOpacity style={styles.bottomBtns} onPress={this.loadMoreData}>
+          <UI.TouchableOpacity style={styles.bottomBtns} onPress={this.addMemberForReservation}>
             <UI.Text style={styles.submitTxt}>Add</UI.Text>
           </UI.TouchableOpacity>
 
-          <UI.TouchableOpacity style={styles.bottomBtns} onPress={this.loadMoreData}>
+          <UI.TouchableOpacity style={styles.bottomBtns} onPress={this.navigateToReservation}>
             <UI.Text style={styles.submitTxt}>Cancel</UI.Text>
           </UI.TouchableOpacity>
         </UI.Box>
@@ -149,10 +150,14 @@ const mapStateToProps = (state: RootState) => {
     errorMessage: state.dashboard.errorMessage,
     memberListPerBatch:state.memberDirectory.memberListPerBatch,
     formData: state.login?.formData,
+    addMemberList:state.addMember.membersList
   }
 }
 const mapDispatchToProps = {
-  getMemberList
+  getMemberList,
+  resetLoadedScreen,
+  singleMemberDetails,
+  addMembersForReservation
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(MemberDirectoryUI)
