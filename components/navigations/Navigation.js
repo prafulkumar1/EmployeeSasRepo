@@ -6,13 +6,14 @@ import dashboardUI from '@/source/views/dashboard/dashboardUI';
 import LoginScreen from '@/source/views/login/loginUI';
 import addMemberUI from '@/source/views/addMember/addMemberUI';
 import MemberDirectoryUI from '@/source/views/memberDirectory/memberDirectoryUI';
+import ReservationUI from '@/source/views/reservation/ReservationUI';
 
 const NormalCubStack = createNativeStackNavigator();
 const PremiumClubStack = createNativeStackNavigator();
 export const NormalClubNavigation = () => {
     return (
       <NormalCubStack.Navigator
-        initialRouteName="AddMemberUI"
+        initialRouteName="ReservationUI"
       >
         <NormalCubStack.Screen
           name="Login"
@@ -22,6 +23,11 @@ export const NormalClubNavigation = () => {
         <NormalCubStack.Screen
           name="DashboardUI"
           component={dashboardUI}
+          options={{ headerShown: false }}
+        />
+        <NormalCubStack.Screen
+          name="ReservationUI"
+          component={ReservationUI}
           options={{ headerShown: false }}
         />
         <NormalCubStack.Screen

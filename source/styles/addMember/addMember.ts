@@ -159,5 +159,57 @@ export const styles = StyleSheet.create({
       color:"#fff",
       textAlign:"center"
     },
-    timeOutIcon:{width:50,height:50,resizeMode:"contain",marginBottom:20}
+    timeOutIcon:{width:50,height:50,resizeMode:"contain",marginBottom:20},
+    thankyouContainer: {
+      flex: 1,
+      justifyContent: "center",
+      alignItems: "center",
+    },
+    logo: {
+      width: 200,
+      height: 80,
+      position: "absolute",
+      top: 120,
+    },
+    card: {
+      marginTop: 50,
+      backgroundColor: "white",
+      borderRadius: 16,
+      paddingVertical: 30,
+      paddingHorizontal: 55,
+      shadowColor: "#000",
+      shadowOpacity: 0.1,
+      shadowRadius: 8,
+      elevation: 5,
+      width: "95%",
+      height: "35%",
+      justifyContent: "center",
+      alignItems: "center",
+    },
+    title: {
+      fontSize: 40,
+      color: "#1B2952",
+      marginBottom: 20,
+      fontFamily:"SourceSansPro_Bold",
+    },
+    subtitle: {
+      fontSize: 26,
+      color: "#666",
+      textAlign: "center",
+      lineHeight: 32,
+      fontFamily:"SourceSansPro_Regular",
+    },
+    modalContent2: {
+      width: '100%',
+      position:"absolute",
+      bottom: 0,
+      left: 0,
+      right: 0,
+      backgroundColor: 'white',
+      borderRadius: 10,
+      padding: 20,
+      alignItems: 'center',
+    },
+    modalBtn2:{backgroundColor: '#f2f2f2', width: '100%', marginBottom: 10 },
+    modalBtnTxt2:{textAlign: 'center', paddingVertical: 10, fontSize: 18, fontWeight: 'bold', color: '#666' }
   });

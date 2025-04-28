@@ -17,6 +17,7 @@ interface IState {
     id:string
   }[]
   selectedId:string
+  isSuccessModalOpen:boolean
 }
 
 interface IProps {
@@ -44,6 +45,7 @@ export default class useAddMemberLogic extends Component<IProps, IState> {
       membersCountList:[],
       isTimeOutModal:false,
       selectedId:"",
+      isSuccessModalOpen:false
     };
     this.interval = null;
   }
@@ -161,4 +163,7 @@ export default class useAddMemberLogic extends Component<IProps, IState> {
     this.setState({isTimeOutModal:!this.state.isTimeOutModal})
   }
 
+  handleSubmitReservation = () => {
+    this.setState({isSuccessModalOpen:!this.state.isSuccessModalOpen})
+  }
 }

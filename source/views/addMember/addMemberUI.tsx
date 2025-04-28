@@ -8,6 +8,7 @@ import useAddMemberLogic from '@/source/controller/addMember/addMember';
 import { styles } from '@/source/styles/addMember/addMember';
 import MemberDirectoryUI from '../memberDirectory/memberDirectoryUI';
 import { handleSelectedMember, removeMembersFromList, resetLoadedScreen, setMembersList } from '@/components/redux/reducers/addMemberReducer';
+import { LinearGradient } from 'expo-linear-gradient';
 
 const pageId = 'AddMember';
 const addMemberList = [{id:1,memberType:"Member"},{id:2,memberType:"Guest"},{id:3,memberType:"TBD"}]
@@ -27,11 +28,35 @@ class AddMemberUI extends useAddMemberLogic {
       </UI.Box>
     )
   }
-  renderUserTypeList = ({ item, index }) => {
+  renderUserTypeList = ({ item }) => {
     return (
         <UI.TouchableOpacity onPress={this.navigateToMember} style={styles.modalBtn}>
           <UI.Text style={styles.modalBtnTxt}>{item.memberType}</UI.Text>
         </UI.TouchableOpacity>
+    )
+  }
+
+  renderSuccessModal = () => {
+    return(
+      <LinearGradient
+        colors={['#0052A5', '#00B2E3']}
+        style={styles.thankyouContainer}
+      >
+ 
+        <Image
+          source={require("@/assets/images/login-logo.png")}
+          style={styles.logo}
+          resizeMode="contain"
+        />
+ 
+        <UI.Box style={styles.card}>
+          <UI.Text style={styles.title}>THANK YOU</UI.Text>
+          <UI.Text style={styles.subtitle}>
+            Your Reservation has been Confirmed for
+          </UI.Text>
+          <UI.Text style={styles.subtitle}>Thursday, Apr 17</UI.Text>
+        </UI.Box>
+      </LinearGradient>
     )
   }
   render() {
@@ -105,7 +130,7 @@ class AddMemberUI extends useAddMemberLogic {
               <UI.ConnectedCbInput id="Comments" style={styles.commentsBox} multiline={true} numberOfLines={4} formId={pageId} />
             </UI.Box>
   
-            <UI.TouchableOpacity style={styles.submitBtn}>
+            <UI.TouchableOpacity style={styles.submitBtn} onPress={() => this.handleSubmitReservation()}>
               <UI.Text style={styles.submitTxt}>Submit</UI.Text>
             </UI.TouchableOpacity>
           </UI.Box>
@@ -141,6 +166,15 @@ class AddMemberUI extends useAddMemberLogic {
                 <UI.Text style={styles.okTxt}>Ok</UI.Text>
               </UI.TouchableOpacity>
             </UI.Pressable>
+          </Modal>
+
+          <Modal
+            transparent={true}
+            visible={this.state.isSuccessModalOpen}
+            animationType="fade"
+            onRequestClose={this.resetTimeOutModal}
+          >
+              {this.renderSuccessModal()}
           </Modal>
   
         </UI.ScrollView>

@@ -22,6 +22,7 @@ import { postApiCall } from '@/components/utlis/api';
 import { getFormFieldData, getFormFieldDataSelector, setFormFieldData } from '../redux/reducers/loginReducer';
 import { connect } from 'react-redux';
 import { SvgUri } from 'react-native-svg';
+import { styles } from './style';
 class CbImage extends React.Component {
   constructor(props) {
     super(props);
@@ -402,6 +403,105 @@ class CbFlatList extends React.Component {
   }
 }
 
+class CbSelectDropDown extends React.Component {
+  constructor(props) {
+    super(props);
+ 
+    this.state = {
+      selectedIndex: props.selectedIndex || null,
+      showDropdown: false,
+    };
+ 
+    this.options = props.options || [];
+    this.onSelect =
+      typeof props.onSelect === "function" ? props.onSelect : () => {};
+    this.placeholder = props.placeholder || "Select Option";
+    this.customstyle = props.customstyle || {}
+    this.selectItemId = props.selectItemId
+    console.log( props.options, 'props.style');
+  }
+  componentDidUpdate(prevProps) {
+    if (
+      prevProps.addMemberIndex !== this.props.addMemberIndex &&
+      this.props.addMemberIndex !== this.selectItemId &&
+      this.state.showDropdown
+    ) {
+      this.setState({ showDropdown: false });
+    }
+  }
+ 
+  // toggleDropdown = () => {
+  //   this.props.setAddMemberIndex(this.selectItemId)
+  //   this.setState((prevState) => ({
+  //     showDropdown: !prevState.showDropdown,
+  //   }));
+ 
+  // };
+  toggleDropdown = () => {
+    const { showDropdown } = this.state;
+    const isOpening = !showDropdown;
+ 
+    this.setState({ showDropdown: isOpening });
+ 
+    if (isOpening) {
+      this.props.setAddMemberIndex?.(this.selectItemId);
+    } else {
+      this.props.setAddMemberIndex?.(null);
+    }
+  };
+ 
+ 
+  selectItem = (index) => {
+    this.setState({
+      selectedIndex: index,
+      showDropdown: false,
+    });
+ 
+    this.onSelect(this.options[index]?.value || this.options[index], index);
+  };
+ 
+  renderDropdown = () => {
+    return (
+   
+      <FlatList
+        style={styles.dropdown}
+        data={this.options}
+        keyExtractor={(_, index) => index.toString()}
+        renderItem={({ item, index }) => (
+          <TouchableOpacity
+            style={[styles.dropdownItem, this.props.dropdownItemStyle]}
+            onPressselectItem={() => this.selectItem(index)}
+          >
+            <Text style={styles.dropdownText}>{item.label}</Text>
+          </TouchableOpacity>
+        )}
+      />
+   
+    );
+  };
+ 
+  render() {
+    const { selectedIndex, showDropdown } = this.state;
+    const selectedValue =
+      selectedIndex !== null
+        ? this.options[selectedIndex]?.label
+        : this.placeholder;
+ 
+    return (
+      <View style={this.props.customstyle}>
+        <TouchableOpacity onPress={this.toggleDropdown} style={[styles.selector]}>
+          <Text style={styles.selectorText}>{selectedValue}</Text>
+          <View style={{ width: 20, height: 20 }}>
+            <Icon as={ChevronDownIcon} size="sm" />
+          </View>
+        </TouchableOpacity>
+     
+        {showDropdown && this.renderDropdown()}
+       
+      </View>
+    );
+  }
+}
 const mapStateToProps = (state) => {
   return{
     formData: state.login.formData,
@@ -434,6 +534,7 @@ const ConnectedCbVStack = connect(mapStateToProps, mapDispatchToProps)(cbVStack)
 const ConnectedCbForm = connect(mapStateToProps, mapDispatchToProps)(cbForm);
 const ConnectedCbFlatList = connect(mapStateToProps, mapDispatchToProps)(CbFlatList);
 const ConnectedCbImage = connect(mapStateToProps, mapDispatchToProps)(CbImage);
+const ConnectedCbSelectDropDown = connect(mapStateToProps, mapDispatchToProps)(CbSelectDropDown);
 export { 
   ConnectedCbButton, 
   ConnectedCbInput, 
@@ -444,7 +545,8 @@ export {
   ConnectedCbVStack, 
   ConnectedCbForm, 
   ConnectedCbFlatList, 
-  ConnectedCbImage 
+  ConnectedCbImage,
+  ConnectedCbSelectDropDown 
 };
  
 // export {  cbButton, cbInput, cbCheckBox, cbSelect, cbImageBackground, cbRadioButton, cbVStack, cbForm, CbFlatList, CbImage };
