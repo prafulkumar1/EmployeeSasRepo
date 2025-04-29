@@ -415,6 +415,8 @@ class CbSelectDropDown extends React.Component {
     this.options = props.options || [];
     this.onSelect =
       typeof props.onSelect === "function" ? props.onSelect : () => {};
+    this.openDropDown =
+      typeof props.openDropDown === "function" ? props.openDropDown : () => {};
     this.placeholder = props.placeholder || "Select Option";
     this.customstyle = props.customstyle || {}
     this.selectItemId = props.selectItemId
@@ -448,6 +450,7 @@ class CbSelectDropDown extends React.Component {
     } else {
       this.props.setAddMemberIndex?.(null);
     }
+    this?.openDropDown()
   };
  
  
@@ -457,7 +460,7 @@ class CbSelectDropDown extends React.Component {
       showDropdown: false,
     });
  
-    this.onSelect(this.options[index]?.value || this.options[index], index);
+    this.onSelect(this.options[index]?.label || this.options[index], index);
   };
  
   renderDropdown = () => {
@@ -470,7 +473,7 @@ class CbSelectDropDown extends React.Component {
         renderItem={({ item, index }) => (
           <TouchableOpacity
             style={[styles.dropdownItem, this.props.dropdownItemStyle]}
-            onPressselectItem={() => this.selectItem(index)}
+            onPress={() => this.selectItem(index)}
           >
             <Text style={styles.dropdownText}>{item.label}</Text>
           </TouchableOpacity>

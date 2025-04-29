@@ -1,10 +1,13 @@
+import { isPlatformAndroid } from "@/components/constants/Matrices";
 import { Platform, StyleSheet } from "react-native";
 
 export const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
+    paddingHorizontal: 10,
+    marginTop: 50,
     backgroundColor: "#fff",
-    padding: 8,
+    paddingBottom: 100,
   },
   headerTitle: {
     width: "100%",
@@ -39,22 +42,26 @@ export const styles = StyleSheet.create({
   },
   dateBox: {
     paddingVertical: 5,
-    paddingHorizontal: 15,
-    marginHorizontal: 3,
     borderRadius: 10,
     alignItems: "center",
+    marginHorizontal: 6,
+    width: 55,
   },
-  day: { fontSize: 16, fontFamily: "SourceSansPro_Light", color: "#000" },
-  mnthAndDate: { fontSize: 16, fontFamily: "SourceSansPro_SemiBold", color: "#000" },
+  day: { fontSize: 16, fontFamily: "SourceSansPro_Regular" },
+  mnthAndDate: {
+    fontSize: 16,
+    fontFamily: "SourceSansPro_SemiBold",
+    color: "#000",
+  },
   container: {
     marginVertical: 20,
-    justifyContent:"center",
-    alignItems:"center"
+    justifyContent: "center",
+    alignItems: "center",
   },
   optionContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent:"center",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
     marginHorizontal: 25,
   },
   radioOuter: {
@@ -62,11 +69,12 @@ export const styles = StyleSheet.create({
     width: 26,
     borderRadius: 12,
     borderWidth: 2,
-    borderColor: '#ccc',
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#fff',
-    shadowColor: '#000',
+    borderColor: "#ccc",
+    margin:4,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#fff",
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.2,
     shadowRadius: 2,
@@ -76,37 +84,59 @@ export const styles = StyleSheet.create({
     height: 12,
     width: 12,
     borderRadius: 6,
-    backgroundColor: '#00AEEF',
+    backgroundColor: "#00AEEF",
   },
 
   label: {
     marginLeft: 10,
     fontSize: 16,
-    color: '#6D6D6D',
+    color: "#6D6D6D",
   },
-  providerTxt: { fontSize: 16, fontFamily: "SourceSansPro_SemiBold", color: "#666", paddingLeft: 10 },
-  timePeriodContainer: { paddingBottom: 20, paddingRight: 12, alignItems: "center" },
-  timePeriodTxt: { fontSize: 18, fontFamily: "SourceSansPro_SemiBold", textAlign: "center" },
+  providerTxt: {
+    fontSize: 16,
+    fontFamily: "SourceSansPro_SemiBold",
+    color: "#666",
+    paddingLeft: 10,
+  },
+  timePeriodContainer: {
+    paddingBottom: 20,
+    paddingRight: 12,
+    alignItems: "center",
+  },
+  timePeriodTxt: {
+    fontSize: 18,
+    fontFamily: "SourceSansPro_SemiBold",
+    textAlign: "center",
+    paddingBottom: 5,
+  },
   timeSlotsBtn: {
     borderWidth: 0.2,
     borderColor: "#aaa",
     borderRadius: 3,
     elevation: 2,
     shadowOffset: { width: 1, height: 1 },
-    shadowOpacity: 1,
+    shadowOpacity: 0.2,
     shadowRadius: 3,
-    width:200,
-    paddingVertical:10
+    width: isPlatformAndroid() ? 200 : 198,
+    paddingVertical: 10,
   },
-  timePeriodBtnTxt: { fontFamily: "SourceSansPro_SemiBold", fontSize: 15.5, textAlign: 'center' },
+  timePeriodBtnTxt: {
+    fontFamily: "SourceSansPro_SemiBold",
+    fontSize: 15.5,
+    textAlign: "center",
+  },
   topContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
-    paddingTop:30,
-    paddingBottom:10,
+    paddingTop: 30,
+    paddingBottom: 10,
   },
   selectTxt: { fontSize: 16, fontFamily: "SourceSansPro_SemiBold" },
-  dateTxt: { fontSize: 16, fontFamily: "SourceSansPro_SemiBold",color:"#00c6ff" },
+  dateTxt: {
+    fontSize: 16,
+    fontFamily: "SourceSansPro_SemiBold",
+    color: "#00c6ff",
+  },
   calendar: {
     position: "absolute",
     top: 60,
@@ -124,7 +154,7 @@ export const styles = StyleSheet.create({
   },
   previousTitleStyle: { color: "#fff", fontSize: 24 },
   nextTitleStyles: { color: "#fff", fontSize: 24 },
-  calendarText:{
+  calendarText: {
     marginTop: 10,
     textAlign: "center",
     color: "#fff",
@@ -156,13 +186,19 @@ export const styles = StyleSheet.create({
   disabledText: {
     color: "#aaa",
   },
-  addMemberContainer:{ alignItems: "center", marginVertical: 25,position:"absolute",bottom:0,alignSelf:"center" },
+  addMemberContainer: {
+    alignItems: "center",
+    marginVertical: 25,
+    position: "absolute",
+    bottom: 0,
+    alignSelf: "center",
+  },
   addMemberBtn: {
     borderWidth: 1,
     borderColor: "#00c6ff",
     justifyContent: "center",
     alignItems: "center",
-    borderRadius: 25
+    borderRadius: 25,
   },
   addMemberBtnTxt: {
     color: "#00c6ff",
@@ -170,22 +206,28 @@ export const styles = StyleSheet.create({
     fontFamily: "SourceSansPro_SemiBold",
     paddingVertical: 10,
     paddingHorizontal: 50,
-
   },
   gridContainer: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent:"space-between",
-    paddingTop:20
+    flexDirection: "row",
+    flexWrap: "wrap",
+    justifyContent: "space-between",
+    paddingTop: 20,
   },
   slotBox: {
-    width: '23%',
+    width: "23%",
     margin: 3,
     borderRadius: 5,
     paddingVertical: 8,
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
     elevation: 2,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
+    shadowOffset: { width: 1, height: 1 },
+    shadowOpacity: 0.2,
+    shadowRadius: 3,
   },
+  dropDownBtn: { width: "100%", marginBottom: 30 },
+  serviceBtn: { width: "100%" },
+  timePeriodContainers: { flex: 1, maxHeight: 160, minHeight: 80 },
+  calenderLoader:{justifyContent:"center",alignItems:"center",alignSelf:"center",paddingTop:25}
 });

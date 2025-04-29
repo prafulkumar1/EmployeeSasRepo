@@ -62,7 +62,7 @@ class AddMemberUI extends useAddMemberLogic {
   render() {
     if(!this.props.isScreenLoaded){
       return (
-        <UI.ScrollView style={styles.mainContainer} contentContainerStyle={{ paddingBottom: 50 }}>
+        <UI.ScrollView style={styles.mainContainer} contentContainerStyle={{ paddingBottom: 50 }} showsVerticalScrollIndicator={false}>
           <UI.Box style={styles.statusBar} />
           <UI.ImageBackground style={styles.backLogo} source={{ uri: "https://images.unsplash.com/photo-1535131749006-b7f58c99034b?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8Z29sZnxlbnwwfHwwfHx8MA%3D%3D" }}>
             <UI.Box style={styles.overLay} />

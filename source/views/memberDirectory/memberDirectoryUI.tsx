@@ -99,9 +99,9 @@ class MemberDirectoryUI extends useMemberDirectoryLogic {
           </UI.TouchableOpacity>
         </UI.Box>
         {
-          this.state.updatedMembersListData.length > 0 ?
+          this.state.updatedMembersListData?.length > 0 ?
             <UI.FlatList
-              data={this.state.updatedMembersListData}
+              data={this.state?.updatedMembersListData}
               ListFooterComponent={this.renderLoadMoreBtn}
               style={{ opacity: this.props.loading ? 0.5 : 1 }}
               renderItem={this.renderMemberList}

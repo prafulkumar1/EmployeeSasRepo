@@ -1,5 +1,6 @@
 import { navigateToScreen } from "@/components/constants/Navigations";
 import { Component } from "react";
+import moment from 'moment';
 
 export interface DateItem {
   id: string;
@@ -25,7 +26,13 @@ export interface ControllerState {
   selectedTimePeriod: string | null;
   selectedTime: string;
   openDropdownIndex: number;
-
+  serviceName: string,
+  providerName: string,
+  isServiceSelected:boolean
+  selectedDate:any
+  requiredDates:any
+  startIndex:number
+  loadingMore:boolean
 }
 
 class ReservationLogic extends Component<Props, ControllerState> {
@@ -38,9 +45,16 @@ class ReservationLogic extends Component<Props, ControllerState> {
       selectedService: null,
       isSelected: false,
       selectedGender: 'Male',
-      selectedTimePeriod: "morning",
+      selectedTimePeriod: "",
       selectedTime: "",
       openDropdownIndex: -1, 
+      serviceName: '',
+      providerName: '',
+      isServiceSelected:false,
+      selectedDate: moment(),
+      requiredDates: this.generateDates(),
+      startIndex: 20,
+      loadingMore: false,
     };
   }
 
@@ -131,6 +145,46 @@ class ReservationLogic extends Component<Props, ControllerState> {
   navigateToAddMembers = () => {
     navigateToScreen(this.props, "AddMemberUI", true, {})
   }
+  selectService = (value:string) => {
+    this.setState({serviceName:value,isServiceSelected:!this.state.isServiceSelected})
+  }
+  selectProvider = (value:string) => {
+    this.setState({providerName:value})
+  }
+  
+  generateDates = (startIndex = 0, count = 20) => {
+    const dates = [];
+    const today = moment();
+    for (let i = startIndex; i < startIndex + count; i++) {
+      const date = moment(today).add(i, 'days');
+      dates.push({
+        id: date.format('YYYY-MM-DD'),
+        day: date.format('ddd'),
+        month: date.format('MMM'),
+        date: date.format('D'),
+        fullDate: date.format('YYYY-MM-DD'),
+      });
+    }
+    return dates;
+  };
+
+  onDateSelect = (date:string) => {
+    this.setState({ selectedDate: date });
+  };
+
+  loadMoreDates = () => {
+    if (this.state.loadingMore) return;
+  
+    this.setState({ loadingMore: true }, () => {
+      const newDates = this.generateDates(this.state.startIndex, 20);
+      this.setState((prevState) => ({
+        requiredDates: [...prevState.requiredDates, ...newDates],
+        startIndex: prevState.startIndex + 20,
+        loadingMore: false,
+      }));
+    });
+  };
+  
 }
 
 export default ReservationLogic;
