@@ -1,3 +1,4 @@
+import { navigateToScreen } from "@/components/constants/Navigations";
 import { Component } from "react";
 
 export interface DateItem {
@@ -127,6 +128,9 @@ class ReservationLogic extends Component<Props, ControllerState> {
       console.log("Selected Service:", this.state.selectedService);
     });
   };
+  navigateToAddMembers = () => {
+    navigateToScreen(this.props, "AddMemberUI", true, {})
+  }
 }
 
 export default ReservationLogic;

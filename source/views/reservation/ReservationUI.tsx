@@ -70,18 +70,24 @@ export default class ReservationUI extends ReservationLogic {
     const { selectedGender } = this.state;
     return (
       <UI.Box style={styles.container}>
-        {['Male', 'Female', 'Any'].map((gender) => (
-          <UI.TouchableOpacity
-            key={gender}
-            style={styles.optionContainer}
-            onPress={() => this.setState({ selectedGender: gender })}
-          >
-            <UI.Box style={styles.radioOuter}>
-              {selectedGender === gender && <UI.Box style={styles.radioInner} />}
-            </UI.Box>
-            <UI.Text style={styles.label}>{gender}</UI.Text>
-          </UI.TouchableOpacity>
-        ))}
+        <UI.FlatList
+          data={[{ id: 1, gender: "Male" }, { id: 2, gender: "Female" }, { id: 3, gender: "Any" }]}
+          horizontal
+          renderItem={({ item, index }) => {
+            return (
+              <UI.TouchableOpacity
+                key={index}
+                style={styles.optionContainer}
+                onPress={() => this.setState({ selectedGender: item?.gender })}
+              >
+                <UI.Box style={styles.radioOuter}>
+                  {selectedGender === item?.gender && <UI.Box style={styles.radioInner} />}
+                </UI.Box>
+                <UI.Text style={styles.label}>{item?.gender}</UI.Text>
+              </UI.TouchableOpacity>
+            )
+          }}
+        />
       </UI.Box>
     );
   };
@@ -148,7 +154,7 @@ export default class ReservationUI extends ReservationLogic {
 
   render() {
     return (
-      <UI.ScrollView contentContainerStyle={{ flex:1,paddingHorizontal: 10,marginTop:50,backgroundColor:"#fff" }}>
+      <UI.ScrollView contentContainerStyle={{ flex:1,paddingHorizontal: 10,marginTop:50,backgroundColor:"#fff",paddingBottom:100 }}>
         <UI.Box
           style={styles.topContainer}
         >
@@ -222,7 +228,7 @@ export default class ReservationUI extends ReservationLogic {
         </UI.Box>
 
         <UI.Box style={styles.addMemberContainer}>
-          <UI.TouchableOpacity style={styles.addMemberBtn}>
+          <UI.TouchableOpacity style={styles.addMemberBtn} onPress={() => this.navigateToAddMembers()}>
             <UI.Text style={styles.addMemberBtnTxt}> Add Member</UI.Text>
           </UI.TouchableOpacity>
         </UI.Box>

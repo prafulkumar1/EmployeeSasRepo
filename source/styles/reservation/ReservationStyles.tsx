@@ -47,15 +47,15 @@ export const styles = StyleSheet.create({
   day: { fontSize: 16, fontFamily: "SourceSansPro_Light", color: "#000" },
   mnthAndDate: { fontSize: 16, fontFamily: "SourceSansPro_SemiBold", color: "#000" },
   container: {
-    flexDirection: 'row',
-    justifyContent: 'center',
     marginVertical: 20,
+    justifyContent:"center",
+    alignItems:"center"
   },
   optionContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent:"space-evenly",
-    marginHorizontal: 10,
+    justifyContent:"center",
+    marginHorizontal: 25,
   },
   radioOuter: {
     height: 26,

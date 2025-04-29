@@ -39,7 +39,7 @@ export default class useAddMemberLogic extends Component<IProps, IState> {
     super(props);
     this.state = {
       isModalVisible: false,
-      timeLeft: 220,
+      timeLeft: 60,
       timerRunning: false,
       membersCount:4,
       membersCountList:[],
@@ -160,7 +160,9 @@ export default class useAddMemberLogic extends Component<IProps, IState> {
     this.props.setMembersList(memberCount)
   }
   resetTimeOutModal = () => {
-    this.setState({isTimeOutModal:!this.state.isTimeOutModal})
+    this.setState({isTimeOutModal:!this.state.isTimeOutModal},() => {
+      navigateToScreen(this.props, "ReservationUI", true, {})
+    })
   }
 
   handleSubmitReservation = () => {
