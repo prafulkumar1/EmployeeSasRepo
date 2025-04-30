@@ -505,6 +505,37 @@ class CbSelectDropDown extends React.Component {
     );
   }
 }
+
+class CbErrorMessagePopup extends React.Component {
+  constructor(props) {
+    super();
+    this.id = props.id;
+    this.visible = props.visible
+    this.errorMessage = props.errorMessage
+    this.transparent = props.transparent
+    this.onRequestClose = typeof props.onRequestClose === 'function' ? props.onRequestClose : () => { }
+  }
+  render(){
+    return (
+      <Modal
+        transparent={this.transparent}
+        visible={this.visible}
+        animationType="fade"
+        onRequestClose={this.onRequestClose}
+      >
+        <Pressable
+          style={styles.modalOverlay}
+          onPress={this.onRequestClose}
+        />
+        <View style={styles.errorMessageContainer}>
+          <Text style={styles.errorMessageTxt}>
+            {this.errorMessage}
+          </Text>
+        </View>
+      </Modal>
+    );
+  }
+}
 const mapStateToProps = (state) => {
   return{
     formData: state.login.formData,
@@ -525,6 +556,7 @@ cbRadioButton.displayName = 'ConnectedCbRadioButton';
 cbVStack.displayName = 'ConnectedCbVStack';
 cbForm.displayName = 'ConnectedCbForm';
 CbFlatList.displayName = "ConnectedCbFlatList"
+CbErrorMessagePopup.displayName = "ConnectedCbErrorMessagePopup"
  
 
 const ConnectedCbInput = connect(mapStateToProps, mapDispatchToProps)(cbInput);
@@ -538,6 +570,7 @@ const ConnectedCbForm = connect(mapStateToProps, mapDispatchToProps)(cbForm);
 const ConnectedCbFlatList = connect(mapStateToProps, mapDispatchToProps)(CbFlatList);
 const ConnectedCbImage = connect(mapStateToProps, mapDispatchToProps)(CbImage);
 const ConnectedCbSelectDropDown = connect(mapStateToProps, mapDispatchToProps)(CbSelectDropDown);
+const ConnectedCbErrorMessagePopup = connect(mapStateToProps, mapDispatchToProps)(CbErrorMessagePopup);
 export { 
   ConnectedCbButton, 
   ConnectedCbInput, 
@@ -549,7 +582,8 @@ export {
   ConnectedCbForm, 
   ConnectedCbFlatList, 
   ConnectedCbImage,
-  ConnectedCbSelectDropDown 
+  ConnectedCbSelectDropDown,
+  ConnectedCbErrorMessagePopup
 };
  
 // export {  cbButton, cbInput, cbCheckBox, cbSelect, cbImageBackground, cbRadioButton, cbVStack, cbForm, CbFlatList, CbImage };

@@ -14,7 +14,9 @@ import { styles } from "@/source/styles/memberDirectory/memberDirectoryStyle";
 import { Icon  } from '@/components/ui/icon';
 import { getMemberList } from "@/components/redux/reducers/memberDirectoryReducer";
 import CbLoader from "@/components/cobalt/cobaltLoader";
-import { addMembersForReservation, resetLoadedScreen, singleMemberDetails } from "@/components/redux/reducers/addMemberReducer";
+import { addMembersForReservation, resetLoadedScreen, resetSingleMemberDetails, singleMemberDetails } from "@/components/redux/reducers/addMemberReducer";
+import { Modal } from "react-native";
+import { guestData } from "@/components/constants/CustomJson";
 
 
 const pageId = 'MemberDirectory';
@@ -59,27 +61,85 @@ class MemberDirectoryUI extends useMemberDirectoryLogic {
     }
   }
 
+  renderGuestSelector = ({item,index}) => {
+    const { selectedGuest } = this.state;
+    return (
+      <UI.TouchableOpacity
+      style={styles.optionContainer}
+      onPress={() => this.setState({ selectedGuest: item?.label })}
+    >
+      <UI.Box style={styles.radioOuter}>
+        {selectedGuest === item?.label && (
+          <UI.Box style={styles.radioInner} />
+        )}
+      </UI.Box>
+      <UI.Text style={styles.label}>{item.label}</UI.Text>
+    </UI.TouchableOpacity>
+    );
+  };
+
   render() {
     const ITEM_HEIGHT = 100
     return (
       <UI.Box style={styles.mainContainer}>
         <UI.Box style={styles.subContainer}>
           <UI.TouchableOpacity style={styles.bellIcon}>
-            <UI.Image source={require("@/assets/images/icons/Search3x.png")} style={styles.iconStyle} />
+            <UI.Image
+              source={require("@/assets/images/icons/Search3x.png")}
+              style={styles.iconStyle}
+            />
           </UI.TouchableOpacity>
-          <UI.ConnectedCbInput id="Search" labelRequired={false} style={styles.commentsBox} multiline={true} formId={pageId} placeholder="Search by Member Last Name" placeholderTextColor="#565c5f" />
+          <UI.ConnectedCbInput
+            id="Search"
+            labelRequired={false}
+            style={styles.commentsBox}
+            multiline={true}
+            formId={pageId}
+            placeholder="Search by Member Last Name"
+            placeholderTextColor="#565c5f"
+          />
         </UI.Box>
 
-        <UI.Box style={styles.checkBoxWrapper}>
-          <UI.TouchableOpacity  onPress={this.toggleCheckbox}  style={styles.checkBoxContainer}>
-             <UI.Box style={styles.checkItem}>
-              <UI.TouchableOpacity onPress={this.toggleCheckbox} style={styles.checkbox}>
-                {this.state.checked ? <UI.Image source={require("@/assets/images/Check.png")} style={styles.checkIcon} /> : <UI.Image source={require("@/assets/images/uncheck.png")} style={styles.checkIcon} />}
-              </UI.TouchableOpacity>
-              <UI.Text style={styles.checkboxLabel}>Add to My Buddy List</UI.Text>
-             </UI.Box>
-          </UI.TouchableOpacity>
-        </UI.Box>
+        {this.props.userType === "Member" ? (
+          <UI.Box style={styles.checkBoxWrapper}>
+            <UI.TouchableOpacity
+              onPress={this.toggleCheckbox}
+              style={styles.checkBoxContainer}
+            >
+              <UI.Box style={styles.checkItem}>
+                <UI.TouchableOpacity
+                  onPress={this.toggleCheckbox}
+                  style={styles.checkbox}
+                >
+                  {this.state.checked ? (
+                    <UI.Image
+                      source={require("@/assets/images/Check.png")}
+                      style={styles.checkIcon}
+                    />
+                  ) : (
+                    <UI.Image
+                      source={require("@/assets/images/uncheck.png")}
+                      style={styles.checkIcon}
+                    />
+                  )}
+                </UI.TouchableOpacity>
+                <UI.Text style={styles.checkboxLabel}>
+                  Add to My Buddy List
+                </UI.Text>
+              </UI.Box>
+            </UI.TouchableOpacity>
+          </UI.Box>
+        ) : (
+          <UI.Box style={styles.container}>
+            <UI.FlatList
+              data={guestData}
+              keyExtractor={(item) => `${item.id}_${Math.random()}`}
+              horizontal
+              renderItem={this.renderGuestSelector}
+              showsHorizontalScrollIndicator={false}
+            />
+          </UI.Box>
+        )}
 
         <UI.Box style={styles.topBar}>
           <UI.TouchableOpacity style={styles.arrow} onPress={this.scrollLeft}>
@@ -95,48 +155,67 @@ class MemberDirectoryUI extends useMemberDirectoryLogic {
             extraData={this.state.activeTab}
           />
           <UI.TouchableOpacity style={styles.arrow} onPress={this.scrollRight}>
-          <Icon as={ChevronRightIcon} size="xl" color="#1dc6ff" />
+            <Icon as={ChevronRightIcon} size="xl" color="#1dc6ff" />
           </UI.TouchableOpacity>
         </UI.Box>
-        {
-          this.state.updatedMembersListData?.length > 0 ?
-            <UI.FlatList
-              data={this.state?.updatedMembersListData}
-              ListFooterComponent={this.renderLoadMoreBtn}
-              style={{ opacity: this.props.loading ? 0.5 : 1 }}
-              renderItem={this.renderMemberList}
-              removeClippedSubviews={true}
-              updateCellsBatchingPeriod={100}
-              windowSize={21}
-              getItemLayout={(_, index) => ({
-                length: ITEM_HEIGHT,
-                offset: ITEM_HEIGHT * index,
-                index,
-              })}
-            /> : <UI.Box style={styles.emptyListContainer}>
-              <UI.Text style={styles.emptyMealTxt}>
-                No Record Found
-              </UI.Text>
-            </UI.Box>
-        }
+        {this.state.updatedMembersListData?.length > 0 ? (
+          <UI.FlatList
+            data={this.state?.updatedMembersListData}
+            ListFooterComponent={this.renderLoadMoreBtn}
+            style={{ opacity: this.props.loading ? 0.5 : 1 }}
+            renderItem={this.renderMemberList}
+            removeClippedSubviews={true}
+            updateCellsBatchingPeriod={100}
+            windowSize={21}
+            getItemLayout={(_, index) => ({
+              length: ITEM_HEIGHT,
+              offset: ITEM_HEIGHT * index,
+              index,
+            })}
+          />
+        ) : (
+          <UI.Box style={styles.emptyListContainer}>
+            <UI.Text style={styles.emptyMealTxt}>No Record Found</UI.Text>
+          </UI.Box>
+        )}
 
         <UI.Box style={styles.addMemberBtn}>
-          <UI.TouchableOpacity style={styles.bottomBtns} onPress={this.addMemberForReservation}>
+          <UI.TouchableOpacity
+            style={styles.bottomBtns}
+            onPress={this.addMemberForReservation}
+          >
             <UI.Text style={styles.submitTxt}>Add</UI.Text>
           </UI.TouchableOpacity>
 
-          <UI.TouchableOpacity style={styles.bottomBtns} onPress={this.navigateToReservation}>
+          <UI.TouchableOpacity
+            style={styles.bottomBtns}
+            onPress={this.navigateToReservation}
+          >
             <UI.Text style={styles.submitTxt}>Cancel</UI.Text>
           </UI.TouchableOpacity>
         </UI.Box>
-       
-        {
-          this.props.loading && 
+
+        {this.props.loading && (
           <UI.Box style={styles.loaderTrans}>
-          <CbLoader />
-        </UI.Box>
-        }
-       
+            <CbLoader />
+          </UI.Box>
+        )}
+        <Modal
+          transparent={true}
+          visible={this.state.errorMessagePopup}
+          animationType="fade"
+          onRequestClose={() => this.setState({ errorMessagePopup: false })}
+        >
+          <UI.Pressable
+            style={styles.modalOverlay}
+            onPress={() => this.setState({ errorMessagePopup: false })}
+          />
+          <UI.Box style={styles.errorMessageContainer}>
+            <UI.Text style={styles.errorMessageTxt}>
+              {this.state.errorMessageTxt}
+            </UI.Text>
+          </UI.Box>
+        </Modal>
       </UI.Box>
     );
   }
@@ -150,14 +229,18 @@ const mapStateToProps = (state: RootState) => {
     errorMessage: state.dashboard.errorMessage,
     memberListPerBatch:state.memberDirectory.memberListPerBatch,
     formData: state.login?.formData,
-    addMemberList:state.addMember.membersList
+    addMemberList:state.addMember.membersList,
+    selectedMembersList:state.addMember.selectedMembersList,
+    singleItemDetails:state.addMember.singleMemberDetails,
+    userType:state.addMember.userType
   }
 }
 const mapDispatchToProps = {
   getMemberList,
   resetLoadedScreen,
   singleMemberDetails,
-  addMembersForReservation
+  addMembersForReservation,
+  resetSingleMemberDetails
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(MemberDirectoryUI)

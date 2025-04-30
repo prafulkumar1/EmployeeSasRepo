@@ -1,4 +1,5 @@
 import { navigateToScreen } from '@/components/constants/Navigations';
+import { MemberListType } from '@/components/constants/Types';
 import * as BackgroundFetch from 'expo-background-fetch';
 import * as TaskManager from 'expo-task-manager';
 import { Component } from 'react';
@@ -18,6 +19,8 @@ interface IState {
   }[]
   selectedId:string
   isSuccessModalOpen:boolean
+  errorMessagePopup:boolean
+  errorMessageTxt:string
 }
 
 interface IProps {
@@ -25,9 +28,18 @@ interface IProps {
   isScreenLoaded:boolean
   selectedId:string
   handleSelectedMember:(id:string) => void
+  setUserType:(userType:string) => void
   setMembersList:(memberCount:number) => void
   membersList:{isMemberSelected:boolean,id:string,memberName:string}[]
   removeMembersFromList:(id:string) =>void
+  addTbdToMemberList:() =>void
+  selectedMembersList:{
+    "id": string
+    "isMemberSelected": boolean
+    "memberName": string
+    "number":number
+    "singleMemberDetails": MemberListType[]
+  }[]
 }
 
 const BACKGROUND_TASK = 'background-timer-task';
@@ -39,13 +51,15 @@ export default class useAddMemberLogic extends Component<IProps, IState> {
     super(props);
     this.state = {
       isModalVisible: false,
-      timeLeft: 60,
+      timeLeft: 3000,
       timerRunning: false,
       membersCount:4,
       membersCountList:[],
       isTimeOutModal:false,
       selectedId:"",
-      isSuccessModalOpen:false
+      isSuccessModalOpen:false,
+      errorMessagePopup:false,
+      errorMessageTxt:""
     };
     this.interval = null;
   }
@@ -112,10 +126,17 @@ export default class useAddMemberLogic extends Component<IProps, IState> {
     }));
   };
 
-  navigateToMember = () => {
-    this.setState({isModalVisible:!this.state.isModalVisible},() => {
-      this.props.resetLoadedScreen()
-    })
+  navigateToMember = (memberType:string) => {
+    this.props.setUserType(memberType)
+    if(memberType === "TBD"){
+      this.setState({isModalVisible:!this.state.isModalVisible},() => {
+        this.props.addTbdToMemberList()
+      })
+    }else{
+      this.setState({isModalVisible:!this.state.isModalVisible},() => {
+        this.props.resetLoadedScreen()
+      })
+    }
   };
 
   startTimer = () => {
@@ -166,6 +187,14 @@ export default class useAddMemberLogic extends Component<IProps, IState> {
   }
 
   handleSubmitReservation = () => {
-    this.setState({isSuccessModalOpen:!this.state.isSuccessModalOpen})
+    if(this.props.selectedMembersList.length === 0){
+       this.setState({errorMessagePopup:true,errorMessageTxt:"Please enter at least one player details."},() => {
+        setTimeout(() => {
+          this.setState({errorMessagePopup:false,errorMessageTxt:""})
+        }, 2000);
+       })
+    }else{
+      this.setState({isSuccessModalOpen:!this.state.isSuccessModalOpen})
+    }
   }
 }

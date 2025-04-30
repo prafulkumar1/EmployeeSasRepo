@@ -7,7 +7,7 @@ import { Image,Modal} from "react-native"
 import useAddMemberLogic from '@/source/controller/addMember/addMember';
 import { styles } from '@/source/styles/addMember/addMember';
 import MemberDirectoryUI from '../memberDirectory/memberDirectoryUI';
-import { handleSelectedMember, removeMembersFromList, resetLoadedScreen, setMembersList } from '@/components/redux/reducers/addMemberReducer';
+import { addTbdToMemberList, handleSelectedMember, removeMembersFromList, resetLoadedScreen, resetSingleMemberDetails, setMembersList, setUserType } from '@/components/redux/reducers/addMemberReducer';
 import { LinearGradient } from 'expo-linear-gradient';
 
 const pageId = 'AddMember';
@@ -30,7 +30,7 @@ class AddMemberUI extends useAddMemberLogic {
   }
   renderUserTypeList = ({ item }) => {
     return (
-        <UI.TouchableOpacity onPress={this.navigateToMember} style={styles.modalBtn}>
+        <UI.TouchableOpacity onPress={() => this.navigateToMember(item.memberType)} style={styles.modalBtn}>
           <UI.Text style={styles.modalBtnTxt}>{item.memberType}</UI.Text>
         </UI.TouchableOpacity>
     )
@@ -176,6 +176,25 @@ class AddMemberUI extends useAddMemberLogic {
           >
               {this.renderSuccessModal()}
           </Modal>
+
+          {/* <UI.ConnectedCbErrorMessagePopup 
+            transparent={true} 
+            visible={this.state.errorMessagePopup}
+            onRequestClose={this.resetTimeOutModal}
+            errorMessage={this.state.errorMessageTxt}
+          />  */}
+
+          <Modal
+            transparent={true}
+            visible={this.state.errorMessagePopup}
+            animationType="fade"
+            onRequestClose={() => this.setState({errorMessagePopup:false})}
+          >
+            <UI.Pressable style={styles.modalOverlay} onPress={() => this.setState({errorMessagePopup:false})} />
+            <UI.Box style={styles.errorMessageContainer}>
+            <UI.Text style={styles.errorMessageTxt}>{this.state.errorMessageTxt}</UI.Text>
+            </UI.Box>
+          </Modal> 
   
         </UI.ScrollView>
       );
@@ -191,14 +210,18 @@ const mapStateToProps = (state:RootState) => {
   return {
     isScreenLoaded:state.addMember.isScreenLoaded,
     selectedId:state.addMember.selectedId,
-    membersList:state.addMember.membersList
+    membersList:state.addMember.membersList,
+    selectedMembersList:state.addMember.selectedMembersList,
   }
 }
 const mapDispatchToProps = {
   resetLoadedScreen,
   handleSelectedMember,
   setMembersList,
-  removeMembersFromList
+  removeMembersFromList,
+  addTbdToMemberList,
+  resetSingleMemberDetails,
+  setUserType
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(AddMemberUI)

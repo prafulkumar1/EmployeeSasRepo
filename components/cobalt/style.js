@@ -562,4 +562,26 @@ CheckIcon:{color:"#ffff"},
     width: "90%",
     fontSize: 16,
   },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.2)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  errorMessageTxt:{
+    color:"#0047AB",
+    fontSize:16,
+    fontFamily:"SourceSansPro_Regular"
+  },
+  errorMessageContainer: {
+    position:"absolute",
+    top:"50%",
+    backgroundColor: '#eafaff',
+    borderRadius: 10,
+    padding: 14,
+    alignItems: 'center',
+    alignSelf:"center",
+    borderWidth:1,
+    borderColor:"#0047AB",
+  },
 })

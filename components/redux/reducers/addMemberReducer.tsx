@@ -8,7 +8,9 @@ const initialState = {
     isScreenLoaded:false,
     selectedId:"",
     membersList:[],
-    singleMemberDetails:null
+    singleMemberDetails:null,
+    selectedMembersList:[],
+    userType:""
 }
 
 export const getMemberDetails = createAsyncThunk(
@@ -53,34 +55,63 @@ const AddMemberSlice = createSlice({
       state.membersList = updateCountList
     },
     singleMemberDetails(state, action) {
-      state.singleMemberDetails = action.payload
+      state.singleMemberDetails = action.payload      
+    },
+    resetSingleMemberDetails(state, action) {
+      state.singleMemberDetails = null
     },
     addMembersForReservation(state, action) {
       state.membersList = state.membersList.map((item) => {
         if (item.id === state.selectedId) {
-          return {
+          const updatedMember = {
             ...item,
             memberName: state.singleMemberDetails?.MemberName,
             isMemberSelected: true,
             singleMemberDetails: state.singleMemberDetails,
           };
+          
+          if (!state.selectedMembersList.some(member => member.id === state.selectedId)) {
+            state.selectedMembersList = [...state.selectedMembersList, updatedMember];
+          }
+          return updatedMember;
         }
         return item;
       });
     },
-    
+    addTbdToMemberList(state,action){
+      state.membersList = state.membersList.map((item) => {
+        if (item.id === state.selectedId) {
+          const updatedMember = {
+            ...item,
+            memberName: "TBD",
+            isMemberSelected: true,
+            singleMemberDetails: null,
+          };
+          if (!state.selectedMembersList.some(member => member.id === state.selectedId)) {
+            state.selectedMembersList = [...state.selectedMembersList, updatedMember];
+          }
+          return updatedMember;
+        }
+        return item;
+      });
+    },
     removeMembersFromList(state, action) {
       state.membersList = state.membersList.map((item, index) => {
         if (item.id === action.payload) {
-          return {
+          const updatedMember = {
             ...item,
             memberName: `Reservation ${index + 1}`,
             isMemberSelected: false,
             singleMemberDetails: null,
           };
+          return updatedMember;
         }
         return item;
       });
+      state.selectedMembersList = state.selectedMembersList.filter((items) => items?.id === action.payload)
+    },
+    setUserType(state, action){
+      state.userType = action.payload
     }
   },
     extraReducers: builder => {
@@ -99,5 +130,16 @@ const AddMemberSlice = createSlice({
     },
 })
 
-export const { loadScreen,resetLoadedScreen,handleSelectedMember,setMembersList,singleMemberDetails,addMembersForReservation,removeMembersFromList }:any = AddMemberSlice.actions
+export const { 
+  loadScreen,
+  resetLoadedScreen,
+  handleSelectedMember,
+  setMembersList,
+  singleMemberDetails,
+  addMembersForReservation,
+  removeMembersFromList,
+  addTbdToMemberList,
+  resetSingleMemberDetails,
+  setUserType 
+}:any = AddMemberSlice.actions
 export default AddMemberSlice.reducer

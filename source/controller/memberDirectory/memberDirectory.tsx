@@ -1,4 +1,5 @@
 import { navigateToScreen } from '@/components/constants/Navigations';
+import { MemberListType } from '@/components/constants/Types';
 import { getFormFieldDataSelector } from '@/components/redux/reducers/loginReducer';
 import React, { Component } from 'react';
  
@@ -8,50 +9,30 @@ interface IProps {
   getMemberList:({pageCount,searchChar,searchBy})=>void
   memberList:{
     "IsLoadMore": number
-    "Members": {
-      "DefaultTransportaionType": string
-      "DietaryRestrictions": string
-      "DisplayName": string
-      "FirstName": string
-      "ID": string
-      "IsMemberNotAllowed": number
-      "IsSpouse":number
-      "LastName":string
-      "MemberID": string
-      "MemberName":string
-      "ModifyDietary": number
-      "ParentID": string
-      "ProfilePic": string
-      "RequestedBy": string
-    }[],
+    "Members": MemberListType[],
     "PageCount": number
     "RecordsPerPage": number
     "ResponseCode": string
     "ResponseMessage": string
     "TotalRecords": number
   }
-  memberListPerBatch:{
-    "DefaultTransportaionType": string
-    "DietaryRestrictions": string
-    "DisplayName": string
-    "FirstName": string
-    "ID": string
-    "IsMemberNotAllowed": number
-    "IsSpouse":number
-    "LastName":string
-    "MemberID": string
-    "MemberName":string
-    "ModifyDietary": number
-    "ParentID": string
-    "ProfilePic": string
-    "RequestedBy": string
-  }[]
+  memberListPerBatch:MemberListType[]
   loading:boolean
   formData:Object,
   resetLoadedScreen:() =>void
   singleMemberDetails:any
   addMembersForReservation:() =>void
+  resetSingleMemberDetails:() =>void
   addMemberList:any
+  selectedMembersList:{
+    "id": string
+    "isMemberSelected": boolean
+    "memberName": string
+    "number":number
+    "singleMemberDetails": MemberListType[]
+  }[]
+  singleItemDetails: MemberListType | null
+  userType:string
 }
  
 interface IState {
@@ -76,6 +57,9 @@ interface IState {
       "RequestedBy": string
     }[]
     singleMemberDetails:null|any
+    errorMessagePopup:boolean
+    errorMessageTxt:string
+    selectedGuest:string
 }
 interface SS{}
  
@@ -120,7 +104,10 @@ export default class useMemberDirectoryLogic extends Component<IProps, IState,SS
         pageCount:1,
         checked: false,
         updatedMembersListData:[],
-        singleMemberDetails:null
+        singleMemberDetails:null,
+        errorMessagePopup:false,
+        errorMessageTxt:"",
+        selectedGuest:"Existing Guest"
     };
   }
 
@@ -131,18 +118,10 @@ export default class useMemberDirectoryLogic extends Component<IProps, IState,SS
   componentDidUpdate(prevProps: Readonly<IProps>, prevState: Readonly<IState>, snapshot?: SS): void {
     if(prevProps.memberListPerBatch !== this.props.memberListPerBatch){  
       const updatedData = this.props.memberListPerBatch?.map((items) => {
-        const matchingMember = this.props.addMemberList?.find((item: any) => item?.singleMemberDetails?.ID === items?.ID);
-        if (matchingMember) {
-          return {
-            ...items,
-            isMemberSelected: true,
-          };
-        } else {
-          return {
-            ...items,
-            isMemberSelected: false,
-          };
-        }
+        return {
+          ...items,
+          isMemberSelected: false,
+        };
       });
         this.setState({updatedMembersListData:updatedData})
     }
@@ -197,20 +176,27 @@ export default class useMemberDirectoryLogic extends Component<IProps, IState,SS
     };
 
     addMemberForReservation = () => {
-      this.props.resetLoadedScreen()
-      this.props.addMembersForReservation()
+      if(this.props.singleItemDetails === null){
+        this.setState({errorMessagePopup:true,errorMessageTxt:"Please enter at least one player details."},() => {
+          setTimeout(() => {
+            this.setState({errorMessagePopup:false,errorMessageTxt:""})
+          }, 2000);
+         })
+      }else{
+        this.props.resetLoadedScreen()
+        this.props.addMembersForReservation()
+        this.props.resetSingleMemberDetails()
+      }
     }
   
     selectedMember = (memberData) => {
       this.props.singleMemberDetails(memberData);
       
       const updatedData = this.state.updatedMembersListData.map((items) => {
-        if (items.ID === memberData?.ID) {
           return {
             ...items,
-            isMemberSelected: !items.isMemberSelected,
+            isMemberSelected: items.ID === memberData?.ID?true:false,
           };
-        }
         return items;
       });
     

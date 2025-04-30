@@ -28,6 +28,12 @@ export const styles = StyleSheet.create({
     paddingVertical:10,
     marginVertical: 15,
   },
+  guestContainer: {
+    width: "100%",
+    justifyContent: "flex-start",
+    alignItems: "flex-start",
+    paddingVertical:15,
+  },
   checkboxLabel: {
     color: "#5773A2",
     fontSize: 18,
@@ -170,5 +176,67 @@ export const styles = StyleSheet.create({
     height: 16,
   },
   checkItem:{flexDirection:"row",alignItems:"center"},
-  checkIcon:{ width: 20, height: 20 }
+  checkIcon:{ width: 20, height: 20 },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.2)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  errorMessageTxt:{
+    color:"#0047AB",
+    fontSize:16,
+    fontFamily:"SourceSansPro_Regular"
+  },
+  errorMessageContainer: {
+    position:"absolute",
+    top:"50%",
+    backgroundColor: '#eafaff',
+    borderRadius: 10,
+    padding: 14,
+    alignItems: 'center',
+    alignSelf:"center",
+    borderWidth:1,
+    borderColor:"#0047AB",
+  },
+  optionContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    paddingLeft:40
+  },
+  radioOuter: {
+    height: 18,
+    width: 18,
+    borderRadius: 12,
+    borderWidth: 2,
+    borderColor: "#00AEEF",
+    margin:4,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#fff",
+  },
+  radioInner: {
+    height: 8,
+    width: 8,
+    borderRadius: 6,
+    backgroundColor: "#00AEEF",
+  },
+
+  label: {
+    marginLeft: 6,
+    fontSize: 18,
+    color: "#000",
+    fontFamily:"SourceSansPro_SemiBold"
+  },
+  providerTxt: {
+    fontSize: 16,
+    fontFamily: "SourceSansPro_SemiBold",
+    color: "#666",
+    paddingLeft: 10,
+  },
+  container:{
+    marginVertical: 20,
+    justifyContent: "flex-start",
+  }
 });

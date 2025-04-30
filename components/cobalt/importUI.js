@@ -34,6 +34,6 @@ export {  ConnectedCbButton,
   ConnectedCbVStack, 
   ConnectedCbForm, 
   ConnectedCbFlatList, 
-  ConnectedCbImage,ConnectedCbSelectDropDown  } from '@/components/cobalt/ui'
+  ConnectedCbImage,ConnectedCbSelectDropDown,ConnectedCbErrorMessagePopup  } from '@/components/cobalt/ui'
 
 
