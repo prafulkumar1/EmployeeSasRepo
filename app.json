@@ -14,7 +14,11 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.anonymous.employeeSas"
+      "bundleIdentifier": "com.anonymous.employeeSas",
+      "infoPlist": {
+        "NSBluetoothAlwaysUsageDescription": "This app uses Bluetooth to connect to health monitoring devices",
+        "UIBackgroundModes": ["bluetooth-central", "bluetooth-peripheral"]
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -78,6 +82,9 @@
         "name": "SourceSansPro_SemiBoldItalic",
         "file": "./assets/fonts/SourceSansPro-SemiboldIt.otf"
       }
+    ],
+    "plugins": [
+      "react-native-ble-plx"
     ]
   }
 }
