@@ -14,6 +14,7 @@ interface Props {
   slotData: DateItem[];
   loading: boolean;
   addMemberIndex:number
+  loadPageConfigurations:({pageId, controlId}) =>void
 }
 
 export interface ControllerState {

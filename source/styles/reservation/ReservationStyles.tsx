@@ -27,13 +27,7 @@ export const styles = StyleSheet.create({
     paddingTop: 20,
     lineHeight: 28,
   },
-  boxshadow: {
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
-  },
+  boxshadow: {},
   boxstyles: {
     flexDirection: "row",
     justifyContent: "space-between",
@@ -46,6 +40,11 @@ export const styles = StyleSheet.create({
     alignItems: "center",
     marginHorizontal: 6,
     width: 55,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
   },
   day: { fontSize: 16, fontFamily: "SourceSansPro_Regular" },
   mnthAndDate: {
@@ -87,7 +86,7 @@ export const styles = StyleSheet.create({
     backgroundColor: "#00AEEF",
   },
 
-  label: {
+  gendarLabel: {
     marginLeft: 10,
     fontSize: 16,
     color: "#6D6D6D",

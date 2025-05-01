@@ -25,7 +25,8 @@ export { Accordion,
   AccordionIcon,  } from '@/components/ui/accordion';
  export { Icon,  } from '@/components/ui/icon';
 export { Box } from '@/components/ui/box';
-export {  ConnectedCbButton, 
+export {  
+  ConnectedCbButton, 
   ConnectedCbInput, 
   ConnectedCbCheckBox, 
   ConnectedCbSelect, 
@@ -34,6 +35,13 @@ export {  ConnectedCbButton,
   ConnectedCbVStack, 
   ConnectedCbForm, 
   ConnectedCbFlatList, 
-  ConnectedCbImage,ConnectedCbSelectDropDown,ConnectedCbErrorMessagePopup  } from '@/components/cobalt/ui'
+  ConnectedCbImage,
+  ConnectedCbSelectDropDown,
+  ConnectedCbErrorMessagePopup,
+  ConnectedCbText,
+  ConnectedCbCommonButton,
+  ConnectedCbBox,
+  ConnectedCbView  
+} from '@/components/cobalt/ui'
 
 

@@ -5,6 +5,9 @@ import { styles } from "@/source/styles/reservation/ReservationStyles";
 import ReservationLogic from "@/source/controller/reservation/Reservation";
 import { ActivityIndicator } from "react-native";
 import moment from "moment";
+import { connect } from "react-redux";
+import { RootState } from "@/components/redux/store";
+import { getAppConfiguration } from "@/components/redux/reducers/reservationReducer";
 
 const pageId = "Reservation";
 
@@ -19,7 +22,7 @@ const dropdownOptions = [
   { label: "Lyn", value: "deep_cleansing" },
   { label: "Hydra", value: "hydra_facial" },
 ];
-export default class ReservationUI extends ReservationLogic {
+class ReservationUI extends ReservationLogic {
   renderHorizontalCalender = ({ item }) => {
     const isSelected = this.state.selectedDateId === item.id;
     const isToday = item?.fullDate === moment()?.format("YYYY-MM-DD");
@@ -29,7 +32,6 @@ export default class ReservationUI extends ReservationLogic {
         <UI.Box
           style={[
             styles.dateBox,
-            styles.boxshadow,
             {
               backgroundColor: isSelected
                 ? "#00c6ff"
@@ -39,7 +41,7 @@ export default class ReservationUI extends ReservationLogic {
             },
           ]}
         >
-          <UI.Text
+          <UI.Text 
             style={[styles.day, { color: showHighlight ? "#fff" : "#4B5154" }]}
           >
             {item?.day}
@@ -70,15 +72,16 @@ export default class ReservationUI extends ReservationLogic {
     return (
       <UI.TouchableOpacity
         key={index}
-        style={styles.optionContainer}
         onPress={() => this.setState({ selectedGender: item?.gender })}
       >
-        <UI.Box style={styles.radioOuter}>
-          {selectedGender === item?.gender && (
-            <UI.Box style={styles.radioInner} />
-          )}
-        </UI.Box>
-        <UI.Text style={styles.label}>{item?.gender}</UI.Text>
+        <UI.ConnectedCbBox id="optionContainer" pageId={pageId} style={styles.optionContainer}>
+          <UI.ConnectedCbBox id="radioOuter" pageId={pageId} style={styles.radioOuter}>
+            {selectedGender === item?.gender && (
+              <UI.ConnectedCbBox id="radioInner" pageId={pageId} style={styles.radioInner} />
+            )}
+          </UI.ConnectedCbBox>
+          <UI.ConnectedCbText id="gendarLabel" pageId={pageId} style={styles.gendarLabel}>{item?.gender}</UI.ConnectedCbText>
+        </UI.ConnectedCbBox>
       </UI.TouchableOpacity>
     );
   };
@@ -90,13 +93,15 @@ export default class ReservationUI extends ReservationLogic {
     const isSelected = this.state.selectedTimePeriod === item.id;
 
     return (
-      <UI.Box
+      <UI.ConnectedCbBox
+        id="timePeriodContainer" 
+        pageId={pageId}
         style={[
           styles.timePeriodContainer,
           shouldAlignLeft && { alignItems: "center" },
         ]}
       >
-        <UI.Text style={styles.timePeriodTxt}>{item.label}</UI.Text>
+        <UI.ConnectedCbText id="timePeriodTxt" pageId={pageId} style={styles.timePeriodTxt}>{item.label}</UI.ConnectedCbText>
         <UI.TouchableOpacity
           style={[
             styles.timeSlotsBtn,
@@ -113,7 +118,7 @@ export default class ReservationUI extends ReservationLogic {
             {item.time}
           </UI.Text>
         </UI.TouchableOpacity>
-      </UI.Box>
+      </UI.ConnectedCbBox>
     );
   };
 
@@ -143,9 +148,9 @@ export default class ReservationUI extends ReservationLogic {
 
   renderCalenderLoader = () => {
     return (
-      <UI.Box style={styles.calenderLoader}>
+      <UI.ConnectedCbBox id="CbLoader" pageId={pageId} style={styles.calenderLoader}>
         <ActivityIndicator color={"#00c6ff"} size={"small"} />
-      </UI.Box>
+      </UI.ConnectedCbBox>
     );
   };
   render() {
@@ -154,14 +159,14 @@ export default class ReservationUI extends ReservationLogic {
         contentContainerStyle={styles.mainContainer}
         bounces={false}
       >
-        <UI.Box style={styles.topContainer}>
-          <UI.Text style={styles.selectTxt}>Select Date</UI.Text>
+        <UI.ConnectedCbBox id="CalenderContainer" pageId={pageId} style={styles.topContainer}>
+          <UI.ConnectedCbText id="SelectDateLabel" pageId={pageId} style={styles.selectTxt}>Select Date</UI.ConnectedCbText>
           <UI.TouchableOpacity onPress={this.toggleCalendar}>
-            <UI.Text style={styles.dateTxt}>
+            <UI.ConnectedCbText id="CurrentDateLable" pageId={pageId} style={styles.dateTxt}>
               {moment()?.format("MMMM, YYYY")}
-            </UI.Text>
+            </UI.ConnectedCbText>
           </UI.TouchableOpacity>
-        </UI.Box>
+        </UI.ConnectedCbBox>
 
         <UI.FlatList
           data={this.state.requiredDates}
@@ -181,8 +186,8 @@ export default class ReservationUI extends ReservationLogic {
         />
 
         {this.state.showCalendar && (
-          <UI.Box style={styles.calendar}>
-            <UI.Box style={{ transform: [{ scale: 0.85 }], marginTop: -15 }}>
+          <UI.ConnectedCbBox id="topCalenderContainer" pageId={pageId} style={styles.calendar}>
+            <UI.ConnectedCbBox id="topSubCalenderContainer" pageId={pageId} style={{ transform: [{ scale: 0.85 }], marginTop: -15 }}>
               <CalendarPicker
                 onDateChange={(date) =>
                   console.log(date, "---->>>datedatedate")
@@ -199,9 +204,9 @@ export default class ReservationUI extends ReservationLogic {
                 height={350}
                 // selectedStartDate={this.state.selectedDate}
               />
-              <UI.Text style={styles.calendarText}>{"18-April-2025"}</UI.Text>
-            </UI.Box>
-          </UI.Box>
+              <UI.ConnectedCbText id="currentDateLabel" pageId={pageId} style={styles.calendarText}>{"18-April-2025"}</UI.ConnectedCbText>
+            </UI.ConnectedCbBox>
+          </UI.ConnectedCbBox>
         )}
         <UI.ConnectedCbSelectDropDown
           options={servicesOptions}
@@ -216,7 +221,7 @@ export default class ReservationUI extends ReservationLogic {
           placeholder={"Select Service"}
         />
 
-        <UI.Box style={styles.container}>
+        <UI.ConnectedCbBox id="genderBox" pageId={pageId} style={styles.container}>
           <UI.FlatList
             data={[
               { id: 1, gender: "Male" },
@@ -228,7 +233,7 @@ export default class ReservationUI extends ReservationLogic {
             horizontal
             renderItem={this.renderGenderSelector}
           />
-        </UI.Box>
+        </UI.ConnectedCbBox>
 
         <UI.ConnectedCbSelectDropDown
           options={dropdownOptions}
@@ -249,19 +254,33 @@ export default class ReservationUI extends ReservationLogic {
           scrollEnabled={false}
         />
 
-        <UI.Box style={styles.gridContainer}>
+        <UI.ConnectedCbBox id="gridContainer" pageId={pageId} style={styles.gridContainer}>
           {this.getCurrentTimeSlots().map(this.renderSlot)}
-        </UI.Box>
+        </UI.ConnectedCbBox>
 
-        <UI.Box style={styles.addMemberContainer}>
+        <UI.ConnectedCbBox id="addMemberContainer" pageId={pageId} style={styles.addMemberContainer}>
           <UI.TouchableOpacity
-            style={styles.addMemberBtn}
             onPress={() => this.navigateToAddMembers()}
           >
-            <UI.Text style={styles.addMemberBtnTxt}> Add Member</UI.Text>
+            <UI.ConnectedCbBox id="addMemberBtn" pageId={pageId} style={styles.addMemberBtn}>
+              <UI.ConnectedCbText id="addMemberBtnTxt" pageId={pageId} style={styles.addMemberBtnTxt}> Add Member</UI.ConnectedCbText>
+            </UI.ConnectedCbBox>
           </UI.TouchableOpacity>
-        </UI.Box>
+        </UI.ConnectedCbBox>
       </UI.ScrollView>
     );
   }
 }
+
+const mapStateToProps = (state:RootState) => {
+  return {
+    loading:state.dashboard.loading,
+    dashboardResponse:state.dashboard.dashboardResponse,
+    errorMessage:state.dashboard.errorMessage
+  }
+}
+const mapDispatchToProps = {
+  getAppConfiguration,
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(ReservationUI)

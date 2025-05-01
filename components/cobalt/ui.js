@@ -23,33 +23,8 @@ import { getFormFieldData, getFormFieldDataSelector, setFormFieldData } from '..
 import { connect } from 'react-redux';
 import { SvgUri } from 'react-native-svg';
 import { styles } from './style';
-class CbImage extends React.Component {
-  constructor(props) {
-    super(props);
-    // this.id=props.id;
-    this.source = props.source || "";
-    this.imageJsx = props.imageJsx;
-    this.style = props.style || "";
-  }
-
-  render() {
-    const jsx = this.imageJsx;
-    const source = this.source;
-
-    if (source) {
-
-      if (source.endsWith('.svg')) {
-
-        return <SvgUri  uri={source}/>;
-      } else {
- 
-        return <Image alt='image' source={{ uri: source }} style={this.style} />;
-      }
-    } else {
-      return jsx;
-    }
-  }
-}
+import { transformStyles } from '../constants/Matrices';
+import { loadPageConfigurations } from '../redux/reducers/reservationReducer';
  
 class cbButton extends React.Component {
   constructor(props) {
@@ -105,29 +80,6 @@ class cbCheckBox extends React.Component {
   }
 }
  
- 
- 
-class cbImageBackground extends React.Component {
-  constructor(props) {
-    super();
-    this.id = props.id;
-    this.source = props.source || null;
-    this.styles = props.styles || null;
-  }
- 
-  render() {
-    const { children } = this.props;
-    const inputArray = global.controlsConfigJson.find(item => item.id === this.id);
-    const sourceprop = inputArray?.source || this.source;
-    const styleprop = inputArray?.styles || this.styles;
- 
-    return (
-      <ImageBackground source={sourceprop} alt='login' style={styleprop?.container} >
-        {children}
-      </ImageBackground>
-    );
-  }
-}
  
 class cbRadioButton extends React.Component {
  
@@ -420,7 +372,6 @@ class CbSelectDropDown extends React.Component {
     this.placeholder = props.placeholder || "Select Option";
     this.customstyle = props.customstyle || {}
     this.selectItemId = props.selectItemId
-    console.log( props.options, 'props.style');
   }
   componentDidUpdate(prevProps) {
     if (
@@ -431,14 +382,6 @@ class CbSelectDropDown extends React.Component {
       this.setState({ showDropdown: false });
     }
   }
- 
-  // toggleDropdown = () => {
-  //   this.props.setAddMemberIndex(this.selectItemId)
-  //   this.setState((prevState) => ({
-  //     showDropdown: !prevState.showDropdown,
-  //   }));
- 
-  // };
   toggleDropdown = () => {
     const { showDropdown } = this.state;
     const isOpening = !showDropdown;
@@ -536,6 +479,271 @@ class CbErrorMessagePopup extends React.Component {
     );
   }
 }
+
+class CbText extends React.Component {
+  constructor(props) {
+    super(props);
+    this.id=props.id;
+    this.pageID=props.pageId;
+    this.styles= props.style || {};
+    this.numberOfLines=props.numberOfLines || undefined;
+    this.Conditionalstyle=props.Conditionalstyle || {};
+    this.strikeThrough=props.strikeThrough || "false";
+    this.state = {
+      ControlConfig: [], 
+    };
+  }
+  componentDidMount() {
+     setTimeout(() => {
+      this.loadPageConfig();
+     }, 500);
+  }
+  loadPageConfig = () => {
+    try {
+      const ControlConfig = this.props?.loadPageConfigurations({pageID:this.pageID,controlId:this.id});
+      this.setState({ ControlConfig });
+    } catch (error) {
+    }
+  };
+
+  render() {    
+     const { ControlConfig } = this.state; 
+     const StrikeThrough = ControlConfig?.StrikeThrough || this.strikeThrough;
+      const Styles=ControlConfig?.Styles;
+      const StyleProps = transformStyles(Styles);  
+      const dynamicStyle = StyleProps && Object.keys(StyleProps).length > 0  ? Object.values(StyleProps)[0] : this.styles;
+      const LabelText=ControlConfig?.LabelText || this.props.children;
+     return (
+      <Text strikeThrough={StrikeThrough} style={[dynamicStyle,this.Conditionalstyle]} numberOfLines={this.numberOfLines}>
+         {LabelText}
+      </Text>
+    );
+  }
+}
+
+class CbImage extends React.Component {
+  constructor(props) {
+    super(props);
+     this.id=props.id;
+     this.pageID=props.pageId;
+    this.source = props.source || "";
+    this.imageJsx = props.imageJsx;
+    this.resizeMode=props.resizeMode || "";
+    this.styles = props.style || "";
+    this.state = {
+      ControlConfig: [], 
+    };
+  }
+  componentDidMount() {
+    setTimeout(() => {
+     this.loadPageConfig();
+    }, 500);
+ }
+ loadPageConfig = () => {
+   try {
+     const ControlConfig = this.props?.loadPageConfigurations({pageID:this.pageID,controlId:this.id});
+     this.setState({ ControlConfig });
+   } catch (error) {
+   }
+ };
+
+  render() {
+    const { ControlConfig } = this.state;
+    const source = ControlConfig?.ImageSource  || this.source;
+    const Styles=ControlConfig?.Styles;
+    const StyleProps = transformStyles(Styles);  
+    const dynamicStyle = StyleProps && Object.keys(StyleProps).length > 0  ? Object.values(StyleProps)[0] : this.styles; 
+    const jsx = this.imageJsx;
+    const ResizeMode= ControlConfig?.resizeMode || this.resizeMode;
+    if (source) {
+
+      if (source.endsWith('.svg')) {
+
+        return <SvgUri source={{ uri: source }} />;
+      } else {
+
+        return <Image alt='image' resizeMode={ResizeMode} source={{ uri: source }}  style={dynamicStyle}/>;
+      }
+    } else if (React.isValidElement(jsx)) {
+      return React.cloneElement(this.imageJsx, {
+        style: [jsx.props.style, dynamicStyle], // Merge styles
+      });
+    } else {
+      return null;
+    }
+  }
+}
+
+class CbImageBackground extends React.Component {
+  constructor(props) {
+    super();
+    this.id=props.id;
+    this.pageID=props.pageId;
+    this.source = props.source || null;
+    this.styles= props.style || null;
+    this.state = {
+      ControlConfig: [], 
+    };
+  }
+  componentDidMount() {
+    setTimeout(() => {
+     this.loadPageConfig();
+    }, 500);
+ }
+ loadPageConfig = () => {
+   try {
+     const ControlConfig = this.props?.loadPageConfigurations({pageID:this.pageID,controlId:this.id});
+     this.setState({ ControlConfig });
+   } catch (error) {
+   }
+ };
+
+  render() {
+    const { ControlConfig }=this.state;
+    const { children } = this.props;
+    const sourceprop = ControlConfig?.source  || this.source;
+    const Styles = ControlConfig?.Styles;
+    const StyleProps = transformStyles(Styles) ;
+    const dynamicStyle = StyleProps && Object.keys(StyleProps).length > 0  ? Object.values(StyleProps)[0] : this.styles;
+
+    return (
+      <ImageBackground source={sourceprop} alt='login' style={dynamicStyle} >
+        {children}
+      </ImageBackground>
+    );
+  }
+}
+
+class CbCommonButton extends React.Component {
+  constructor(props) {
+    super(props);
+    this.id = props.id
+    this.pageID=props.pageId;
+    this.cartQuantity = props.cartQuantity
+    this.showBtnName = props.showBtnName || ""
+    this.isPlusIconAvailable = props.isPlusIconAvailable || false
+    this.style = props.style
+    this.btnTextStyle = props.btnTextStyle
+    this.onPress = props.onPress
+    this.state={
+      ControlConfig:[]
+    }
+  }
+  componentDidMount() {
+    setTimeout(() => {
+     this.loadPageConfig();
+    }, 500);
+ }
+ loadPageConfig = () => {
+   try {
+     const ControlConfig = this.props?.loadPageConfigurations({pageID:this.pageID,controlId:this.id});
+     this.setState({ ControlConfig });
+   } catch (error) {
+   }
+ };
+  render() {
+    const { ControlConfig } =this.state;
+    const Styles=ControlConfig?.Styles;
+    const StyleProps = transformStyles(Styles); 
+    const Buttontext = ControlConfig?.Buttontext ||  this.showBtnName;
+    const ButtonStyleProp =StyleProps?.buttonStyle || this.style;
+    const ButtonTextStyle=StyleProps?.buttonTextStyle || this.btnTextStyle;
+    const isPlusIconAvailable= (ControlConfig?.isPlusIconAvailable == "true") || this.isPlusIconAvailable;
+    return (
+      <Box>
+        <TouchableOpacity
+          style={[ButtonStyleProp ? ButtonStyleProp : styles.mediumBtn]}
+          onPress={() => this?.onPress()}
+        >
+          {
+            isPlusIconAvailable && <Icon as={AddIcon} color='#2A4E7D' />
+          }
+          <Text style={[ButtonTextStyle ? ButtonTextStyle : styles.mediumBtnTxt]}>
+            {Buttontext}
+          </Text>
+        </TouchableOpacity>
+      </Box>
+    )
+  }
+}
+
+
+class CbBox extends React.Component {
+  constructor(props) {
+    super(props);
+    this.id=props.id;
+    this.pageID=props.pageId;
+    this.Conditionalstyle=props.Conditionalstyle || {};
+    this.styles= props.style || {};
+    this.state = {
+      ControlConfig: [], 
+    };
+   
+  }
+  componentDidMount() {
+    setTimeout(() => {
+     this.loadPageConfig();
+    }, 500);
+ }
+ loadPageConfig = () => {
+   try {
+     const ControlConfig = this.props?.loadPageConfigurations({pageID:this.pageID,controlId:this.id});
+     this.setState({ ControlConfig });
+   } catch (error) {
+   }
+ };
+
+  render() {
+    const { ControlConfig } = this.state;  
+    const Styles = ControlConfig?.Styles;
+    const StyleProps = transformStyles(Styles);
+    const dynamicStyle = StyleProps && Object.keys(StyleProps).length > 0  ? Object.values(StyleProps)[0] : this.styles;
+    return (
+      <Box style={[dynamicStyle,this.Conditionalstyle]} >
+         {this.props.children}
+       </Box>
+    );
+  }
+}
+
+
+class CbView extends React.Component {
+  constructor(props) {
+    super(props);
+    this.id=props.id;
+    this.pageID=props.pageId;
+    this.Conditionalstyle=props.Conditionalstyle || {};
+    this.styles= props.style || {};
+    this.state = {
+      ControlConfig: [], 
+    };
+   
+  }
+  componentDidMount() {
+    setTimeout(() => {
+     this.loadPageConfig();
+    }, 500);
+ }
+ loadPageConfig = () => {
+   try {
+     const ControlConfig = this.props?.loadPageConfigurations({pageID:this.pageID,controlId:this.id});
+     this.setState({ ControlConfig });
+   } catch (error) {
+   }
+ };
+  render() {
+    const { ControlConfig } = this.state;  
+     const Styles=ControlConfig?.Styles;
+     const StyleProps = transformStyles(Styles);
+     const dynamicStyle =  StyleProps && Object.keys(StyleProps).length > 0  ? Object.values(StyleProps)[0] : this.styles;
+    return (
+      <View style={[dynamicStyle,this.Conditionalstyle]} >
+         {this.props.children}
+       </View>
+    );
+  }
+}
+
 const mapStateToProps = (state) => {
   return{
     formData: state.login.formData,
@@ -544,33 +752,42 @@ const mapStateToProps = (state) => {
  
 const mapDispatchToProps = {
   setFormFieldData,
-  getFormFieldData
+  getFormFieldData,
+  loadPageConfigurations
 };
-CbImage.displayName = 'ConnectedCbImage';
 cbButton.displayName = 'ConnectedCbButton';
 cbInput.displayName = 'ConnectedCbInput';
 cbCheckBox.displayName = 'ConnectedCbCheckBox';
 cbSelect.displayName = 'ConnectedCbSelect';
-cbImageBackground.displayName = 'ConnectedCbImageBackground';
 cbRadioButton.displayName = 'ConnectedCbRadioButton';
 cbVStack.displayName = 'ConnectedCbVStack';
 cbForm.displayName = 'ConnectedCbForm';
 CbFlatList.displayName = "ConnectedCbFlatList"
 CbErrorMessagePopup.displayName = "ConnectedCbErrorMessagePopup"
+CbText.displayName = "ConnectedCbText"
+CbImageBackground.displayName = 'ConnectedCbImageBackground';
+CbImage.displayName = 'ConnectedCbImage';
+CbCommonButton.displayName = 'ConnectedCbCommonButton';
+CbBox.displayName = 'ConnectedCbBox';
+CbView.displayName = 'ConnectedCbView';
  
 
 const ConnectedCbInput = connect(mapStateToProps, mapDispatchToProps)(cbInput);
 const ConnectedCbButton = connect(mapStateToProps, mapDispatchToProps)(cbButton);
 const ConnectedCbCheckBox = connect(mapStateToProps, mapDispatchToProps)(cbCheckBox);
 const ConnectedCbSelect = connect(mapStateToProps, mapDispatchToProps)(cbSelect);
-const ConnectedCbImageBackground = connect(mapStateToProps, mapDispatchToProps)(cbImageBackground);
 const ConnectedCbRadioButton = connect(mapStateToProps, mapDispatchToProps)(cbRadioButton);
 const ConnectedCbVStack = connect(mapStateToProps, mapDispatchToProps)(cbVStack);
 const ConnectedCbForm = connect(mapStateToProps, mapDispatchToProps)(cbForm);
 const ConnectedCbFlatList = connect(mapStateToProps, mapDispatchToProps)(CbFlatList);
-const ConnectedCbImage = connect(mapStateToProps, mapDispatchToProps)(CbImage);
 const ConnectedCbSelectDropDown = connect(mapStateToProps, mapDispatchToProps)(CbSelectDropDown);
 const ConnectedCbErrorMessagePopup = connect(mapStateToProps, mapDispatchToProps)(CbErrorMessagePopup);
+const ConnectedCbText = connect(mapStateToProps, mapDispatchToProps)(CbText);
+const ConnectedCbImage = connect(mapStateToProps, mapDispatchToProps)(CbImage);
+const ConnectedCbImageBackground = connect(mapStateToProps, mapDispatchToProps)(CbImageBackground);
+const ConnectedCbCommonButton = connect(mapStateToProps, mapDispatchToProps)(CbCommonButton);
+const ConnectedCbBox = connect(mapStateToProps, mapDispatchToProps)(CbBox);
+const ConnectedCbView = connect(mapStateToProps, mapDispatchToProps)(CbView);
 export { 
   ConnectedCbButton, 
   ConnectedCbInput, 
@@ -583,7 +800,11 @@ export {
   ConnectedCbFlatList, 
   ConnectedCbImage,
   ConnectedCbSelectDropDown,
-  ConnectedCbErrorMessagePopup
+  ConnectedCbErrorMessagePopup,
+  ConnectedCbText,
+  ConnectedCbCommonButton,
+  ConnectedCbBox,
+  ConnectedCbView
 };
  
 // export {  cbButton, cbInput, cbCheckBox, cbSelect, cbImageBackground, cbRadioButton, cbVStack, cbForm, CbFlatList, CbImage };

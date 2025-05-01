@@ -1,22 +1,77 @@
+import { postApiCall } from '@/components/utlis/api';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
   addMemberIndex: null as number | null, 
-  loading:false
+  loading:false,
+  AppConfigJson:null
+};
+
+export const getAppConfiguration = createAsyncThunk(
+  'getAppConfiguration',
+  async (
+    _,
+    { getState, rejectWithValue, fulfillWithValue },
+  ) => {
+    const params = {};
+    let AppConfigJsonData = await postApiCall("UI_CONFIGURATIONS", "GET_UI_CONFIGURATIONS", {});
+    if (AppConfigJsonData) {
+      if(AppConfigJsonData.statusCode === 200){
+        if (AppConfigJsonData.response) {
+          return fulfillWithValue(AppConfigJsonData.response?.Data);
+        } else {
+          return rejectWithValue(AppConfigJsonData.response?.Data);
+        }
+      }else{
+        return rejectWithValue(AppConfigJsonData.response?.Data);
+      }
+    }
+  },
+);
+export const loadPageConfigurations = (payload: {pageID:string,controlId:string}) => (_: any, getState:any) => {
+  const {pageID,controlId} = payload
+  const state = getState();
+  const pageConfig = state.reservation.AppConfigJson?.find(
+    (item:{PageId:string}) => item.PageId === pageID
+  );
+  if (!pageConfig) return null;
+
+  const pageConfigJson = pageConfig.Controls.map((control:any) => {
+    try {
+      return JSON.parse(control.ControlJson);
+    } catch (error) {
+      console.error("Error parsing ControlJson:", error);
+      return null;
+    }
+  });
+
+  const controlConfig = pageConfigJson.find((item:{id:string}) => item?.id === controlId);
+  return controlConfig;
 };
 
 const ReservationSlice = createSlice({
-  name: 'reservation',
+  name: "reservation",
   initialState: initialState,
   reducers: {
     setAddMemberIndex(state, action) {
-      state.addMemberIndex = action.payload; 
+      state.addMemberIndex = action.payload;
     },
   },
-
-
+  extraReducers: (builder) => {
+    builder
+      .addCase(getAppConfiguration.pending, (state, action) => {
+        state.loading = true;
+      })
+      .addCase(getAppConfiguration.fulfilled, (state, action) => {
+        state.loading = false;
+        state.AppConfigJson = action.payload;
+      })
+      .addCase(getAppConfiguration.rejected, (state, action) => {
+        state.loading = false;
+      });
+  },
 });
 
-export const {setAddMemberIndex } = ReservationSlice.actions;
+export const {setAddMemberIndex} = ReservationSlice.actions;
 
 export default ReservationSlice.reducer;
