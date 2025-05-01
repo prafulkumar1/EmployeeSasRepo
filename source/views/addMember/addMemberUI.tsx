@@ -9,6 +9,7 @@ import { styles } from '@/source/styles/addMember/addMember';
 import MemberDirectoryUI from '../memberDirectory/memberDirectoryUI';
 import { addTbdToMemberList, handleSelectedMember, removeMembersFromList, resetLoadedScreen, resetSingleMemberDetails, setMembersList, setUserType } from '@/components/redux/reducers/addMemberReducer';
 import { LinearGradient } from 'expo-linear-gradient';
+import moment from 'moment';
 
 const pageId = 'AddMember';
 const addMemberList = [{id:1,memberType:"Member"},{id:2,memberType:"Guest"},{id:3,memberType:"TBD"}]
@@ -54,7 +55,7 @@ class AddMemberUI extends useAddMemberLogic {
           <UI.Text style={styles.subtitle}>
             Your Reservation has been Confirmed for
           </UI.Text>
-          <UI.Text style={styles.subtitle}>Thursday, Apr 17</UI.Text>
+          <UI.Text style={styles.subtitle}>{moment()?.format('dddd, MMM D')}</UI.Text>
         </UI.Box>
       </LinearGradient>
     )
