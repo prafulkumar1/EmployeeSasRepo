@@ -2,6 +2,7 @@
   "expo": {
     "name": "employeeSas",
     "slug": "employeeSas",
+    "scheme": "com.employeeSas",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -17,7 +18,10 @@
       "bundleIdentifier": "com.anonymous.employeeSas",
       "infoPlist": {
         "NSBluetoothAlwaysUsageDescription": "This app uses Bluetooth to connect to health monitoring devices",
-        "UIBackgroundModes": ["bluetooth-central", "bluetooth-peripheral"]
+        "UIBackgroundModes": [
+          "bluetooth-central",
+          "bluetooth-peripheral"
+        ]
       }
     },
     "android": {
@@ -84,7 +88,7 @@
       }
     ],
     "plugins": [
-      "react-native-ble-plx"
+      "expo-font"
     ]
   }
 }
