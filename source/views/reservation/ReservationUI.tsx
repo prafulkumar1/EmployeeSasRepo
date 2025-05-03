@@ -8,6 +8,7 @@ import moment from "moment";
 import { connect } from "react-redux";
 import { RootState } from "@/components/redux/store";
 import { getAppConfiguration } from "@/components/redux/reducers/reservationReducer";
+import { StatusBar } from "expo-status-bar";
 
 const pageId = "Reservation";
 
@@ -154,120 +155,171 @@ class ReservationUI extends ReservationLogic {
     );
   };
   render() {
+    const displayDate = this.state.selectedDate || moment();
+    const displayMonthYear = displayDate.format("MMMM, YYYY");
     return (
-      <UI.ScrollView
-        contentContainerStyle={styles.mainContainer}
-        bounces={false}
-      >
-        <UI.ConnectedCbBox id="CalenderContainer" pageId={pageId} style={styles.topContainer}>
-          <UI.ConnectedCbText id="SelectDateLabel" pageId={pageId} style={styles.selectTxt}>Select Date</UI.ConnectedCbText>
-          <UI.TouchableOpacity onPress={this.toggleCalendar}>
-            <UI.ConnectedCbText id="CurrentDateLable" pageId={pageId} style={styles.dateTxt}>
-              {moment()?.format("MMMM, YYYY")}
-            </UI.ConnectedCbText>
-          </UI.TouchableOpacity>
-        </UI.ConnectedCbBox>
-
-        <UI.FlatList
-          data={this.state.requiredDates}
-          horizontal
-          keyExtractor={(item) => item.id}
-          renderItem={this.renderHorizontalCalender}
-          showsHorizontalScrollIndicator={false}
-          onEndReached={this.loadMoreDates}
-          ListFooterComponent={this.renderCalenderLoader}
-          onEndReachedThreshold={0.5}
-          style={{
-            flex: 1,
-            maxHeight: 110,
-            minHeight: 80,
-            paddingTop: 10,
-          }}
-        />
-
-        {this.state.showCalendar && (
-          <UI.ConnectedCbBox id="topCalenderContainer" pageId={pageId} style={styles.calendar}>
-            <UI.ConnectedCbBox id="topSubCalenderContainer" pageId={pageId} style={{ transform: [{ scale: 0.85 }], marginTop: -15 }}>
-              <CalendarPicker
-                onDateChange={(date) =>
-                  console.log(date, "---->>>datedatedate")
-                }
-                selectedDayColor="#002c5f"
-                selectedDayTextColor="#fff"
-                textStyle={{ color: "#fff" }}
-                yearTitleStyle={{ color: "#fff" }}
-                previousTitle="<"
-                nextTitle=">"
-                previousTitleStyle={styles.previousTitleStyle}
-                nextTitleStyle={styles.nextTitleStyles}
-                width={300}
-                height={350}
-                // selectedStartDate={this.state.selectedDate}
-              />
-              <UI.ConnectedCbText id="currentDateLabel" pageId={pageId} style={styles.calendarText}>{"18-April-2025"}</UI.ConnectedCbText>
-            </UI.ConnectedCbBox>
-          </UI.ConnectedCbBox>
-        )}
-        <UI.ConnectedCbSelectDropDown
-          options={servicesOptions}
-          customstyle={[
-            styles.serviceBtn,
-            { zIndex: this.state.isServiceSelected ? 1 : -1 },
-          ]}
-          onSelect={(value: string) => this.selectService(value)}
-          openDropDown={() =>
-            this.setState({ isServiceSelected: !this.state.isServiceSelected })
-          }
-          placeholder={"Select Service"}
-        />
-
-        <UI.ConnectedCbBox id="genderBox" pageId={pageId} style={styles.container}>
-          <UI.FlatList
-            data={[
-              { id: 1, gender: "Male" },
-              { id: 2, gender: "Female" },
-              { id: 3, gender: "Any" },
-            ]}
-            scrollEnabled={false}
-            keyExtractor={(item) => `${item.id}_${Math.random()}`}
-            horizontal
-            renderItem={this.renderGenderSelector}
-          />
-        </UI.ConnectedCbBox>
-
-        <UI.ConnectedCbSelectDropDown
-          options={dropdownOptions}
-          customstyle={[
-            styles.dropDownBtn,
-            { zIndex: !this.state.isServiceSelected ? 1 : -1 },
-          ]}
-          onSelect={(value: string) => this.selectProvider(value)}
-          placeholder={"Select Provider"}
-        />
-
-        <UI.FlatList
-          data={this.timeData}
-          renderItem={this.renderTimePeriods}
-          numColumns={2}
-          columnWrapperStyle={{ justifyContent: "flex-start" }}
-          style={styles.timePeriodContainers}
-          scrollEnabled={false}
-        />
-
-        <UI.ConnectedCbBox id="gridContainer" pageId={pageId} style={styles.gridContainer}>
-          {this.getCurrentTimeSlots().map(this.renderSlot)}
-        </UI.ConnectedCbBox>
-
-        <UI.ConnectedCbBox id="addMemberContainer" pageId={pageId} style={styles.addMemberContainer}>
-          <UI.TouchableOpacity
-            onPress={() => this.navigateToAddMembers()}
+      <UI.Box style={styles.mainContainer}>
+        <UI.ConnectedCbHeader />
+        <StatusBar hidden={true} />
+        <UI.ScrollView bounces={false} style={{ padding: 10 }}>
+          <UI.ConnectedCbBox
+            id="CalenderContainer"
+            pageId={pageId}
+            style={styles.topContainer}
           >
-            <UI.ConnectedCbBox id="addMemberBtn" pageId={pageId} style={styles.addMemberBtn}>
-              <UI.ConnectedCbText id="addMemberBtnTxt" pageId={pageId} style={styles.addMemberBtnTxt}> Add Member</UI.ConnectedCbText>
+            <UI.ConnectedCbText
+              id="SelectDateLabel"
+              pageId={pageId}
+              style={styles.selectTxt}
+            >
+              Select Date
+            </UI.ConnectedCbText>
+            <UI.TouchableOpacity onPress={this.toggleCalendar}>
+              <UI.ConnectedCbText
+                id="CurrentDateLable"
+                pageId={pageId}
+                style={styles.dateTxt}
+              >
+                {this.state.selectedDate
+                  ? this.state.selectedDate.format("MMMM, YYYY")
+                  : moment().format("MMMM, YYYY")}
+              </UI.ConnectedCbText>
+            </UI.TouchableOpacity>
+          </UI.ConnectedCbBox>
+
+          <UI.FlatList
+            ref={this.flatListRef}
+            data={this.state.requiredDates}
+            horizontal
+            keyExtractor={(item) => item.id}
+            renderItem={this.renderHorizontalCalender}
+            showsHorizontalScrollIndicator={false}
+            onEndReached={this.loadMoreDates}
+            ListFooterComponent={this.renderCalenderLoader}
+            onEndReachedThreshold={0.5}
+            style={{
+              paddingVertical: 10,
+              marginBottom: 10,
+            }}
+          />
+
+          {this.state.showCalendar && (
+            <UI.ConnectedCbBox
+              id="topCalenderContainer"
+              pageId={pageId}
+              style={styles.calendar}
+            >
+              <UI.ConnectedCbBox
+                id="topSubCalenderContainer"
+                pageId={pageId}
+                style={{ transform: [{ scale: 0.85 }], marginTop: -15 }}
+              >
+                <CalendarPicker
+                  onDateChange={(date:string) => this.handleChangeDate(date)}
+                  selectedDayColor="#002c5f"
+                  selectedDayTextColor="#fff"
+                  textStyle={{ color: "#fff" }}
+                  yearTitleStyle={{ color: "#fff" }}
+                  previousTitle="<"
+                  nextTitle=">"
+                  previousTitleStyle={styles.previousTitleStyle}
+                  nextTitleStyle={styles.nextTitleStyles}
+                  width={300}
+                  height={350}
+                  selectedStartDate={this.state.selectedDate}
+                />
+                <UI.ConnectedCbText
+                  id="currentDateLabel"
+                  pageId={pageId}
+                  style={styles.calendarText}
+                >
+                  {(this.state.selectedDate || moment()).format("DD-MMMM-YYYY")}
+                </UI.ConnectedCbText>
+              </UI.ConnectedCbBox>
+            </UI.ConnectedCbBox>
+          )}
+          <UI.ConnectedCbSelectDropDown
+            options={servicesOptions}
+            customstyle={[
+              styles.serviceBtn,
+              { zIndex: this.state.isServiceSelected ? 1 : -1 },
+            ]}
+            onSelect={(value: string) => this.selectService(value)}
+            openDropDown={() =>
+              this.setState({
+                isServiceSelected: !this.state.isServiceSelected,
+              })
+            }
+            placeholder={"Select Service"}
+          />
+
+          <UI.ConnectedCbBox
+            id="genderBox"
+            pageId={pageId}
+            style={styles.container}
+          >
+            <UI.FlatList
+              data={[
+                { id: 1, gender: "Male" },
+                { id: 2, gender: "Female" },
+                { id: 3, gender: "Any" },
+              ]}
+              scrollEnabled={false}
+              keyExtractor={(item) => `${item.id}_${Math.random()}`}
+              horizontal
+              renderItem={this.renderGenderSelector}
+            />
+          </UI.ConnectedCbBox>
+
+          <UI.ConnectedCbSelectDropDown
+            options={dropdownOptions}
+            customstyle={[
+              styles.dropDownBtn,
+              { zIndex: !this.state.isServiceSelected ? 1 : -1 },
+            ]}
+            onSelect={(value: string) => this.selectProvider(value)}
+            placeholder={"Select Provider"}
+          />
+
+          <UI.FlatList
+            data={this.timeData}
+            renderItem={this.renderTimePeriods}
+            numColumns={2}
+            columnWrapperStyle={{ justifyContent: "flex-start" }}
+            scrollEnabled={false}
+          />
+
+          <UI.ConnectedCbBox
+            id="gridContainer"
+            pageId={pageId}
+            style={styles.gridContainer}
+          >
+            {this.getCurrentTimeSlots().map(this.renderSlot)}
+          </UI.ConnectedCbBox>
+        </UI.ScrollView>
+        <UI.ConnectedCbBox
+          id="addMemberContainer"
+          pageId={pageId}
+          style={styles.addMemberContainer}
+        >
+          <UI.TouchableOpacity onPress={() => this.navigateToAddMembers()}>
+            <UI.ConnectedCbBox
+              id="addMemberBtn"
+              pageId={pageId}
+              style={styles.addMemberBtn}
+            >
+              <UI.ConnectedCbText
+                id="addMemberBtnTxt"
+                pageId={pageId}
+                style={styles.addMemberBtnTxt}
+              >
+                {" "}
+                Add Member
+              </UI.ConnectedCbText>
             </UI.ConnectedCbBox>
           </UI.TouchableOpacity>
         </UI.ConnectedCbBox>
-      </UI.ScrollView>
+      </UI.Box>
     );
   }
 }

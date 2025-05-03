@@ -41,7 +41,8 @@ export {
   ConnectedCbText,
   ConnectedCbCommonButton,
   ConnectedCbBox,
-  ConnectedCbView  
+  ConnectedCbView,
+  ConnectedCbHeader  
 } from '@/components/cobalt/ui'
 
 

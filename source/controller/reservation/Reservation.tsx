@@ -1,6 +1,7 @@
 import { navigateToScreen } from "@/components/constants/Navigations";
-import { Component } from "react";
+import { Component, createRef } from "react";
 import moment from 'moment';
+import { FlatList } from "react-native";
 
 export interface DateItem {
   id: string;
@@ -34,9 +35,11 @@ export interface ControllerState {
   requiredDates:any
   startIndex:number
   loadingMore:boolean
+  calenderSelectedDate:string
 }
 
 class ReservationLogic extends Component<Props, ControllerState> {
+  flatListRef = createRef<FlatList>();
   constructor(props: Props) {
     super(props);
     this.state = {
@@ -56,6 +59,7 @@ class ReservationLogic extends Component<Props, ControllerState> {
       requiredDates: this.generateDates(),
       startIndex: 20,
       loadingMore: false,
+      calenderSelectedDate : ""
     };
   }
 
@@ -153,7 +157,7 @@ class ReservationLogic extends Component<Props, ControllerState> {
     this.setState({providerName:value})
   }
   
-  generateDates = (startIndex = 0, count = 20) => {
+  generateDates = (startIndex = 0, count = 60) => {
     const dates = [];
     const today = moment();
     for (let i = startIndex; i < startIndex + count; i++) {
@@ -185,7 +189,26 @@ class ReservationLogic extends Component<Props, ControllerState> {
       }));
     });
   };
+  handleChangeDate = (date: string) => {
+    const selectedDate = moment(date).format("YYYY-MM-DD");
   
+    const index = this.state.requiredDates.findIndex(
+      (dates:{id:string}) => dates.id === selectedDate
+    );
+  
+    if (index !== -1 && this.flatListRef?.current) {
+      this.flatListRef?.current.scrollToIndex({
+        index,
+        animated: true,
+      });
+    }
+  
+    this.setState({
+      showCalendar: false,
+      selectedDate: moment(date),
+      selectedDateId: selectedDate,
+    });
+  };
 }
 
 export default ReservationLogic;

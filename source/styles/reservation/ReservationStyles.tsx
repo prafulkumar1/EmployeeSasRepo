@@ -1,13 +1,13 @@
 import { isPlatformAndroid } from "@/components/constants/Matrices";
 import { Platform, StyleSheet } from "react-native";
+import { responsiveHeight } from "react-native-responsive-dimensions";
 
 export const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
-    paddingHorizontal: 10,
-    marginTop: 50,
     backgroundColor: "#fff",
     paddingBottom: 100,
+    borderWidth:1,
   },
   headerTitle: {
     width: "100%",
@@ -127,7 +127,7 @@ export const styles = StyleSheet.create({
   topContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
-    paddingTop: 30,
+    paddingTop: 10,
     paddingBottom: 10,
   },
   selectTxt: { fontSize: 16, fontFamily: "SourceSansPro_SemiBold" },
@@ -187,16 +187,13 @@ export const styles = StyleSheet.create({
   },
   addMemberContainer: {
     alignItems: "center",
-    marginVertical: 25,
     position: "absolute",
-    bottom: 0,
+    bottom: responsiveHeight(5),
     alignSelf: "center",
   },
   addMemberBtn: {
     borderWidth: 1,
     borderColor: "#00c6ff",
-    justifyContent: "center",
-    alignItems: "center",
     borderRadius: 25,
   },
   addMemberBtnTxt: {

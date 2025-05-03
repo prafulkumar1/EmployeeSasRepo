@@ -1,5 +1,5 @@
 import React from 'react';
-import { FlatList, ImageBackground, Image, TouchableOpacity, View, Alert, Animated, Modal, Pressable, } from 'react-native';
+import { FlatList, ImageBackground, Image, TouchableOpacity, View, Alert, Animated, Modal, Pressable, SafeAreaView, } from 'react-native';
 import {
   FormControl,
   FormControlError,
@@ -744,6 +744,76 @@ class CbView extends React.Component {
   }
 }
 
+class CbHeader extends React.Component {
+  constructor(props) {
+    super(props);
+    this.id=props.id;
+    this.pageID=props.pageId;
+    this.Conditionalstyle=props.Conditionalstyle || {};
+    this.styles= props.style || {};
+    this.source = props.source;
+    this.state = {
+      ControlConfig: [], 
+    };
+   
+  }
+  componentDidMount() {
+    setTimeout(() => {
+     this.loadPageConfig();
+    }, 500);
+ }
+ loadPageConfig = () => {
+   try {
+     const ControlConfig = this.props?.loadPageConfigurations({pageID:this.pageID,controlId:this.id});
+     this.setState({ ControlConfig });
+   } catch (error) {
+   }
+ };
+  render() {
+    const { ControlConfig } = this.state;  
+     const Styles=ControlConfig?.Styles;
+     const ImageSource = ControlConfig?.ImageSource || this.source;    
+     const StyleProps = transformStyles(Styles);
+     const dynamicStyle =  StyleProps && Object.keys(StyleProps).length > 0  ? Object.values(StyleProps)[0] : this.styles;
+    return (
+      <SafeAreaView style={[dynamicStyle, styles.headerMainContainer]}>
+        <View style={styles.headerSubContainer}>
+          <View style={styles.headerLeftContainer}>
+            <TouchableOpacity style={{paddingHorizontal:15}}>
+              {ImageSource ? (
+                <Image
+                  source={{ uri: ImageSource }}
+                  style={Styles ? Styles?.BackIcon : styles.BackIcon}
+                />
+              ) : (
+                <Image
+                  alt="image"
+                  source={require("@/assets/images/icons/Back.png")}
+                />
+              )}
+            </TouchableOpacity>
+            <Text style={styles.headerTitle}>Couple Massage</Text>
+          </View>
+          <TouchableOpacity>
+            {ImageSource ? (
+              <Image
+                source={{ uri: ImageSource }}
+                style={Styles ? Styles?.HomeIcon : styles.HomeIcon}
+              />
+            ) : (
+              <Image
+                alt="image"
+                source={require("@/assets/images/icons/Home.png")}
+                style={Styles ? Styles?.HomeIcon : styles.HomeIcon}
+              />
+            )}
+          </TouchableOpacity>
+        </View>
+      </SafeAreaView>
+    );
+  }
+}
+
 const mapStateToProps = (state) => {
   return{
     formData: state.login.formData,
@@ -770,6 +840,7 @@ CbImage.displayName = 'ConnectedCbImage';
 CbCommonButton.displayName = 'ConnectedCbCommonButton';
 CbBox.displayName = 'ConnectedCbBox';
 CbView.displayName = 'ConnectedCbView';
+CbHeader.displayName = 'ConnectedCbHeader'
  
 
 const ConnectedCbInput = connect(mapStateToProps, mapDispatchToProps)(cbInput);
@@ -788,6 +859,7 @@ const ConnectedCbImageBackground = connect(mapStateToProps, mapDispatchToProps)(
 const ConnectedCbCommonButton = connect(mapStateToProps, mapDispatchToProps)(CbCommonButton);
 const ConnectedCbBox = connect(mapStateToProps, mapDispatchToProps)(CbBox);
 const ConnectedCbView = connect(mapStateToProps, mapDispatchToProps)(CbView);
+const ConnectedCbHeader = connect(mapStateToProps, mapDispatchToProps)(CbHeader);
 export { 
   ConnectedCbButton, 
   ConnectedCbInput, 
@@ -804,7 +876,8 @@ export {
   ConnectedCbText,
   ConnectedCbCommonButton,
   ConnectedCbBox,
-  ConnectedCbView
+  ConnectedCbView,
+  ConnectedCbHeader
 };
  
 // export {  cbButton, cbInput, cbCheckBox, cbSelect, cbImageBackground, cbRadioButton, cbVStack, cbForm, CbFlatList, CbImage };
