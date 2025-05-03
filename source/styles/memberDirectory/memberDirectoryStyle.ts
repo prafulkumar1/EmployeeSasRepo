@@ -1,6 +1,6 @@
 import { isPlatformAndroid } from '@/components/constants/Matrices';
 import { Dimensions, StyleSheet } from 'react-native';
-import { responsiveHeight } from 'react-native-responsive-dimensions';
+import { responsiveHeight, responsiveWidth } from 'react-native-responsive-dimensions';
 const { width, height } = Dimensions.get('window');
 
 export const styles = StyleSheet.create({
@@ -20,7 +20,7 @@ export const styles = StyleSheet.create({
   checkBoxContainer: {
     borderWidth: 1,
     borderColor: "#5773A2",
-    width: "50%",
+    width: responsiveWidth(60),
     borderRadius: 25,
     justifyContent: "center",
     alignItems: "center",
@@ -67,24 +67,24 @@ export const styles = StyleSheet.create({
   activeTxt:{
     color:"#5A729A",
   },
-  subContainer:{ width: '100%', alignItems: 'center', backgroundColor: "#f5f5f5",paddingBottom:15 },
+  subContainer:{ width: '100%', alignItems: 'center',justifyContent:"center", backgroundColor: "#f5f5f5" },
   checkBox:{ flexDirection: "row", },
   checkBoxIndicator:{borderWidth:1,width:20,height:20,borderColor:"#e0e0e0", marginRight:10},
   topBar:{ flexDirection: 'row',justifyContent:"space-between", alignItems: 'center', backgroundColor: '#eee', },
   commentsBox:{
-    height: 45,
     borderColor:"#cbcbcb", 
     borderRadius: 20,
-    paddingTop:10,
     borderWidth:1, 
-    width: 400,
+    width: responsiveWidth(94),
     backgroundColor: "#fff",
     color: "#000",
-    paddingLeft:42,
+    paddingLeft:responsiveWidth(11),
     fontSize: 20,
     fontFamily:"SourceSansPro_Regular",
+    height:responsiveHeight(5.5),
+    paddingTop:8
   },
-  bellIcon:{width: 25, height: 25,position:"absolute" ,left:isPlatformAndroid()?40:30,top:isPlatformAndroid()?12:14,zIndex:1},
+  bellIcon:{width: 25, height: 25,position:"absolute" ,left:responsiveWidth(8),top:isPlatformAndroid()?responsiveHeight(1.3):responsiveHeight(1.6),zIndex:1},
   iconStyle:{ width: 18, height: 18, resizeMode: "contain", tintColor: "#565c5f" },
   profileLogo:{ 
     width: 40, 
@@ -141,7 +141,7 @@ export const styles = StyleSheet.create({
     color:"#565c5f"
   },
   loaderTrans:{ position: "absolute", alignSelf: "center", flex: 1, top: responsiveHeight(50),backgroundColor:"red" },
-  addMemberBtn:{ flexDirection: "row", backgroundColor: "#e0e0e0", width: "100%", position: "absolute", bottom: 0,height:70,justifyContent:"center",alignItems:"center" },
+  addMemberBtn:{ flexDirection: "row", backgroundColor: "#e0e0e0", width: "100%", position: "absolute", bottom: responsiveHeight(0),height:responsiveHeight(10),justifyContent:"center",alignItems:"center" },
   bottomBtns:{
     alignSelf:"center",
     width:140,

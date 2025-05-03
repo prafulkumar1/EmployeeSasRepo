@@ -1,6 +1,6 @@
 import { isPlatformAndroid } from "@/components/constants/Matrices";
 import { Platform, StyleSheet } from "react-native";
-import { responsiveHeight } from "react-native-responsive-dimensions";
+import { responsiveHeight, responsiveWidth } from "react-native-responsive-dimensions";
 
 export const styles = StyleSheet.create({
   mainContainer: {
@@ -61,7 +61,7 @@ export const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    marginHorizontal: 25,
+    marginHorizontal:responsiveWidth(4),
   },
   radioOuter: {
     height: 26,
@@ -116,7 +116,7 @@ export const styles = StyleSheet.create({
     shadowOffset: { width: 1, height: 1 },
     shadowOpacity: 0.2,
     shadowRadius: 3,
-    width: isPlatformAndroid() ? 200 : 198,
+    width:responsiveWidth(46),
     paddingVertical: 10,
   },
   timePeriodBtnTxt: {
@@ -208,6 +208,7 @@ export const styles = StyleSheet.create({
     flexWrap: "wrap",
     justifyContent: "space-between",
     paddingTop: 20,
+    marginBottom:responsiveHeight(5)
   },
   slotBox: {
     width: "23%",

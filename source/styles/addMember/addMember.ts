@@ -5,6 +5,7 @@ export const styles = StyleSheet.create({
     mainContainer: {
       flex: 1,
       backgroundColor:"#fff",
+      paddingBottom: 80
     },
     subContainer:{paddingHorizontal:10,paddingVertical:10,position:"absolute",bottom:0,flexDirection:"row",justifyContent:"space-between",width:"100%"},
     profileLabel:{
@@ -79,7 +80,8 @@ export const styles = StyleSheet.create({
       borderRadius:60,
       justifyContent:"center",
       alignItems:"center",
-      marginTop:40,
+      marginTop:50,
+      marginBottom:20,
       backgroundColor:"#5773a2"
     },
     submitTxt:{
@@ -87,7 +89,7 @@ export const styles = StyleSheet.create({
       fontSize:20,
       color:"#fff",
     },
-    memberContainer:{ padding: 10 },
+    memberContainer:{ padding: 10  },
     timeContainer:{ borderRadius: 5, borderWidth: 1.5, justifyContent: "center", alignSelf: "center", alignItems: "center", paddingVertical: 5, width: 150, marginVertical: 25, borderColor: "#2a4e7d" },
     timeTxt:{ fontFamily: "SourceSansPro_Bold", fontSize: 26, color: "#2a4e7d" },
     addMemberContainer:{ alignSelf: "center", justifyContent: "center", alignItems: "center" },
@@ -228,4 +230,9 @@ export const styles = StyleSheet.create({
       borderWidth:1,
       borderColor:"#0047AB",
     },
+    HomeIcon:{
+      height:25,
+      width:25
+    },
+    modalSuccess:{position:"absolute",top:30,right:20}
   });

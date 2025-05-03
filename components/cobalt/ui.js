@@ -779,7 +779,7 @@ class CbHeader extends React.Component {
       <SafeAreaView style={[dynamicStyle, styles.headerMainContainer]}>
         <View style={styles.headerSubContainer}>
           <View style={styles.headerLeftContainer}>
-            <TouchableOpacity style={{paddingHorizontal:15}}>
+            <TouchableOpacity style={{paddingRight:20}}>
               {ImageSource ? (
                 <Image
                   source={{ uri: ImageSource }}

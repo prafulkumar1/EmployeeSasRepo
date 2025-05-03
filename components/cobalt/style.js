@@ -588,9 +588,8 @@ CheckIcon:{color:"#ffff"},
     fontSize: 22,
     color: "#4B5154",
     fontFamily: 'SourceSansPro_SemiBold',
-    lineHeight: 28,
   },
-  headerLeftContainer:{flexDirection:"row",alignItems:"center",justifyContent:"center"},
+  headerLeftContainer:{flexDirection:"row",justifyContent:"center",alignItems:"center",alignSelf:"center"},
   headerMainContainer:{
     flexDirection:"row",
     justifyContent:"space-between",
@@ -602,6 +601,7 @@ CheckIcon:{color:"#ffff"},
     backgroundColor:"#fff",
     elevation: 5,
     width:"100%",
+    paddingTop:isPlatformAndroid? responsiveHeight(5) : 0,
   },
   headerSubContainer:{flexDirection:"row",justifyContent:"space-between",alignItems:"center",paddingBottom:10,width:"100%",paddingHorizontal:15}
 })

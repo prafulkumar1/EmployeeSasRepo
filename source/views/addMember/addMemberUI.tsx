@@ -38,24 +38,37 @@ class AddMemberUI extends useAddMemberLogic {
   }
 
   renderSuccessModal = () => {
-    return(
+    return (
       <LinearGradient
-        colors={['#0052A5', '#00B2E3']}
+        colors={["#0052A5", "#00B2E3"]}
         style={styles.thankyouContainer}
       >
- 
+        <UI.TouchableOpacity style={styles.modalSuccess} onPress={() => this.handleNavToReservation()}>
+          <Image
+            alt="image"
+            source={require("@/assets/images/icons/Home.png")}
+            style={styles.HomeIcon}
+          />
+        </UI.TouchableOpacity>
         <Image
           source={require("@/assets/images/login-logo.png")}
           style={styles.logo}
           resizeMode="contain"
         />
- 
+
+        <Image
+          source={require("@/assets/images/login-logo.png")}
+          style={styles.logo}
+          resizeMode="contain"
+        />
         <UI.Box style={styles.card}>
           <UI.Text style={styles.title}>THANK YOU</UI.Text>
           <UI.Text style={styles.subtitle}>
             Your Reservation has been Confirmed for
           </UI.Text>
-          <UI.Text style={styles.subtitle}>{moment()?.format('dddd, MMM D')}</UI.Text>
+          <UI.Text style={styles.subtitle}>
+            {moment()?.format("dddd, MMM D")}
+          </UI.Text>
         </UI.Box>
       </LinearGradient>
     )
@@ -63,7 +76,7 @@ class AddMemberUI extends useAddMemberLogic {
   render() {
     if(!this.props.isScreenLoaded){
       return (
-        <UI.ScrollView style={styles.mainContainer} contentContainerStyle={{ paddingBottom: 50 }} showsVerticalScrollIndicator={false}>
+        <UI.Box style={styles.mainContainer}>
           <UI.Box style={styles.statusBar} />
           <UI.ImageBackground style={styles.backLogo} source={{ uri: "https://images.unsplash.com/photo-1535131749006-b7f58c99034b?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8Z29sZnxlbnwwfHwwfHx8MA%3D%3D" }}>
             <UI.Box style={styles.overLay} />
@@ -91,7 +104,7 @@ class AddMemberUI extends useAddMemberLogic {
             </UI.Box>
           </UI.ImageBackground>
   
-          <UI.Box style={styles.memberContainer}>
+          <UI.ScrollView style={styles.memberContainer}>
   
             <UI.TouchableOpacity style={styles.timeContainer}>
               <UI.Text style={styles.timeTxt}>{this.formatTime(this.state.timeLeft)}</UI.Text>
@@ -134,7 +147,7 @@ class AddMemberUI extends useAddMemberLogic {
             <UI.TouchableOpacity style={styles.submitBtn} onPress={() => this.handleSubmitReservation()}>
               <UI.Text style={styles.submitTxt}>Submit</UI.Text>
             </UI.TouchableOpacity>
-          </UI.Box>
+          </UI.ScrollView>
   
           <Modal
             transparent={true}
@@ -149,6 +162,7 @@ class AddMemberUI extends useAddMemberLogic {
               style={{width:"100%"}}
               data={addMemberList}
               renderItem={this.renderUserTypeList}
+              showsVerticalScrollIndicator={false}
             />
             </UI.Pressable>
           </Modal>
@@ -197,7 +211,7 @@ class AddMemberUI extends useAddMemberLogic {
             </UI.Box>
           </Modal> 
   
-        </UI.ScrollView>
+        </UI.Box>
       );
     }else{
       return (

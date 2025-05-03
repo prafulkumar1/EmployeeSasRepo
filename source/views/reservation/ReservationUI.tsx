@@ -73,6 +73,7 @@ class ReservationUI extends ReservationLogic {
     return (
       <UI.TouchableOpacity
         key={index}
+        activeOpacity={0}
         onPress={() => this.setState({ selectedGender: item?.gender })}
       >
         <UI.ConnectedCbBox id="optionContainer" pageId={pageId} style={styles.optionContainer}>
@@ -264,6 +265,7 @@ class ReservationUI extends ReservationLogic {
                 { id: 2, gender: "Female" },
                 { id: 3, gender: "Any" },
               ]}
+              showsHorizontalScrollIndicator={false}
               scrollEnabled={false}
               keyExtractor={(item) => `${item.id}_${Math.random()}`}
               horizontal

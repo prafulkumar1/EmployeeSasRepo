@@ -138,6 +138,11 @@ export default class useAddMemberLogic extends Component<IProps, IState> {
       })
     }
   };
+  handleNavToReservation = () => {
+    this.setState({isSuccessModalOpen:false},() => {
+      navigateToScreen(this.props, "ReservationUI", true, {})
+    })
+  }
 
   startTimer = () => {
     if (this.state.timerRunning) return;
