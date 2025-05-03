@@ -28,7 +28,6 @@ export const styles = StyleSheet.create({
       fontSize:14,
       color:"#fff"
     },
-    statusBar:{ backgroundColor: "#0047AB", width: "100%", height: 30 },
     backLogo:{ height: 280, width: "100%",position: "relative",},
     bellIcon:{width: 25, height: 25 },
     profileImgBtn:{ position:"absolute",bottom:75,marginLeft:10,width: 70, height: 70, borderRadius: 35, borderWidth: 2, borderColor: "#fff", marginVertical: 15 },
