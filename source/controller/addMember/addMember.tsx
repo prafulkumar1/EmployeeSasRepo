@@ -60,7 +60,7 @@ export default class useAddMemberLogic extends Component<IProps, IState> {
       selectedId:"",
       isSuccessModalOpen:false,
       errorMessagePopup:false,
-      errorMessageTxt:""
+      errorMessageTxt:"",
     };
     this.interval = null;
   }

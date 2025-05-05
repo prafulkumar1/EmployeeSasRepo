@@ -17,6 +17,7 @@ interface Props {
   loading: boolean;
   addMemberIndex:number
   loadPageConfigurations:({pageId, controlId}) =>void
+  route:any
 }
 
 export interface ControllerState {
@@ -37,6 +38,8 @@ export interface ControllerState {
   startIndex:number
   loadingMore:boolean
   calenderSelectedDate:string
+  mainServiceName:string
+
 }
 
 class ReservationLogic extends Component<Props, ControllerState> {
@@ -60,7 +63,8 @@ class ReservationLogic extends Component<Props, ControllerState> {
       requiredDates: this.generateDates(),
       startIndex: 20,
       loadingMore: false,
-      calenderSelectedDate : ""
+      calenderSelectedDate : "",
+      mainServiceName:""
     };
   }
 
@@ -102,7 +106,17 @@ class ReservationLogic extends Component<Props, ControllerState> {
     },
   ];
 
-
+  componentDidMount(): void {
+    // let name = this.props?.route?.params?.serviceDetails?.title
+    // console.log(this.props?.route?.params?.serviceDetails,"---1111111")
+    this.setState({mainServiceName:this.props?.route?.params?.serviceDetails?.title})
+  }
+  componentDidUpdate(prevProps: Readonly<Props>, prevState: Readonly<ControllerState>, snapshot?: any): void {
+    if(prevProps.route !== this.props.route){
+      let name = this.props?.route?.params?.serviceDetails?.title
+      this.setState({mainServiceName:name})
+    }
+  }
   handleSelectDate = (id: string) => {
     this.setState({ selectedDateId: id });
   };

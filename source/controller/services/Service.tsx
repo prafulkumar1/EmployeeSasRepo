@@ -37,8 +37,8 @@ export default class ServiceLogic extends Component<IProps, IState> {
         serviceTypes:serviceTypes
     };
   }
-    navigateToReservation =() => {
-        navigateToScreen(this.props, "ReservationUI", true, {})
+    navigateToReservation =(serviceDetails:any) => {
+        navigateToScreen(this.props, "ReservationUI", true, {serviceDetails:serviceDetails})
     }
     handleActiveService = (id:number) => {
         let toggleUpdateService = this.state.serviceTypes.map((items) => {

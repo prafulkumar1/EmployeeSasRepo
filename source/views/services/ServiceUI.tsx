@@ -40,7 +40,7 @@ class ServiceUI extends ServiceLogic {
     renderServiceList = ({ item }) => {
         const isLesson = item.type !== "image";
         return (
-            <UI.TouchableOpacity style={styles.cardBox} onPress={() => this.navigateToReservation()}>
+            <UI.TouchableOpacity style={styles.cardBox} onPress={() => this.navigateToReservation(item)}>
                 <UI.Box style={styles.card}>
                     <UI.Image
                         source={isLesson ? item.icon : {uri:item.image}}
