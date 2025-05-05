@@ -80,10 +80,10 @@ class AddMemberUI extends useAddMemberLogic {
           <UI.ImageBackground style={styles.backLogo} source={{ uri: "https://images.unsplash.com/photo-1535131749006-b7f58c99034b?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8Z29sZnxlbnwwfHwwfHx8MA%3D%3D" }}>
             <UI.Box style={styles.overLay} />
             <UI.Box style={styles.headerContainer}>
-            <UI.TouchableOpacity style={styles.backIon}>
+            <UI.TouchableOpacity style={styles.backIon} onPress={()=>this.props.navigation.goBack()}>
               <Image source={require("@/assets/images/icons/Back.png")} style={styles.iconStyle} />
             </UI.TouchableOpacity>
-            <UI.TouchableOpacity style={styles.bellIcon}>
+            <UI.TouchableOpacity style={styles.bellIcon} onPress={()=>this.navigateToService()}>
               <Image source={require("@/assets/images/icons/Home3x.png")} style={styles.iconStyle} />
             </UI.TouchableOpacity>
             </UI.Box>

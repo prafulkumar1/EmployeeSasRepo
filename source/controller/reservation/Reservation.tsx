@@ -11,6 +11,7 @@ export interface DateItem {
 }
 
 interface Props {
+  navigation:any
   getSlotBookingData: () => Promise<any>;
   slotData: DateItem[];
   loading: boolean;

@@ -24,6 +24,7 @@ interface IState {
 }
 
 interface IProps {
+  navigation:any
   resetLoadedScreen:() => void
   isScreenLoaded:boolean
   selectedId:string
@@ -202,4 +203,7 @@ export default class useAddMemberLogic extends Component<IProps, IState> {
       this.setState({isSuccessModalOpen:!this.state.isSuccessModalOpen})
     }
   }
+  navigateToService =() => {
+    navigateToScreen(this.props, "ServiceUI", true, {})
+}
 }

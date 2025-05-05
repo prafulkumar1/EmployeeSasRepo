@@ -752,6 +752,8 @@ class CbHeader extends React.Component {
     this.Conditionalstyle=props.Conditionalstyle || {};
     this.styles= props.style || {};
     this.source = props.source;
+    this.headerTitle = props.headerTitle
+    this.goBack = typeof props.goBack === 'function' ? props.goBack : () => { };
     this.state = {
       ControlConfig: [], 
     };
@@ -779,7 +781,7 @@ class CbHeader extends React.Component {
       <SafeAreaView style={[dynamicStyle, styles.headerMainContainer]}>
         <View style={styles.headerSubContainer}>
           <View style={styles.headerLeftContainer}>
-            <TouchableOpacity style={{paddingRight:20}}>
+            <TouchableOpacity style={{paddingRight:20}} onPress={() => this.goBack()}>
               {ImageSource ? (
                 <Image
                   source={{ uri: ImageSource }}
@@ -792,7 +794,7 @@ class CbHeader extends React.Component {
                 />
               )}
             </TouchableOpacity>
-            <Text style={styles.headerTitle}>Couple Massage</Text>
+            <Text style={styles.headerTitle}>{this.headerTitle}</Text>
           </View>
           <TouchableOpacity>
             {ImageSource ? (

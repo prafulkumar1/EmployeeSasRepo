@@ -160,7 +160,7 @@ class ReservationUI extends ReservationLogic {
     const displayMonthYear = displayDate.format("MMMM, YYYY");
     return (
       <UI.Box style={styles.mainContainer}>
-        <UI.ConnectedCbHeader />
+        <UI.ConnectedCbHeader headerTitle={"Couple Massage"} goBack={() => this.props.navigation?.goBack()}/>
         <StatusBar hidden={true} />
         <UI.ScrollView bounces={false} style={{ padding: 10 }}>
           <UI.ConnectedCbBox

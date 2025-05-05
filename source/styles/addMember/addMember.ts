@@ -29,7 +29,7 @@ export const styles = StyleSheet.create({
       color:"#fff"
     },
     backLogo:{ height: 280, width: "100%",position: "relative",},
-    bellIcon:{width: 25, height: 25 },
+    bellIcon:{width: 25, height: 25,zIndex:1 },
     profileImgBtn:{ position:"absolute",bottom:75,marginLeft:10,width: 70, height: 70, borderRadius: 35, borderWidth: 2, borderColor: "#fff", marginVertical: 15 },
     profileImg:{ width: "100%", height: "100%", borderRadius: 35 },
     viewNewsBtn:{
@@ -68,7 +68,7 @@ export const styles = StyleSheet.create({
       color:"#fff",
     },
     icons:{ width: 40, height: 40 },
-    backIon:{ width: 25, height: 25 },
+    backIon:{ width: 25, height: 25 ,zIndex:1},
     memberActionIcons:{ width: 28, height: 28 },
     addIcon:{ width: 28, height: 28},
     commentsBox:{height: 110,borderColor:"#cbcbcb", borderRadius: 5,paddingTop:10,borderWidth:1,paddingHorizontal:10},

@@ -17,6 +17,7 @@ import CbLoader from "@/components/cobalt/cobaltLoader";
 import { addMembersForReservation, resetLoadedScreen, resetSingleMemberDetails, singleMemberDetails } from "@/components/redux/reducers/addMemberReducer";
 import { Modal } from "react-native";
 import { guestData } from "@/components/constants/CustomJson";
+import { StatusBar } from "expo-status-bar";
 
 
 const pageId = 'MemberDirectory';
@@ -82,6 +83,8 @@ class MemberDirectoryUI extends useMemberDirectoryLogic {
     const ITEM_HEIGHT = 100
     return (
       <UI.Box style={styles.mainContainer}>
+        <UI.ConnectedCbHeader headerTitle={"Members Directory"} />
+        <StatusBar hidden={true} />
         <UI.Box style={styles.subContainer}>
           <UI.TouchableOpacity style={styles.bellIcon}>
             <UI.Image
