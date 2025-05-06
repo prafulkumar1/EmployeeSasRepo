@@ -4,7 +4,8 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 const initialState = {
   addMemberIndex: null as number | null, 
   loading:false,
-  AppConfigJson:null
+  AppConfigJson:null,
+  dropDownIndex: null as number | null,
 };
 
 export const getAppConfiguration = createAsyncThunk(
@@ -56,6 +57,10 @@ const ReservationSlice = createSlice({
     setAddMemberIndex(state, action) {
       state.addMemberIndex = action.payload;
     },
+    setAdddropDownIndex(state, action) {
+      state.dropDownIndex = action.payload;
+    },
+
   },
   extraReducers: (builder) => {
     builder
@@ -72,6 +77,6 @@ const ReservationSlice = createSlice({
   },
 });
 
-export const {setAddMemberIndex} = ReservationSlice.actions;
+export const {setAddMemberIndex, setAdddropDownIndex} = ReservationSlice.actions;
 
 export default ReservationSlice.reducer;

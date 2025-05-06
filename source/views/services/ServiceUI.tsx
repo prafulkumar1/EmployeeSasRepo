@@ -3,6 +3,7 @@ import * as UI from '@/components/cobalt/importUI';
 import ServiceLogic from "@/source/controller/services/Service";
 import { StatusBar } from "expo-status-bar";
 import { styles } from "@/source/styles/services/ServiceStyles";
+import { responsiveHeight } from "react-native-responsive-dimensions";
 class ServiceUI extends ServiceLogic {
 
     renderTypes = ({ item }) => {
@@ -72,7 +73,7 @@ class ServiceUI extends ServiceLogic {
                     <UI.FlatList
                         data={this.cards}
                         numColumns={2}
-                        contentContainerStyle={{ justifyContent: "center" }}
+                        contentContainerStyle={{ justifyContent: "center" , paddingBottom: responsiveHeight(20)}}
                         renderItem={this.renderServiceList}
                     />
                 </UI.Box>

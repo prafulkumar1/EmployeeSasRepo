@@ -12,11 +12,11 @@ import { StatusBar } from "expo-status-bar";
 
 const pageId = "Reservation";
 
-const servicesOptions = [
-  { label: "Couple Massage - 1hr", value: "massage_1hr" },
-  { label: "Deep Cleansing", value: "deep_cleansing" },
-  { label: "Hydra Facial Treatment", value: "hydra_facial" },
-];
+// const servicesOptions = [
+//   { label: "Couple Massage - 1hr", value: "massage_1hr" },
+//   { label: "Deep Cleansing", value: "deep_cleansing" },
+//   { label: "Hydra Facial Treatment", value: "hydra_facial" },
+// ];
 
 const dropdownOptions = [
   { label: "John smith", value: "massage_1hr" },
@@ -240,7 +240,7 @@ class ReservationUI extends ReservationLogic {
             </UI.ConnectedCbBox>
           )}
           <UI.ConnectedCbSelectDropDown
-            options={servicesOptions}
+            options={this.servicesOptions}
             customstyle={[
               styles.serviceBtn,
               { zIndex: this.state.isServiceSelected ? 1 : -1 },
@@ -251,7 +251,7 @@ class ReservationUI extends ReservationLogic {
                 isServiceSelected: !this.state.isServiceSelected,
               })
             }
-            placeholder={"Select Service"}
+            placeholder={"Select the Service"}
           />
 
           <UI.ConnectedCbBox
