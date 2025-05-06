@@ -61,7 +61,9 @@ class ReservationUI extends useReservationLogic {
             onPress={() => this.setState({ selectedGender: gender })}
           >
             <UI.View style={styles.radioOuter}>
-              {selectedGender === gender && <UI.View style={styles.radioInner} />}
+              {selectedGender === gender && (
+                <UI.View style={styles.radioInner} />
+              )}
             </UI.View>
             <Text style={styles.label}>{gender}</Text>
           </TouchableOpacity>
@@ -157,7 +159,7 @@ class ReservationUI extends useReservationLogic {
           </UI.View>
 
           {popupVisibleIndex === Number(i) && (
-            <UI.View style={[styles.popupContainer]}>
+            <UI.View style={[styles.popupContainer,]}>
               <UI.Pressable
                 style={[
                   styles.popupButton,
@@ -326,7 +328,7 @@ class ReservationUI extends useReservationLogic {
     global.controlsConfigJson =
       pageConfigJson && pageConfigJson.Controlls
         ? pageConfigJson.Controlls
-        : []
+        : [];
     return (
       <UI.ScrollView style={[styles.mainContainer]}>
         {/* <UI.ScrollView
@@ -426,19 +428,16 @@ class ReservationUI extends useReservationLogic {
             placeholder={"Select the Provider"}
           />
         </UI.View>
-        <UI.View style={[{width :"100%",  zIndex: -2 }]}>
+
+        <UI.View style={[{ width: "100%", zIndex: -2 }]}>
           <UI.ConnectedCbFlatList
             flatlistData={this.timeData}
             children={this.renderTimePeriods}
             numColumns={3}
             columnWrapperStyle={{ justifyContent: "flex-start" }}
-            contentContainerStyle={{
-              paddingTop: 20,
-              paddingBottom: 10,
-              paddingHorizontal: 1,
-            }}
           />
         </UI.View>
+
         <UI.View style={styles.slotTimeContainer}>
           {this.getCurrentTimeSlots().map(this.renderSlot)}
         </UI.View>
@@ -451,6 +450,15 @@ class ReservationUI extends useReservationLogic {
             <UI.Text style={styles.addMemberBtnTxt}> Add Member</UI.Text>
           </UI.TouchableOpacity>
         </UI.View>
+
+                <UI.ConnectedCbBox
+                  id="addMemberContainer"
+                  pageId={pageId}
+                  style={styles.addMemberBtncontainer}
+                >
+        <UI.Text style={styles.addMemberBtnTxt}> Add Member</UI.Text>
+
+                </UI.ConnectedCbBox>
 
         {this.state.showCalendar && (
           <CalendarComponent
@@ -573,10 +581,17 @@ class ReservationUI extends useReservationLogic {
                       to select Member, Guest or My Buddies
                     </UI.Text>
                   </UI.View>
-                 <UI.View style={{ width: "50%", justifyContent:'center', alignItems :'center' }}>
-                    {/* <UI.Text style={styles.memberLabel}>Member</UI.Text>  */}
-                    {this.renderMemberInputRows()}
-                  </UI.View>
+                </UI.View>
+                <UI.View
+                  style={{
+                    width: "100%",
+                    flexDirection: "row",
+                    flexWrap: "wrap",
+                    justifyContent: "flex-start",
+                    paddingHorizontal :20
+                  }}
+                >
+                  {this.renderMemberInputRows()}
                 </UI.View>
 
                 <UI.Box style={{ marginTop: 10, padding: 12 }}>

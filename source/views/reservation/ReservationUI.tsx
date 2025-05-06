@@ -18,11 +18,11 @@ const pageId = "Reservation";
 //   { label: "Hydra Facial Treatment", value: "hydra_facial" },
 // ];
 
-const dropdownOptions = [
-  { label: "John smith", value: "massage_1hr" },
-  { label: "Lyn", value: "deep_cleansing" },
-  { label: "Hydra", value: "hydra_facial" },
-];
+// const dropdownOptions = [
+//   { label: "John smith", value: "massage_1hr" },
+//   { label: "Lyn", value: "deep_cleansing" },
+//   { label: "Hydra", value: "hydra_facial" },
+// ];
 class ReservationUI extends ReservationLogic {
   renderHorizontalCalender = ({ item }) => {
     const isSelected = this.state.selectedDateId === item.id;
@@ -274,13 +274,13 @@ class ReservationUI extends ReservationLogic {
           </UI.ConnectedCbBox>
 
           <UI.ConnectedCbSelectDropDown
-            options={dropdownOptions}
+            options={this.providersdummyData}
             customstyle={[
               styles.dropDownBtn,
               { zIndex: !this.state.isServiceSelected ? 1 : -1 },
             ]}
             onSelect={(value: string) => this.selectProvider(value)}
-            placeholder={"Select Provider"}
+            placeholder={"Select the Provider"}
           />
 
           <UI.FlatList

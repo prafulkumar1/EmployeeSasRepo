@@ -56,10 +56,9 @@ const servicesOptions = [
 ];
 
 const providersdummyData = [
-  { value: "1", label: "Jhon" },
-  { value: "2", label: "Steve" },
-  { value: "3", label: "mary" },
-  { value: "4", label: "michael" },
+  { label: "John smith", value: "massage_1hr" },
+  { label: "Lyn", value: "deep_cleansing" },
+  { label: "Hydra", value: "hydra_facial" },
 ];
 const HeaderData = {
   Tennis: {

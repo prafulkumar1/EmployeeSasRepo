@@ -244,7 +244,8 @@ export const styles = StyleSheet.create({
     paddingRight: 12,
     alignItems: "center",
     flexWrap: 'wrap',
-    justifyContent: 'flex-start'
+    justifyContent: 'center',
+  alignContent:"center",
 
   },
   timePeriodTxt: {
@@ -415,10 +416,10 @@ export const styles = StyleSheet.create({
 
   },
   memberFieldWrapper: {
-    width: '100%',
-    marginBottom: 10,
-    marginTop: 5,
-    alignItems: 'center',
+    width: '48%',
+  // paddingHorizontal: 8,
+  paddingVertical: 5,
+  alignItems: 'center',
   },
   memberLabel: {
     color: '#000',
@@ -507,7 +508,7 @@ export const styles = StyleSheet.create({
     padding: 5,
     width: 100,
     marginHorizontal :30,
-    right :-45,
+    right :-50,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 3 },
     shadowOpacity: 0.25,
