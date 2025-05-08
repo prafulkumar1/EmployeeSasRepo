@@ -57,7 +57,7 @@ class ServiceUI extends ServiceLogic {
     render() {
         return (
             <UI.Box style={styles.mainContainer}>
-                <UI.ConnectedCbHeader headerTitle={""} props={this.props} />
+                <UI.ConnectedCbHeader headerTitle={"Book A Lesson"} props={this.props} />
                 <StatusBar hidden={true} />
 
                 <UI.Box style={styles.serviceTopBar}>
