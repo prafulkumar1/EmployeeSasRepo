@@ -1,12 +1,6 @@
 import React from "react";
 import * as UI from '@/components/cobalt/importUI';
-import {
-  Checkbox,
-  CheckboxIndicator,
-  CheckboxLabel,
-  CheckboxIcon,
-} from "@/components/ui/checkbox";
-import { CheckIcon ,ChevronLeftIcon,ChevronRightIcon} from "@/components/ui/icon";
+import { ChevronLeftIcon,ChevronRightIcon} from "@/components/ui/icon";
 import useMemberDirectoryLogic from "@/source/controller/memberDirectory/memberDirectory";
 import { connect } from "react-redux";
 import { RootState } from "@/components/redux/store";

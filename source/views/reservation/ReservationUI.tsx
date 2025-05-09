@@ -1,5 +1,5 @@
 import * as UI from "@/components/cobalt/importUI";
-import React, { Component } from "react";
+import React  from "react";
 import CalendarPicker from "react-native-calendar-picker";
 import { styles } from "@/source/styles/reservation/ReservationStyles";
 import ReservationLogic from "@/source/controller/reservation/Reservation";
@@ -12,17 +12,6 @@ import { StatusBar } from "expo-status-bar";
 
 const pageId = "Reservation";
 
-// const servicesOptions = [
-//   { label: "Couple Massage - 1hr", value: "massage_1hr" },
-//   { label: "Deep Cleansing", value: "deep_cleansing" },
-//   { label: "Hydra Facial Treatment", value: "hydra_facial" },
-// ];
-
-// const dropdownOptions = [
-//   { label: "John smith", value: "massage_1hr" },
-//   { label: "Lyn", value: "deep_cleansing" },
-//   { label: "Hydra", value: "hydra_facial" },
-// ];
 class ReservationUI extends ReservationLogic {
   renderHorizontalCalender = ({ item }) => {
     const isSelected = this.state.selectedDateId === item.id;

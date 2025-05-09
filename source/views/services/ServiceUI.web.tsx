@@ -1,4 +1,3 @@
-
 // import * as UI from '@/components/cobalt/importUI';
 // import { RootState } from '@/components/redux/store';
 // import { styles } from '@/source/styles/dashbboard/dashboardStyle.web';
@@ -29,11 +28,9 @@
 
 // export default connect(mapStateToProps, mapDispatchToProps)(ServiceUI)
 
-
 import React from "react";
 import * as UI from '@/components/cobalt/importUI';
 import ServiceLogic from "@/source/controller/services/Service";
-import { styles } from "@/source/styles/services/ServiceStyles.web";
 import { Text } from "react-native";
 class ServiceUI extends ServiceLogic {
 
@@ -110,7 +107,7 @@ class ServiceUI extends ServiceLogic {
                 </UI.Box> */}
                   <Text>jwnjewnjnjniewjnijwni</Text>
                 <UI.TouchableOpacity
-                  
+
                     onPress={() => this.navigateToReservation(4444)}
                 >
                     <Text>
@@ -123,3 +120,64 @@ class ServiceUI extends ServiceLogic {
 }
 
 export default ServiceUI;
+
+// import React, { useEffect, useState } from "react";
+// import { Text, ActivityIndicator } from "react-native";
+// import axios from "axios";
+// import * as UI from "@/components/cobalt/importUI";
+// import { styles } from "@/source/styles/services/ServiceStyles.web";
+// const pageId = 'ServiceUI'
+// const ServiceUI = () => {
+//   const [data, setData] = useState(null);
+//   const [loading, setLoading] = useState(true);
+
+//   useEffect(() => {
+//     axios
+//       .get(
+//         "https://cobaltportal.mycobaltsoftware.com:4430/codesync.test/BookingManagement/GetLoginUserDetails"
+//       )
+//       .then((response) => {
+//         console.log(response?.data, "responisdeeee");
+//         setData(response?.data);
+//         setLoading(false);
+//       })
+//       .catch((error) => {
+//         console.error("API Error:", error);
+//         setLoading(false);
+//       });
+//   }, []);
+//   console.log(data?.ID, "---------------------");
+
+//   return (
+//     <UI.View
+//       style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+//     >
+//       {loading ? (
+//         <ActivityIndicator size="large" color="#0000ff" />
+//       ) : (
+//         <>
+//           {data && (
+//             <UI.View>
+//               {Object.entries(data).map(([key, value], index) => (
+//                 <UI.View key={index} style={{ marginVertical: 5 }}>
+//                   <Text style={{ fontSize: 20, color: "#000" }}>
+//                     {key}: {String(value ?? "null")}
+//                   </Text>
+//                 </UI.View>
+//               ))}
+//             </UI.View>
+//           )}
+//         </>
+//       )}
+//     </UI.View>
+//     // <UI.ConnectedCbView
+//     //   id="addMemberContainer"
+//     //   pageId={pageId}
+//     //   style={styles.cardContainer}
+//     // >
+//     //   <Text> Add Member</Text>
+//     // </UI.ConnectedCbView>
+//   );
+// };
+
+// export default ServiceUI;

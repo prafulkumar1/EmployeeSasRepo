@@ -25,6 +25,12 @@ interface Props {
   addMemberIndex: number;
   loadPageConfigurations: ({ pageId, controlId }) => void;
   route: any;
+  setOpenAddmemberModel?:()=>void
+  setClosememberModel?:()=>void
+  setOpenMembersModel?:()=>void
+  OpenAddmemberModel?:boolean
+  OpenMemberModel?:boolean
+  closeMemberModel?:boolean
 }
 
 //webdummydata
@@ -128,7 +134,7 @@ export interface ControllerState {
   isChecked: Boolean;
   number: string;
   buddyList: boolean;
-  members: Member[];
+  // members: Member[];
   currentPage: number;
   startPage: number;
   membersPerPage: number;
@@ -209,191 +215,6 @@ class ReservationLogic extends Component<Props, ControllerState> {
       hover: null,
       isChecked: false,
       buddyList: true,
-      members: [
-        { id: "#0089", name: "’s, MR O’Fla" },
-        { id: "#65432", name: "456, MR Vin123" },
-        { id: "#0277", name: "a, Mr. appu" },
-        { id: "#1438", name: "Abraham, Mr. James" },
-        { id: "#1005", name: "Abraham, John" },
-        { id: "#1752-A", name: "Abraham, Mrs. Sam" },
-        { id: "#1202", name: "Abramson, mr Shelley" },
-        { id: "#1224", name: "Adam, Dr Jose" },
-        { id: "#6699", name: "Adelsheimer, Carol" },
-        { id: "#1117-W", name: "Adelson, Mr. Seymour" },
-        { id: "#4061", name: "Aery, Mr. Wayne" },
-        { id: "#9851", name: "Agran, Alex" },
-        { id: "#9851", name: "Alexa, Mathew" },
-        { id: "#9851", name: "alexa, Roman" },
-        { id: "#9851", name: "alexa, siddu" },
-        { id: "#9851", name: "Alexander, MR Jake" },
-        { id: "#9851", name: "Alexa, Mathew" },
-        { id: "#9851", name: "alexa, Roman" },
-        { id: "#9851", name: "alexa, siddu" },
-        { id: "#9851", name: "alexa, siddu" },
-
-        { id: "#0089", name: "’s, MR O’Fla" },
-        { id: "#65432", name: "456, MR Vin123" },
-        { id: "#0277", name: "a, Mr. appu" },
-        { id: "#1438", name: "Abraham, Mr. James" },
-        { id: "#1005", name: "Abraham, John" },
-        { id: "#1752-A", name: "Abraham, Mrs. Sam" },
-        { id: "#1202", name: "Abramson, mr Shelley" },
-        { id: "#1224", name: "Adam, Dr Jose" },
-        { id: "#6699", name: "Adelsheimer, Carol" },
-        { id: "#1117-W", name: "Adelson, Mr. Seymour" },
-        { id: "#4061", name: "Aery, Mr. Wayne" },
-        { id: "#9851", name: "Agran, Alex" },
-        { id: "#9851", name: "Alexa, Mathew" },
-        { id: "#9851", name: "alexa, Roman" },
-        { id: "#9851", name: "alexa, siddu" },
-        { id: "#9851", name: "Alexander, MR Jake" },
-        { id: "#9851", name: "Alexa, Mathew" },
-        { id: "#9851", name: "alexa, Roman" },
-        { id: "#9851", name: "alexa, siddu" },
-        { id: "#9851", name: "alexa, siddu" },
-
-        { id: "#0089", name: "’s, MR O’Fla" },
-        { id: "#65432", name: "456, MR Vin123" },
-        { id: "#0277", name: "a, Mr. appu" },
-        { id: "#1438", name: "Abraham, Mr. James" },
-        { id: "#1005", name: "Abraham, John" },
-        { id: "#1752-A", name: "Abraham, Mrs. Sam" },
-        { id: "#1202", name: "Abramson, mr Shelley" },
-        { id: "#1224", name: "Adam, Dr Jose" },
-        { id: "#6699", name: "Adelsheimer, Carol" },
-        { id: "#1117-W", name: "Adelson, Mr. Seymour" },
-        { id: "#4061", name: "Aery, Mr. Wayne" },
-        { id: "#9851", name: "Agran, Alex" },
-        { id: "#9851", name: "Alexa, Mathew" },
-        { id: "#9851", name: "alexa, Roman" },
-        { id: "#9851", name: "alexa, siddu" },
-        { id: "#9851", name: "Alexander, MR Jake" },
-        { id: "#9851", name: "Alexa, Mathew" },
-        { id: "#9851", name: "alexa, Roman" },
-        { id: "#9851", name: "alexa, siddu" },
-        { id: "#9851", name: "alexa, siddu" },
-
-        { id: "#0089", name: "’s, MR O’Fla" },
-        { id: "#65432", name: "456, MR Vin123" },
-        { id: "#0277", name: "a, Mr. appu" },
-        { id: "#1438", name: "Abraham, Mr. James" },
-        { id: "#1005", name: "Abraham, John" },
-        { id: "#1752-A", name: "Abraham, Mrs. Sam" },
-        { id: "#1202", name: "Abramson, mr Shelley" },
-        { id: "#1224", name: "Adam, Dr Jose" },
-        { id: "#6699", name: "Adelsheimer, Carol" },
-        { id: "#1117-W", name: "Adelson, Mr. Seymour" },
-        { id: "#4061", name: "Aery, Mr. Wayne" },
-        { id: "#9851", name: "Agran, Alex" },
-        { id: "#0089", name: "’s, MR O’Fla" },
-        { id: "#65432", name: "456, MR Vin123" },
-        { id: "#0277", name: "a, Mr. appu" },
-        { id: "#1438", name: "Abraham, Mr. James" },
-        { id: "#1005", name: "Abraham, John" },
-        { id: "#1752-A", name: "Abraham, Mrs. Sam" },
-        { id: "#1202", name: "Abramson, mr Shelley" },
-        { id: "#1224", name: "Adam, Dr Jose" },
-        { id: "#6699", name: "Adelsheimer, Carol" },
-        { id: "#1117-W", name: "Adelson, Mr. Seymour" },
-        { id: "#4061", name: "Aery, Mr. Wayne" },
-        { id: "#9851", name: "Agran, Alex" },
-        { id: "#0089", name: "’s, MR O’Fla" },
-        { id: "#65432", name: "456, MR Vin123" },
-        { id: "#0277", name: "a, Mr. appu" },
-        { id: "#1438", name: "Abraham, Mr. James" },
-        { id: "#1005", name: "Abraham, John" },
-        { id: "#1752-A", name: "Abraham, Mrs. Sam" },
-        { id: "#1202", name: "Abramson, mr Shelley" },
-        { id: "#1224", name: "Adam, Dr Jose" },
-        { id: "#6699", name: "Adelsheimer, Carol" },
-        { id: "#1117-W", name: "Adelson, Mr. Seymour" },
-        { id: "#4061", name: "Aery, Mr. Wayne" },
-        { id: "#9851", name: "Agran, Alex" },
-        { id: "#0089", name: "’s, MR O’Fla" },
-        { id: "#65432", name: "456, MR Vin123" },
-        { id: "#0277", name: "a, Mr. appu" },
-        { id: "#1438", name: "Abraham, Mr. James" },
-        { id: "#1005", name: "Abraham, John" },
-        { id: "#1752-A", name: "Abraham, Mrs. Sam" },
-        { id: "#1202", name: "Abramson, mr Shelley" },
-        { id: "#1224", name: "Adam, Dr Jose" },
-        { id: "#6699", name: "Adelsheimer, Carol" },
-        { id: "#1117-W", name: "Adelson, Mr. Seymour" },
-        { id: "#4061", name: "Aery, Mr. Wayne" },
-        { id: "#9851", name: "Agran, Alex" },
-        { id: "#0089", name: "’s, MR O’Fla" },
-        { id: "#65432", name: "456, MR Vin123" },
-        { id: "#0277", name: "a, Mr. appu" },
-        { id: "#1438", name: "Abraham, Mr. James" },
-        { id: "#1005", name: "Abraham, John" },
-        { id: "#1752-A", name: "Abraham, Mrs. Sam" },
-        { id: "#1202", name: "Abramson, mr Shelley" },
-        { id: "#1224", name: "Adam, Dr Jose" },
-        { id: "#6699", name: "Adelsheimer, Carol" },
-        { id: "#1117-W", name: "Adelson, Mr. Seymour" },
-        { id: "#4061", name: "Aery, Mr. Wayne" },
-        { id: "#9851", name: "Agran, Alex" },
-        { id: "#0089", name: "’s, MR O’Fla" },
-        { id: "#65432", name: "456, MR Vin123" },
-        { id: "#0277", name: "a, Mr. appu" },
-        { id: "#1438", name: "Abraham, Mr. James" },
-        { id: "#1005", name: "Abraham, John" },
-        { id: "#1752-A", name: "Abraham, Mrs. Sam" },
-        { id: "#1202", name: "Abramson, mr Shelley" },
-        { id: "#1224", name: "Adam, Dr Jose" },
-        { id: "#6699", name: "Adelsheimer, Carol" },
-        { id: "#1117-W", name: "Adelson, Mr. Seymour" },
-        { id: "#4061", name: "Aery, Mr. Wayne" },
-        { id: "#9851", name: "Agran, Alex" },
-        { id: "#0089", name: "’s, MR O’Fla" },
-        { id: "#65432", name: "456, MR Vin123" },
-        { id: "#0277", name: "a, Mr. appu" },
-        { id: "#1438", name: "Abraham, Mr. James" },
-        { id: "#1005", name: "Abraham, John" },
-        { id: "#1752-A", name: "Abraham, Mrs. Sam" },
-        { id: "#1202", name: "Abramson, mr Shelley" },
-        { id: "#1224", name: "Adam, Dr Jose" },
-        { id: "#6699", name: "Adelsheimer, Carol" },
-        { id: "#1117-W", name: "Adelson, Mr. Seymour" },
-        { id: "#4061", name: "Aery, Mr. Wayne" },
-        { id: "#9851", name: "Agran, Alex" },
-        { id: "#0089", name: "’s, MR O’Fla" },
-        { id: "#65432", name: "456, MR Vin123" },
-        { id: "#0277", name: "a, Mr. appu" },
-        { id: "#1438", name: "Abraham, Mr. James" },
-        { id: "#1005", name: "Abraham, John" },
-        { id: "#1752-A", name: "Abraham, Mrs. Sam" },
-        { id: "#1202", name: "Abramson, mr Shelley" },
-        { id: "#1224", name: "Adam, Dr Jose" },
-        { id: "#6699", name: "Adelsheimer, Carol" },
-        { id: "#1117-W", name: "Adelson, Mr. Seymour" },
-        { id: "#4061", name: "Aery, Mr. Wayne" },
-        { id: "#9851", name: "Agran, Alex" },
-        { id: "#0089", name: "’s, MR O’Fla" },
-        { id: "#65432", name: "456, MR Vin123" },
-        { id: "#0277", name: "a, Mr. appu" },
-        { id: "#1438", name: "Abraham, Mr. James" },
-        { id: "#1005", name: "Abraham, John" },
-        { id: "#1752-A", name: "Abraham, Mrs. Sam" },
-        { id: "#1202", name: "Abramson, mr Shelley" },
-        { id: "#1224", name: "Adam, Dr Jose" },
-        { id: "#6699", name: "Adelsheimer, Carol" },
-        { id: "#1117-W", name: "Adelson, Mr. Seymour" },
-        { id: "#4061", name: "Aery, Mr. Wayne" },
-        { id: "#9851", name: "Agran, Alex" },
-        { id: "#0089", name: "’s, MR O’Fla" },
-        { id: "#65432", name: "456, MR Vin123" },
-        { id: "#0277", name: "a, Mr. appu" },
-        { id: "#1438", name: "Abraham, Mr. James" },
-        { id: "#1005", name: "Abraham, John" },
-        { id: "#1752-A", name: "Abraham, Mrs. Sam" },
-        { id: "#1202", name: "Abramson, mr Shelley" },
-        { id: "#1224", name: "Adam, Dr Jose" },
-        { id: "#6699", name: "Adelsheimer, Carol" },
-        { id: "#1117-W", name: "Adelson, Mr. Seymour" },
-        { id: "#4061", name: "Aery, Mr. Wayne" },
-        { id: "#9851", name: "Agran, Alex" },
-      ],
       currentPage: 1,
       startPage: 1,
       perPage: 16,
@@ -543,54 +364,6 @@ class ReservationLogic extends Component<Props, ControllerState> {
       .padStart(2, "0")}`;
   };
 
-  startTimer = () => {
-    this.timer = setInterval(() => {
-      this.setState((prev) => {
-        if (prev.secondsLeft <= 1 && this.timer && !prev.showSecondModal) {
-          clearInterval(this.timer);
-          return {
-            ...prev,
-            secondsLeft: 0,
-            showSecondModal: true, // Set showSecondModal to true when the timer reaches 0
-          };
-        }
-        return { ...prev, secondsLeft: prev.secondsLeft - 1 };
-      });
-    }, 1000);
-  };
-
-  toggleModal = () => {
-    const { showModal } = this.state;
-    this.setState(
-      {
-        showModal: !showModal,
-        secondsLeft: 1200,
-      },
-      () => {
-        if (!showModal) {
-          this.startTimer();
-        } else {
-          if (this.timer) {
-            clearInterval(this.timer);
-          }
-        }
-      }
-    );
-  };
-
-  toggleSecondModal = () => {
-    const { showSecondModal, showMemberModal } = this.state;
-    this.setState(
-      {
-        showSecondModal: !showSecondModal,
-      },
-      () => {
-        this.toggleModal();
-        this.toggleMemberModel();
-        this.toggleGuestModel();
-      }
-    );
-  };
   toggleMemberModel = () => {
     const { showMemberModal } = this.state;
     this.setState({
@@ -615,14 +388,6 @@ class ReservationLogic extends Component<Props, ControllerState> {
       showThankModal: !showThankModal,
     });
   };
-  handleCommentsChange = (text: string) => {
-    this.setState({ comments: text });
-  };
-
-  handleCirclePress = (item: number) => {
-    this.setState({ selectedCount: item });
-  };
-
   scrollToIndex = (index: number) => {
     this.flatListRef.current.scrollToIndex({ animated: true, index });
     // setCurrentIndex(index);
@@ -652,8 +417,6 @@ class ReservationLogic extends Component<Props, ControllerState> {
   onDateChange = (date: any) => {
     const formattedDate = moment(new Date(date)).format("DD-MMM-YYYY");
     const selecteditem = this.state.dateRange.find((d) => d === formattedDate);
-    console.log(selecteditem, 'selecteditem');
-    
     if (selecteditem) {
       this.setState({ selectedItem: selecteditem});
     } else {
@@ -706,73 +469,6 @@ class ReservationLogic extends Component<Props, ControllerState> {
     console.log("Selected value:", selectedItem);
   };
 
-  handleCheckBox = () => {
-    const { isChecked } = this.state;
-    this.setState({ isChecked: !isChecked });
-  };
-
-  getTotalPages() {
-    return Math.ceil(this.state.members.length / this.state.membersPerPage);
-  }
-  // Slice data for current page
-  getCurrentPageData = () => {
-    const { currentPage, membersPerPage, members } = this.state;
-    const startIndex = (currentPage - 1) * membersPerPage;
-    return members.slice(startIndex, startIndex + membersPerPage);
-  };
-  handlePageChange = (page) => {
-    const { visiblePageLimit } = this.state;
-    const totalPages = this.getTotalPages();
-
-    let newStartPage = this.state.startPage;
-    if (
-      page < this.state.startPage ||
-      page >= this.state.startPage + visiblePageLimit
-    ) {
-      newStartPage = Math.max(
-        Math.min(
-          page - Math.floor(visiblePageLimit / 2),
-          totalPages - visiblePageLimit + 1
-        ),
-        1
-      );
-    }
-
-    this.setState({
-      currentPage: page,
-      startPage: newStartPage,
-    });
-  };
-
-  handleFirstPage = () => {
-    this.setState({ currentPage: 1, startPage: 1 });
-  };
-
-  handleLastPage = () => {
-    const totalPages = this.getTotalPages();
-    const { visiblePageLimit } = this.state;
-    this.setState({
-      currentPage: totalPages,
-      startPage: Math.max(totalPages - visiblePageLimit + 1, 1),
-    });
-  };
-
-  handleLeftPress = () => {
-    const { currentPage } = this.state;
-    if (currentPage > 1) {
-      this.handlePageChange(currentPage - 1);
-    }
-  };
-
-  handleRightPress = () => {
-    const { currentPage } = this.state;
-    console.log(currentPage, "currentPage");
-
-    const totalPages = this.getTotalPages();
-    if (currentPage < totalPages) {
-      this.handlePageChange(currentPage + 1);
-    }
-  };
 
   selectedMember = (memberData: any) => {
     const updatedData = this.state.updatedMembersListData.map((items) => {
@@ -791,32 +487,9 @@ class ReservationLogic extends Component<Props, ControllerState> {
     this.setState({ selectedDateId: id });
   };
 
-  // handleSelectTimePeriod = (id: string) => {
-  //   this.setState({ selectedTimePeriod: id });
-  // };
-
-  // getCurrentTimeSlots = () => {
-  //   const selectedPeriod = this.timeData.find(
-  //     (period) => period.id === this.state.selectedTimePeriod
-  //   );
-  //   return selectedPeriod?.slots || [];
-  // };
-
-  // handleSelectTime = (label: string, disabled?: boolean) => {
-  //   if (disabled) return;
-  //   this.setState({ selectedTime: label });
-  // };
-
   onDate = (date: string) => {
     this.toggleCalendar();
-    console.log("Selected Date:", date);
   };
-
-  // toggleCalendar = () => {
-  //   this.setState((prevState) => ({
-  //     showCalendar: !prevState.showCalendar,
-  //   }));
-  // };
 
   toggleSelect = () => {
     this.setState((prevState) => ({
@@ -896,6 +569,14 @@ class ReservationLogic extends Component<Props, ControllerState> {
       selectedDateId: selectedDate,
     });
   };
+
+  handleCloseAllModels = () =>{
+      this.props.setClosememberModel(),
+      this.props.setOpenAddmemberModel();
+      if(this.props.OpenMemberModel){
+        this.props.setOpenMembersModel();
+      }
+  }
   //
 }
 

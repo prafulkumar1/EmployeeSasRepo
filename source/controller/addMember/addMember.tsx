@@ -21,26 +21,43 @@ interface IState {
   isSuccessModalOpen:boolean
   errorMessagePopup:boolean
   errorMessageTxt:string
+  //Webcode
+  selectedCount: number,
+  showplayedpopup: boolean;
+  popupVisibleIndex: number | null;
+  popupPosition: { top: number; left: number };
+  hover:string | null
+  showSecondModal: boolean,
+  showMemberModal: boolean,
+  showThankModal: boolean,
+  showGuestModal: boolean,
+  //Webcode
 }
 
 interface IProps {
-  navigation:any
-  resetLoadedScreen:() => void
-  isScreenLoaded:boolean
-  selectedId:string
-  handleSelectedMember:(id:string) => void
-  setUserType:(userType:string) => void
-  setMembersList:(memberCount:number) => void
-  membersList:{isMemberSelected:boolean,id:string,memberName:string}[]
-  removeMembersFromList:(id:string) =>void
-  addTbdToMemberList:() =>void
-  selectedMembersList:{
+  navigation?:any
+  resetLoadedScreen?:() => void
+  isScreenLoaded?:boolean
+  selectedId?:string
+  handleSelectedMember?:(id:string) => void
+  setUserType?:(userType:string) => void
+  setMembersList?:(memberCount:number) => void
+  membersList?:{isMemberSelected:boolean,id:string,memberName:string}[]
+  removeMembersFromList?:(id:string) =>void
+  addTbdToMemberList?:() =>void
+  selectedMembersList?:{
     "id": string
     "isMemberSelected": boolean
     "memberName": string
     "number":number
     "singleMemberDetails": MemberListType[]
   }[]
+  OpenAddmemberModel?:boolean,
+  OpenMemberModel?:boolean,
+  setOpenAddmemberModel?:()=>void
+  setOpenMembersModel?:()=>void
+  setClosememberModel?:()=>void
+  setChangeToGuest?:({userType})=>void
 }
 
 const BACKGROUND_TASK = 'background-timer-task';
@@ -61,6 +78,17 @@ export default class useAddMemberLogic extends Component<IProps, IState> {
       isSuccessModalOpen:false,
       errorMessagePopup:false,
       errorMessageTxt:"",
+      //webcode
+      selectedCount: 1,
+      showplayedpopup: false,
+      popupVisibleIndex: null,
+      popupPosition: { top: 0, left: 0 },
+      hover :null,
+      showSecondModal: false,
+      showMemberModal: false,
+      showThankModal: false,
+      showGuestModal: false,
+      //webcode
     };
     this.interval = null;
   }
@@ -85,8 +113,9 @@ export default class useAddMemberLogic extends Component<IProps, IState> {
     if(prevState.timeLeft !==this.state.timeLeft){
       if(this.state.timeLeft === 0){
         this.setState({isTimeOutModal:true})
+        this.props.setClosememberModel()
       }
-    }
+    } 
   }
 
   registerBackgroundTask = async () => {
@@ -206,4 +235,40 @@ export default class useAddMemberLogic extends Component<IProps, IState> {
   navigateToService =() => {
     navigateToScreen(this.props, "ServiceUI", true, {})
 }
+
+//webcode
+handleCirclePress = (item: number) => {
+  this.setState({ selectedCount: item });
+};
+
+toggleMutiplePlayers = () => {
+  const { showplayedpopup } = this.state;
+  this.setState({
+    showplayedpopup: !showplayedpopup,
+  });
+};
+handleAddIconPress = (index: number, event: any) => {
+  const { pageX, pageY } = event.nativeEvent;
+  this.setState((prev) => ({
+    popupVisibleIndex: prev.popupVisibleIndex === index ? null : index,
+    popupPosition: { top: pageY, left: pageX },
+  }));
+};
+handleRemoveMember = (indexToRemove: number) => {
+  const { selectedCount } = this.state;
+
+  // Ensure at least one member remains
+  if (selectedCount <= 1) return;
+
+  this.setState((prevState) => ({
+    selectedCount: prevState.selectedCount - 1,
+    popupVisibleIndex: null, // Close any open popup
+  }));
+};
+
+handleSetGuest = (userType:string) =>{
+  this.props.setChangeToGuest({userType:userType}) ;
+  this.props.setOpenMembersModel()
+}
+//webcode
 }

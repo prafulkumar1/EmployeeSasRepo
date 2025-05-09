@@ -176,12 +176,11 @@ export const styles = StyleSheet.create({
   label: {
     marginLeft: 10,
     fontSize: 16,
-    color: "#6D6D6D",
+    color: "#000",
   },
   //selector
   selectorcontainer: {
-    justifyContent: "center", alignItems: "center"
-  },
+    justifyContent: "center", alignItems: "center"  },
   selectorcustomstyle: {
     width: "40%",
     marginVertical: 10,
@@ -489,6 +488,7 @@ export const styles = StyleSheet.create({
     fontSize: 18,
     textAlign: "center",
   },
+  //MODEL ONE END
   Thankyou: {
     color: "#5773A2",
     fontFamily: "SourceSansPro_SemiBold",

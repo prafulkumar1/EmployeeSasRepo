@@ -65,7 +65,7 @@ cardTitle: {
     fontWeight: "600",
     color: "#5e4c4c",
 },
-cardContainer: { justifyContent: "center", alignItems: "center", alignSelf: "center", marginTop: 20 },
+cardContainer: { backgroundColor :'red',justifyContent: "center", alignItems: "center", alignSelf: "center", marginTop: 20 },
 topServiceContainer: { marginTop: 10, alignItems: "center" },
 serviceTopBar:{ width: '100%', alignItems: 'center' }
 });

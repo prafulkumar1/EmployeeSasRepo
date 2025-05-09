@@ -1,3 +1,4 @@
+import { isPlatformWeb } from '@/components/constants/Matrices';
 import { navigateToScreen } from '@/components/constants/Navigations';
 import { MemberListType } from '@/components/constants/Types';
 import { getFormFieldDataSelector } from '@/components/redux/reducers/loginReducer';
@@ -6,8 +7,8 @@ import React, { Component } from 'react';
 const pageId='MemberDirectory';
 
 interface IProps {
-  getMemberList:({pageCount,searchChar,searchBy})=>void
-  memberList:{
+  getMemberList?:({pageCount,searchChar,searchBy})=>void
+  memberList?:{
     "IsLoadMore": number
     "Members": MemberListType[],
     "PageCount": number
@@ -16,24 +17,33 @@ interface IProps {
     "ResponseMessage": string
     "TotalRecords": number
   }
-  memberListPerBatch:MemberListType[]
-  loading:boolean
-  formData:Object,
-  resetLoadedScreen:() =>void
-  singleMemberDetails:any
-  addMembersForReservation:() =>void
-  resetSingleMemberDetails:() =>void
-  addMemberList:any
-  selectedMembersList:{
+  memberListPerBatch?:MemberListType[]
+  loading?:boolean
+  formData?:Object,
+  resetLoadedScreen?:() =>void
+  singleMemberDetails?:any
+  addMembersForReservation?:() =>void
+  resetSingleMemberDetails?:() =>void
+  addMemberList?:any
+  selectedMembersList?:{
     "id": string
     "isMemberSelected": boolean
     "memberName": string
     "number":number
     "singleMemberDetails": MemberListType[]
   }[]
-  singleItemDetails: MemberListType | null
-  userType:string
+  singleItemDetails?: MemberListType | null
+  userType?:string,
+  OpenMemberModel?:boolean,
+  ChangeToGuest?:string,
+  setOpenMembersModel?:()=> void
 }
+//webinterface
+interface Member {
+  id: string;
+  name: string;
+}
+//webinterface
  
 interface IState {
     activeTab: number;
@@ -60,6 +70,15 @@ interface IState {
     errorMessagePopup:boolean
     errorMessageTxt:string
     selectedGuest:string
+    showMemberModal:boolean
+    showGuestModal:boolean
+    hover:null | string
+    isChecked: Boolean;
+    members: Member[];
+    currentPage: number;
+    startPage: number;
+    membersPerPage: number;
+    visiblePageLimit: number,
 }
 interface SS{}
  
@@ -107,12 +126,213 @@ export default class useMemberDirectoryLogic extends Component<IProps, IState,SS
         singleMemberDetails:null,
         errorMessagePopup:false,
         errorMessageTxt:"",
-        selectedGuest:"Existing Guest"
+        selectedGuest:"Existing Guest",
+        //webcode
+        showMemberModal:false,
+        showGuestModal:false,
+        hover:null,
+        isChecked: false,
+        members: [
+          { id: "#0089", name: "’s, MR O’Fla" },
+          { id: "#65432", name: "456, MR Vin123" },
+          { id: "#0277", name: "a, Mr. appu" },
+          { id: "#1438", name: "Abraham, Mr. James" },
+          { id: "#1005", name: "Abraham, John" },
+          { id: "#1752-A", name: "Abraham, Mrs. Sam" },
+          { id: "#1202", name: "Abramson, mr Shelley" },
+          { id: "#1224", name: "Adam, Dr Jose" },
+          { id: "#6699", name: "Adelsheimer, Carol" },
+          { id: "#1117-W", name: "Adelson, Mr. Seymour" },
+          { id: "#4061", name: "Aery, Mr. Wayne" },
+          { id: "#9851", name: "Agran, Alex" },
+          { id: "#9851", name: "Alexa, Mathew" },
+          { id: "#9851", name: "alexa, Roman" },
+          { id: "#9851", name: "alexa, siddu" },
+          { id: "#9851", name: "Alexander, MR Jake" },
+          { id: "#9851", name: "Alexa, Mathew" },
+          { id: "#9851", name: "alexa, Roman" },
+          { id: "#9851", name: "alexa, siddu" },
+          { id: "#9851", name: "alexa, siddu" },
+  
+          { id: "#0089", name: "’s, MR O’Fla" },
+          { id: "#65432", name: "456, MR Vin123" },
+          { id: "#0277", name: "a, Mr. appu" },
+          { id: "#1438", name: "Abraham, Mr. James" },
+          { id: "#1005", name: "Abraham, John" },
+          { id: "#1752-A", name: "Abraham, Mrs. Sam" },
+          { id: "#1202", name: "Abramson, mr Shelley" },
+          { id: "#1224", name: "Adam, Dr Jose" },
+          { id: "#6699", name: "Adelsheimer, Carol" },
+          { id: "#1117-W", name: "Adelson, Mr. Seymour" },
+          { id: "#4061", name: "Aery, Mr. Wayne" },
+          { id: "#9851", name: "Agran, Alex" },
+          { id: "#9851", name: "Alexa, Mathew" },
+          { id: "#9851", name: "alexa, Roman" },
+          { id: "#9851", name: "alexa, siddu" },
+          { id: "#9851", name: "Alexander, MR Jake" },
+          { id: "#9851", name: "Alexa, Mathew" },
+          { id: "#9851", name: "alexa, Roman" },
+          { id: "#9851", name: "alexa, siddu" },
+          { id: "#9851", name: "alexa, siddu" },
+  
+          { id: "#0089", name: "’s, MR O’Fla" },
+          { id: "#65432", name: "456, MR Vin123" },
+          { id: "#0277", name: "a, Mr. appu" },
+          { id: "#1438", name: "Abraham, Mr. James" },
+          { id: "#1005", name: "Abraham, John" },
+          { id: "#1752-A", name: "Abraham, Mrs. Sam" },
+          { id: "#1202", name: "Abramson, mr Shelley" },
+          { id: "#1224", name: "Adam, Dr Jose" },
+          { id: "#6699", name: "Adelsheimer, Carol" },
+          { id: "#1117-W", name: "Adelson, Mr. Seymour" },
+          { id: "#4061", name: "Aery, Mr. Wayne" },
+          { id: "#9851", name: "Agran, Alex" },
+          { id: "#9851", name: "Alexa, Mathew" },
+          { id: "#9851", name: "alexa, Roman" },
+          { id: "#9851", name: "alexa, siddu" },
+          { id: "#9851", name: "Alexander, MR Jake" },
+          { id: "#9851", name: "Alexa, Mathew" },
+          { id: "#9851", name: "alexa, Roman" },
+          { id: "#9851", name: "alexa, siddu" },
+          { id: "#9851", name: "alexa, siddu" },
+  
+          { id: "#0089", name: "’s, MR O’Fla" },
+          { id: "#65432", name: "456, MR Vin123" },
+          { id: "#0277", name: "a, Mr. appu" },
+          { id: "#1438", name: "Abraham, Mr. James" },
+          { id: "#1005", name: "Abraham, John" },
+          { id: "#1752-A", name: "Abraham, Mrs. Sam" },
+          { id: "#1202", name: "Abramson, mr Shelley" },
+          { id: "#1224", name: "Adam, Dr Jose" },
+          { id: "#6699", name: "Adelsheimer, Carol" },
+          { id: "#1117-W", name: "Adelson, Mr. Seymour" },
+          { id: "#4061", name: "Aery, Mr. Wayne" },
+          { id: "#9851", name: "Agran, Alex" },
+          { id: "#0089", name: "’s, MR O’Fla" },
+          { id: "#65432", name: "456, MR Vin123" },
+          { id: "#0277", name: "a, Mr. appu" },
+          { id: "#1438", name: "Abraham, Mr. James" },
+          { id: "#1005", name: "Abraham, John" },
+          { id: "#1752-A", name: "Abraham, Mrs. Sam" },
+          { id: "#1202", name: "Abramson, mr Shelley" },
+          { id: "#1224", name: "Adam, Dr Jose" },
+          { id: "#6699", name: "Adelsheimer, Carol" },
+          { id: "#1117-W", name: "Adelson, Mr. Seymour" },
+          { id: "#4061", name: "Aery, Mr. Wayne" },
+          { id: "#9851", name: "Agran, Alex" },
+          { id: "#0089", name: "’s, MR O’Fla" },
+          { id: "#65432", name: "456, MR Vin123" },
+          { id: "#0277", name: "a, Mr. appu" },
+          { id: "#1438", name: "Abraham, Mr. James" },
+          { id: "#1005", name: "Abraham, John" },
+          { id: "#1752-A", name: "Abraham, Mrs. Sam" },
+          { id: "#1202", name: "Abramson, mr Shelley" },
+          { id: "#1224", name: "Adam, Dr Jose" },
+          { id: "#6699", name: "Adelsheimer, Carol" },
+          { id: "#1117-W", name: "Adelson, Mr. Seymour" },
+          { id: "#4061", name: "Aery, Mr. Wayne" },
+          { id: "#9851", name: "Agran, Alex" },
+          { id: "#0089", name: "’s, MR O’Fla" },
+          { id: "#65432", name: "456, MR Vin123" },
+          { id: "#0277", name: "a, Mr. appu" },
+          { id: "#1438", name: "Abraham, Mr. James" },
+          { id: "#1005", name: "Abraham, John" },
+          { id: "#1752-A", name: "Abraham, Mrs. Sam" },
+          { id: "#1202", name: "Abramson, mr Shelley" },
+          { id: "#1224", name: "Adam, Dr Jose" },
+          { id: "#6699", name: "Adelsheimer, Carol" },
+          { id: "#1117-W", name: "Adelson, Mr. Seymour" },
+          { id: "#4061", name: "Aery, Mr. Wayne" },
+          { id: "#9851", name: "Agran, Alex" },
+          { id: "#0089", name: "’s, MR O’Fla" },
+          { id: "#65432", name: "456, MR Vin123" },
+          { id: "#0277", name: "a, Mr. appu" },
+          { id: "#1438", name: "Abraham, Mr. James" },
+          { id: "#1005", name: "Abraham, John" },
+          { id: "#1752-A", name: "Abraham, Mrs. Sam" },
+          { id: "#1202", name: "Abramson, mr Shelley" },
+          { id: "#1224", name: "Adam, Dr Jose" },
+          { id: "#6699", name: "Adelsheimer, Carol" },
+          { id: "#1117-W", name: "Adelson, Mr. Seymour" },
+          { id: "#4061", name: "Aery, Mr. Wayne" },
+          { id: "#9851", name: "Agran, Alex" },
+          { id: "#0089", name: "’s, MR O’Fla" },
+          { id: "#65432", name: "456, MR Vin123" },
+          { id: "#0277", name: "a, Mr. appu" },
+          { id: "#1438", name: "Abraham, Mr. James" },
+          { id: "#1005", name: "Abraham, John" },
+          { id: "#1752-A", name: "Abraham, Mrs. Sam" },
+          { id: "#1202", name: "Abramson, mr Shelley" },
+          { id: "#1224", name: "Adam, Dr Jose" },
+          { id: "#6699", name: "Adelsheimer, Carol" },
+          { id: "#1117-W", name: "Adelson, Mr. Seymour" },
+          { id: "#4061", name: "Aery, Mr. Wayne" },
+          { id: "#9851", name: "Agran, Alex" },
+          { id: "#0089", name: "’s, MR O’Fla" },
+          { id: "#65432", name: "456, MR Vin123" },
+          { id: "#0277", name: "a, Mr. appu" },
+          { id: "#1438", name: "Abraham, Mr. James" },
+          { id: "#1005", name: "Abraham, John" },
+          { id: "#1752-A", name: "Abraham, Mrs. Sam" },
+          { id: "#1202", name: "Abramson, mr Shelley" },
+          { id: "#1224", name: "Adam, Dr Jose" },
+          { id: "#6699", name: "Adelsheimer, Carol" },
+          { id: "#1117-W", name: "Adelson, Mr. Seymour" },
+          { id: "#4061", name: "Aery, Mr. Wayne" },
+          { id: "#9851", name: "Agran, Alex" },
+          { id: "#0089", name: "’s, MR O’Fla" },
+          { id: "#65432", name: "456, MR Vin123" },
+          { id: "#0277", name: "a, Mr. appu" },
+          { id: "#1438", name: "Abraham, Mr. James" },
+          { id: "#1005", name: "Abraham, John" },
+          { id: "#1752-A", name: "Abraham, Mrs. Sam" },
+          { id: "#1202", name: "Abramson, mr Shelley" },
+          { id: "#1224", name: "Adam, Dr Jose" },
+          { id: "#6699", name: "Adelsheimer, Carol" },
+          { id: "#1117-W", name: "Adelson, Mr. Seymour" },
+          { id: "#4061", name: "Aery, Mr. Wayne" },
+          { id: "#9851", name: "Agran, Alex" },
+          { id: "#0089", name: "’s, MR O’Fla" },
+          { id: "#65432", name: "456, MR Vin123" },
+          { id: "#0277", name: "a, Mr. appu" },
+          { id: "#1438", name: "Abraham, Mr. James" },
+          { id: "#1005", name: "Abraham, John" },
+          { id: "#1752-A", name: "Abraham, Mrs. Sam" },
+          { id: "#1202", name: "Abramson, mr Shelley" },
+          { id: "#1224", name: "Adam, Dr Jose" },
+          { id: "#6699", name: "Adelsheimer, Carol" },
+          { id: "#1117-W", name: "Adelson, Mr. Seymour" },
+          { id: "#4061", name: "Aery, Mr. Wayne" },
+          { id: "#9851", name: "Agran, Alex" },
+          { id: "#0089", name: "’s, MR O’Fla" },
+          { id: "#65432", name: "456, MR Vin123" },
+          { id: "#0277", name: "a, Mr. appu" },
+          { id: "#1438", name: "Abraham, Mr. James" },
+          { id: "#1005", name: "Abraham, John" },
+          { id: "#1752-A", name: "Abraham, Mrs. Sam" },
+          { id: "#1202", name: "Abramson, mr Shelley" },
+          { id: "#1224", name: "Adam, Dr Jose" },
+          { id: "#6699", name: "Adelsheimer, Carol" },
+          { id: "#1117-W", name: "Adelson, Mr. Seymour" },
+          { id: "#4061", name: "Aery, Mr. Wayne" },
+          { id: "#9851", name: "Agran, Alex" },
+        ],
+        currentPage: 1,
+        startPage: 1,
+        membersPerPage: 16,
+        visiblePageLimit: 10,
+        //webcode
     };
   }
 
   componentDidMount(): void {
-    this.props.getMemberList({pageCount:1,searchChar:"All",searchBy:""})
+    if (!isPlatformWeb()) {
+      this.props.getMemberList({
+        pageCount: 1,
+        searchChar: "All",
+        searchBy: ""
+      });
+    }
   }
 
   componentDidUpdate(prevProps: Readonly<IProps>, prevState: Readonly<IState>, snapshot?: SS): void {
@@ -205,4 +425,74 @@ export default class useMemberDirectoryLogic extends Component<IProps, IState,SS
         singleMemberDetails: memberData 
       });
     }
+
+    //webcode
+    handleCheckBox = () => {
+      const { isChecked } = this.state;
+      this.setState({ isChecked: !isChecked });
+    };
+    getTotalPages() {
+      return Math.ceil(this.state.members.length / this.state.membersPerPage);
+    }
+
+    getCurrentPageData = () => {
+      const { currentPage, membersPerPage, members } = this.state;
+      const startIndex = (currentPage - 1) * membersPerPage;
+      return members.slice(startIndex, startIndex + membersPerPage);
+    };
+
+    handlePageChange = (page) => {
+      const { visiblePageLimit } = this.state;
+      const totalPages = this.getTotalPages();
+  
+      let newStartPage = this.state.startPage;
+      if (
+        page < this.state.startPage ||
+        page >= this.state.startPage + visiblePageLimit
+      ) {
+        newStartPage = Math.max(
+          Math.min(
+            page - Math.floor(visiblePageLimit / 2),
+            totalPages - visiblePageLimit + 1
+          ),
+          1
+        );
+      }
+  
+      this.setState({
+        currentPage: page,
+        startPage: newStartPage,
+      });
+    };
+  
+    handleFirstPage = () => {
+      this.setState({ currentPage: 1, startPage: 1 });
+    };
+  
+    handleLastPage = () => {
+      const totalPages = this.getTotalPages();
+      const { visiblePageLimit } = this.state;
+      this.setState({
+        currentPage: totalPages,
+        startPage: Math.max(totalPages - visiblePageLimit + 1, 1),
+      });
+    };
+  
+    handleLeftPress = () => {
+      const { currentPage } = this.state;
+      if (currentPage > 1) {
+        this.handlePageChange(currentPage - 1);
+      }
+    };
+  
+    handleRightPress = () => {
+      const { currentPage } = this.state;
+      console.log(currentPage, "currentPage");
+  
+      const totalPages = this.getTotalPages();
+      if (currentPage < totalPages) {
+        this.handlePageChange(currentPage + 1);
+      }
+    };
+    //webcode
 }

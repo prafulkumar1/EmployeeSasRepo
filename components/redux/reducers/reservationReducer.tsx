@@ -6,6 +6,8 @@ const initialState = {
   loading:false,
   AppConfigJson:null,
   dropDownIndex: null as number | null,
+  OpenAddmemberModel: false ,
+  closeMemberModel:false
 };
 
 export const getAppConfiguration = createAsyncThunk(
@@ -60,6 +62,13 @@ const ReservationSlice = createSlice({
     setAdddropDownIndex(state, action) {
       state.dropDownIndex = action.payload;
     },
+    setOpenAddmemberModel(state, action) {
+      state.OpenAddmemberModel = !state.OpenAddmemberModel;
+    },
+    setClosememberModel(state, action) {
+      state.closeMemberModel = !state.closeMemberModel;
+    },
+
 
   },
   extraReducers: (builder) => {
@@ -77,6 +86,6 @@ const ReservationSlice = createSlice({
   },
 });
 
-export const {setAddMemberIndex, setAdddropDownIndex} = ReservationSlice.actions;
+export const {setAddMemberIndex, setAdddropDownIndex, setOpenAddmemberModel,setClosememberModel}:any = ReservationSlice.actions;
 
 export default ReservationSlice.reducer;

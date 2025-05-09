@@ -10,7 +10,9 @@ const initialState = {
     membersList:[],
     singleMemberDetails:null,
     selectedMembersList:[],
-    userType:""
+    userType:"",
+    OpenMemberModel: false ,
+    ChangeToGuest:''
 }
 
 export const getMemberDetails = createAsyncThunk(
@@ -112,7 +114,14 @@ const AddMemberSlice = createSlice({
     },
     setUserType(state, action){
       state.userType = action.payload
-    }
+    },
+    setOpenMembersModel(state, action) {
+      state.OpenMemberModel = !state.OpenMemberModel;
+    },
+    setChangeToGuest(state, action) {
+      const {userType} = action.payload
+      state.ChangeToGuest = userType;
+    },
   },
     extraReducers: builder => {
       builder
@@ -140,6 +149,8 @@ export const {
   removeMembersFromList,
   addTbdToMemberList,
   resetSingleMemberDetails,
-  setUserType 
+  setUserType ,
+  setOpenMembersModel,
+  setChangeToGuest
 }:any = AddMemberSlice.actions
 export default AddMemberSlice.reducer

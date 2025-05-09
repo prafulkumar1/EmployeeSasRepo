@@ -5,23 +5,14 @@ import { connect } from "react-redux";
 import { Image, View, Text, TouchableOpacity, Modal } from "react-native";
 import { Icon } from "@/components/ui/icon";
 import { CloseIcon, AddIcon } from "@/components/ui/icon";
-import BoxComponent from "./BoxComponent";
+import { CalendarDaysIcon } from "@/components/ui/icon";
 import CalendarComponent from "./CalendarComponent";
 import useReservationLogic from "@/source/controller/reservation/Reservation";
-import { setAdddropDownIndex } from "@/components/redux/reducers/reservationReducer";
-import {
-  Checkbox,
-  CheckboxIcon,
-  CheckboxIndicator,
-  CheckboxLabel,
-} from "@/components/ui/checkbox";
-import {
-  CheckIcon,
-  ChevronLeftIcon,
-  ChevronRightIcon,
-  ChevronsLeftIcon,
-  ChevronsRightIcon,
-} from "@/components/ui/icon";
+import {setAdddropDownIndex,setClosememberModel,setOpenAddmemberModel} from "@/components/redux/reducers/reservationReducer";
+import {ChevronLeftIcon,ChevronRightIcon,ChevronsLeftIcon,ChevronsRightIcon,} from "@/components/ui/icon";
+import AddMemberUIWeb from "../addMember/addMemberUI.web";
+import MemberDirectoryUI from "../memberDirectory/memberDirectoryUI.web";
+import { setOpenMembersModel } from "@/components/redux/reducers/addMemberReducer";
 
 const pageId = "Reservation";
 class ReservationUI extends useReservationLogic {
@@ -53,22 +44,22 @@ class ReservationUI extends useReservationLogic {
   renderGenderSelector = () => {
     const { selectedGender } = this.state;
     return (
-      <UI.View style={styles.RadioContainer}>
+      <UI.ConnectedCbView style={styles.RadioContainer}>
         {["Male", "Female", "Any"].map((gender) => (
           <TouchableOpacity
             key={gender}
             style={styles.optionContainer}
             onPress={() => this.setState({ selectedGender: gender })}
           >
-            <UI.View style={styles.radioOuter}>
+            <UI.ConnectedCbView style={styles.radioOuter}>
               {selectedGender === gender && (
-                <UI.View style={styles.radioInner} />
+                <UI.ConnectedCbView style={styles.radioInner} />
               )}
-            </UI.View>
-            <Text style={styles.label}>{gender}</Text>
+            </UI.ConnectedCbView>
+            <UI.ConnectedCbText style={styles.label}>{gender}</UI.ConnectedCbText>
           </TouchableOpacity>
         ))}
-      </UI.View>
+      </UI.ConnectedCbView>
     );
   };
 
@@ -130,194 +121,6 @@ class ReservationUI extends useReservationLogic {
       </UI.View>
     );
   };
-  renderMemberInputRows = () => {
-    const { popupVisibleIndex, popupPosition, selectedCount } = this.state;
-    let rows = [];
-    for (let i = 0; i < selectedCount; i++) {
-      rows.push(
-        <UI.View
-          key={i}
-          style={[styles.memberFieldWrapper, { position: "relative" }]}
-        >
-          <UI.View style={styles.memberInputRow}>
-            <UI.Text style={styles.MemberTxt}> Reservation {i + 1}</UI.Text>
-            <UI.View style={styles.iconcontainer}>
-              <UI.TouchableOpacity
-                style={[{ width: 30, height: 30 }]}
-                onPress={(e) => this.handleRemoveMember(i)}
-              >
-                <UI.Icon as={CloseIcon} size="sm" color="#ccc" />
-              </UI.TouchableOpacity>
-
-              <UI.TouchableOpacity
-                style={[{ width: 30, height: 30 }]}
-                onPress={(e) => this.handleAddIconPress(i, e)}
-              >
-                <UI.Icon as={AddIcon} size="sm" color="#08c3f8" />
-              </UI.TouchableOpacity>
-            </UI.View>
-          </UI.View>
-
-          {popupVisibleIndex === Number(i) && (
-            <UI.View style={[styles.popupContainer,]}>
-              <UI.Pressable
-                style={[
-                  styles.popupButton,
-                  {
-                    backgroundColor:
-                      this?.state?.hover === "member" ? "#000" : "#fff",
-                  },
-                ]}
-                onPress={this.toggleMemberModel}
-                onMouseEnter={() => this.setState({ hover: "member" })}
-                onMouseLeave={() => this.setState({ hover: null })}
-              >
-                <UI.Text style={styles.popupButtonText}>Members</UI.Text>
-              </UI.Pressable>
-              <UI.Pressable
-                style={[
-                  styles.popupButton,
-                  {
-                    backgroundColor:
-                      this?.state?.hover === "guest" ? "#000" : "#fff",
-                  },
-                ]}
-                onMouseEnter={() => this.setState({ hover: "guest" })}
-                onMouseLeave={() => this.setState({ hover: null })}
-                onPress={this.toggleGuestModel}
-              >
-                <UI.Text style={styles.popupButtonText}>Guest</UI.Text>
-              </UI.Pressable>
-              <UI.Pressable
-                style={[
-                  styles.popupButton,
-                  {
-                    backgroundColor:
-                      this?.state?.hover === "TBD" ? "#000" : "#fff",
-                  },
-                ]}
-                onMouseEnter={() => this.setState({ hover: "TBD" })}
-                onMouseLeave={() => this.setState({ hover: null })}
-              >
-                <UI.Text style={styles.popupButtonText}>TBD</UI.Text>
-              </UI.Pressable>
-            </UI.View>
-          )}
-        </UI.View>
-      );
-    }
-    return rows;
-  };
-
-  renderMemberItem = ({ item }: { item: any }) => {
-    return (
-      <UI.TouchableOpacity
-        style={[
-          styles.memberItem,
-          { backgroundColor: item.isMemberSelected ? "#e0e0e0" : "#fff" },
-        ]}
-        onPress={() => this.selectedMember(item)}
-      >
-        <UI.View>
-          <Image
-            style={styles.stretch}
-            source={require("@/assets/images/profile.png")}
-          />
-        </UI.View>
-        <UI.View>
-          <Text style={styles.memberName} numberOfLines={1}>
-            {item.name}
-          </Text>
-          <Text style={styles.memberId}>{item.id}</Text>
-        </UI.View>
-      </UI.TouchableOpacity>
-    );
-  };
-
-  renderPagination = () => {
-    const { startPage, visiblePageLimit, currentPage, membersPerPage } =
-      this.state;
-    const totalPages = this.getTotalPages();
-
-    if (totalPages <= 1) return null;
-
-    const visiblePages = Math.min(visiblePageLimit, totalPages - startPage + 1);
-    const totalMembers = this.state.members.length;
-    const start = (currentPage - 1) * membersPerPage + 1;
-    const end = Math.min(start + membersPerPage - 1, totalMembers);
-
-    const pages = [];
-    for (let i = 0; i < visiblePages; i++) {
-      const pageNum = startPage + i;
-      const isActive = currentPage === pageNum;
-      pages.push(
-        <UI.TouchableOpacity
-          key={i}
-          onPress={() => this.handlePageChange(pageNum)}
-          style={[
-            styles.pageButton,
-            // { paddingHorizontal: this.state.screenWidth <= 780 ? 5 : 10 },
-          ]}
-        >
-          <Text
-            style={[
-              styles.pageText,
-              { fontSize: this.state.screenWidth <= 780 ? 12 : 18 },
-              isActive && styles.activePageText,
-            ]}
-          >
-            {pageNum}
-          </Text>
-        </UI.TouchableOpacity>
-      );
-    }
-
-    return (
-      <UI.View style={styles.paginationContainer}>
-        <UI.View
-          style={{ flexDirection: "row", alignItems: "center", flex: 1 }}
-        >
-          <UI.TouchableOpacity
-            style={{ width: 30, height: 30 }}
-            onPress={this.handleFirstPage}
-          >
-            <Icon as={ChevronsLeftIcon} />
-          </UI.TouchableOpacity>
-
-          <UI.TouchableOpacity
-            style={{ width: 30, height: 30 }}
-            onPress={this.handleLeftPress}
-          >
-            <Icon as={ChevronLeftIcon} />
-          </UI.TouchableOpacity>
-
-          {pages}
-
-          <UI.TouchableOpacity
-            style={{ width: 30, height: 30 }}
-            onPress={this.handleRightPress}
-          >
-            <Icon as={ChevronRightIcon} />
-          </UI.TouchableOpacity>
-
-          <UI.TouchableOpacity
-            style={{ width: 30, height: 30 }}
-            onPress={this.handleLastPage}
-          >
-            <Icon as={ChevronsRightIcon} />
-          </UI.TouchableOpacity>
-        </UI.View>
-
-        <UI.View
-          style={{ justifyContent: "center", alignItems: "flex-end", flex: 1 }}
-        >
-          <Text
-            style={{ color: "#888", fontSize: 18 }}
-          >{`Displaying ${start} to ${end}`}</Text>
-        </UI.View>
-      </UI.View>
-    );
-  };
 
   render() {
     this.dummydata;
@@ -329,52 +132,40 @@ class ReservationUI extends useReservationLogic {
       pageConfigJson && pageConfigJson.Controlls
         ? pageConfigJson.Controlls
         : [];
+
     return (
       <UI.ScrollView style={[styles.mainContainer]}>
-        {/* <UI.ScrollView
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          style={styles.headerContainer}
+        <UI.ConnectedCbBox
+          style={styles.container}
+          pageId={pageId}
+          id="calenderContainer"
         >
-          {Object.entries(this.HeaderData).map(([key]) => (
-            <UI.TouchableOpacity
-              key={key}
-              style={styles.headerButton}
-              onPress={() => this.setState({ selectedKey: key })}
+          <UI.ConnectedCbView
+            style={styles.scrollBox}
+            id="togglecalender"
+            pageId={pageId}
+          >
+            <UI.ConnectedCbText
+              id="SelectDateLabel"
+              pageId={pageId}
+              style={styles.title}
             >
-              <UI.View style={styles.keyContent}>
-                 <Image source={{ uri: image }} style={styles.keyImage} /> 
-                <Text style={styles.headerText}>{key}</Text>
-              </UI.View>
-              <UI.View
-                style={[
-                  styles.underline,
-                  this.state.selectedKey === key && styles.selectedUnderline,
-                ]}
-              />
+              {this.state.selectedKey}
+            </UI.ConnectedCbText>
+            <UI.TouchableOpacity
+              style={[styles.calendarBox]}
+              onPress={() => this.toggleCalendar()}
+            >
+              <UI.Box style={styles.calendarIcon}>
+                <Icon as={CalendarDaysIcon} size="md" color="#00c6ff" />
+              </UI.Box>
+              <UI.Text style={styles.calendarText}>
+                {this.state.selectedItem}
+              </UI.Text>
             </UI.TouchableOpacity>
-          ))}
-        </UI.ScrollView> */}
-        {/* <UI.FlatList
-          data={this?.HeaderData[this?.state?.selectedKey]?.values}
-          keyExtractor={(item, index) => item + index}
-          // numColumns={2}
-          horizontal={true}
-          contentContainerStyle={styles.valuesContainer}
-          renderItem={({ item }) => (
-            <UI.View style={styles.box}>
-              <Text style={styles.boxText}>{item}</Text>
-            </UI.View>
-          )}
-        /> */}
+          </UI.ConnectedCbView>
 
-        <UI.Box style={styles.container}>
-          <BoxComponent
-            title={this.state.selectedKey}
-            onPressCalendar={this.toggleCalendar}
-            date={this.state.selectedItem}
-          />
-          <UI.View style={styles.row}>
+          <UI.ConnectedCbView style={styles.row}>
             <UI.TouchableOpacity
               onPress={this.handlePrevious}
               style={{ paddingHorizontal: 20 }}
@@ -404,9 +195,9 @@ class ReservationUI extends useReservationLogic {
                 source={require("@/assets/images/icons/Back-Right-arrow.png")}
               />
             </UI.TouchableOpacity>
-          </UI.View>
-        </UI.Box>
-        <UI.View style={[styles.selectorcontainer]}>
+          </UI.ConnectedCbView>
+        </UI.ConnectedCbBox>
+        <UI.ConnectedCbView style={[styles.selectorcontainer]}>
           <UI.ConnectedCbSelectDropDown
             options={this.servicesOptions}
             customstyle={styles.selectorcustomstyle}
@@ -414,12 +205,12 @@ class ReservationUI extends useReservationLogic {
           />
 
           {this.renderGenderSelector()}
-          <UI.View style={{ marginVertical: 10 }}>
-            <UI.Text style={styles.providerText}>
+          <UI.ConnectedCbView style={{ marginVertical: 10 }}>
+            <UI.ConnectedCbText style={styles.providerText}>
               Please select provider
-            </UI.Text>
-          </UI.View>
-        </UI.View>
+            </UI.ConnectedCbText>
+          </UI.ConnectedCbView>
+        </UI.ConnectedCbView>
         <UI.View style={[styles.selectorcontainer, { zIndex: -1 }]}>
           <UI.ConnectedCbSelectDropDown
             options={this.providersdummyData}
@@ -445,21 +236,71 @@ class ReservationUI extends useReservationLogic {
         <UI.View style={styles.addMemberBtncontainer}>
           <UI.TouchableOpacity
             style={styles.addMemberBtn}
-            onPress={this.toggleModal}
+            onPress={() => this.props.setOpenAddmemberModel()}
           >
             <UI.Text style={styles.addMemberBtnTxt}> Add Member</UI.Text>
           </UI.TouchableOpacity>
         </UI.View>
 
-                <UI.ConnectedCbBox
-                  id="addMemberContainer"
-                  pageId={pageId}
-                  style={styles.addMemberBtncontainer}
-                >
-        <UI.Text style={styles.addMemberBtnTxt}> Add Member</UI.Text>
+        {/* Conditionally show AddMemberUIWeb only on Web and if modal open */}
+        {this.props.OpenAddmemberModel && <AddMemberUIWeb />}
 
-                </UI.ConnectedCbBox>
+        {/*MODEL FOR THE TIME OUT*/}
+        {this.props.closeMemberModel && (
+          <Modal
+            animationType="fade"
+            transparent={true}
+            visible={this.props.closeMemberModel}
+          >
+            <UI.ConnectedCbView style={styles.modalBackground}>
+              <UI.View
+                style={[
+                  styles.modalContainer,
+                  {
+                    height: "50%",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  },
+                ]}
+              >
+                <Image source={require("@/assets/images/icons/tennis.jpg")} />
+                <Text style={[styles.txt2, { marginVertical: 10 }]}>
+                  our Time has expired, you are no longer holding this
+                  reservation. Please return to the reservation screen and try
+                  again.
+                </Text>
+                <UI.View style={styles.SubmitContainer}>
+                  <UI.Pressable
+                    style={[
+                      styles.SubmitBtn,
+                      {
+                        backgroundColor:
+                          this.state.hover === "ok" ? "#000" : "transparent",
+                      },
+                    ]}
+                    onPress={() => this.handleCloseAllModels()}
+                    onMouseEnter={() => this.setState({ hover: "ok" })}
+                    onMouseLeave={() => this.setState({ hover: null })}
+                  >
+                    <Text
+                      style={[
+                        styles.submitTxt,
+                        {
+                          color:
+                            this.state.hover === "ok" ? "#fff" : " #5773A2,",
+                        },
+                      ]}
+                    >
+                      Ok
+                    </Text>
+                  </UI.Pressable>
+                </UI.View>
+              </UI.View>
+            </UI.ConnectedCbView>
+          </Modal>
+        )}
 
+        {this.props.OpenMemberModel && <MemberDirectoryUI />}
         {this.state.showCalendar && (
           <CalendarComponent
             onDateChange={this.onDateChange}
@@ -467,462 +308,7 @@ class ReservationUI extends useReservationLogic {
             sixtyDaysLater={this.state.sixtyDaysLater}
           />
         )}
-        {/*MODEL TO ADD THE MEMBER*/}
-        <Modal
-          animationType="fade"
-          transparent={true}
-          visible={this.state.showModal}
-          onRequestClose={this.toggleModal}
-        >
-          <UI.View style={styles.modalBackground}>
-            <UI.View style={styles.modalContainer}>
-              <UI.View style={styles.modalTitleContainer}>
-                <Text style={styles.modalTitle}>Add Member</Text>
-                <TouchableOpacity
-                  onPress={this.toggleModal}
-                  style={styles.CloseModel}
-                >
-                  <Icon as={CloseIcon} size="sm" />
-                </TouchableOpacity>
-              </UI.View>
-              <UI.ScrollView
-                contentContainerStyle={styles.scrollViewContent}
-                showsVerticalScrollIndicator={false}
-              >
-                <UI.View style={styles.timerRow}>
-                  <UI.View style={styles.timerWrapper}>
-                    <UI.Text style={styles.timerText}>
-                      {" "}
-                      {this.formatTime(this.state.secondsLeft)}
-                    </UI.Text>
-                  </UI.View>
-                </UI.View>
 
-                <UI.View style={styles.playerListRow}>
-                  <UI.FlatList
-                    data={[1, 2, 3, 4]}
-                    horizontal
-                    renderItem={({ item }) => (
-                      <UI.TouchableOpacity
-                        onPress={() => this.handleCirclePress(item)}
-                      >
-                        <UI.View
-                          style={[
-                            styles.circleItem,
-                            {
-                              backgroundColor:
-                                this.state.selectedCount === item
-                                  ? "#08c3f8"
-                                  : "#fff",
-                            },
-                          ]}
-                        >
-                          <UI.Text style={styles.circleText}>{item}</UI.Text>
-                        </UI.View>
-                      </UI.TouchableOpacity>
-                    )}
-                    keyExtractor={(item) => item.toString()}
-                    style={{ flex: 1 }}
-                  />
-                  <UI.TouchableOpacity
-                    style={styles.addMultipleBtn}
-                    onPress={this.toggleMutiplePlayers}
-                  >
-                    <UI.Text style={styles.addMultipleBtnText}>
-                      Add Multiple Players
-                    </UI.Text>
-                  </UI.TouchableOpacity>
-                </UI.View>
-                {this.state.showplayedpopup && (
-                  <UI.View style={[styles.MutiplepopupContainer]}>
-                    <UI.Pressable
-                      style={[
-                        styles.popupButton,
-                        {
-                          backgroundColor:
-                            this?.state?.hover === "Addmember"
-                              ? "#000"
-                              : "#fff",
-                        },
-                      ]}
-                      onPress={this.toggleMemberModel}
-                      onMouseEnter={() => this.setState({ hover: "Addmember" })}
-                      onMouseLeave={() => this.setState({ hover: null })}
-                    >
-                      <UI.Text style={styles.popupButtonText}>Members</UI.Text>
-                    </UI.Pressable>
-                    <UI.Pressable
-                      style={[
-                        styles.popupButton,
-                        {
-                          backgroundColor:
-                            this?.state?.hover === "addguest" ? "#000" : "#fff",
-                        },
-                      ]}
-                      onMouseEnter={() => this.setState({ hover: "addguest" })}
-                      onMouseLeave={() => this.setState({ hover: null })}
-                      onPress={this.toggleGuestModel}
-                    >
-                      <UI.Text style={styles.popupButtonText}>Guest</UI.Text>
-                    </UI.Pressable>
-                  </UI.View>
-                )}
-
-                <UI.View style={styles.memberSection}>
-                  <UI.View style={styles.Pluscontainer}>
-                    <UI.Text style={styles.sectionNote}>
-                      Please click on{"  "}
-                    </UI.Text>
-                    <UI.View style={styles.plusCircle}>
-                      <UI.Text style={styles.plusText}>+</UI.Text>
-                    </UI.View>
-                    <UI.Text style={styles.sectionNote}>
-                      {"  "}
-                      to select Member, Guest or My Buddies
-                    </UI.Text>
-                  </UI.View>
-                </UI.View>
-                <UI.View
-                  style={{
-                    width: "100%",
-                    flexDirection: "row",
-                    flexWrap: "wrap",
-                    justifyContent: "flex-start",
-                    paddingHorizontal :20
-                  }}
-                >
-                  {this.renderMemberInputRows()}
-                </UI.View>
-
-                <UI.Box style={{ marginTop: 10, padding: 12 }}>
-                  <UI.Box style={{ padding: 5 }}>
-                    <UI.Text style={styles.commentTxt}>Comments</UI.Text>
-                  </UI.Box>
-
-                  <UI.ConnectedCbInput
-                    id="Comments"
-                    style={styles.commentsBox}
-                    multiline={true}
-                    numberOfLines={4}
-                    formId={pageId}
-                  />
-                </UI.Box>
-              </UI.ScrollView>
-              <UI.View style={styles.SubmitContainer}>
-                <UI.TouchableOpacity style={styles.SubmitBtn}>
-                  <UI.Text style={styles.submitTxt}>Submit</UI.Text>
-                </UI.TouchableOpacity>
-              </UI.View>
-
-              <UI.Text style={styles.txt1}>SPA POLICIES</UI.Text>
-              <UI.Text style={styles.txt2}>Hilcox, Loreson | #13310-00</UI.Text>
-            </UI.View>
-          </UI.View>
-        </Modal>
-        {/*Model for the  directory*/}
-        <Modal
-          animationType="fade"
-          transparent={true}
-          visible={this.state.showMemberModal}
-          onRequestClose={this.toggleMemberModel}
-        >
-          <UI.View style={styles.modalBackground}>
-            <UI.View style={styles.modalContainer}>
-              <UI.View style={styles.modalHeader}>
-                <UI.Text style={styles.modalTitle}>Add Member</UI.Text>
-              </UI.View>
-
-              <UI.TouchableOpacity
-                onPress={this.toggleMemberModel}
-                style={styles.closeIcon}
-                onMouseEnter={() => this.setState({ hover: "close" })}
-                onMouseLeave={() => this.setState({ hover: null })}
-              >
-                <Icon
-                  as={CloseIcon}
-                  size="sm"
-                  style={{
-                    color: this.state.hover === "close" ? "#000" : "#fff",
-                  }}
-                />
-              </UI.TouchableOpacity>
-
-              <UI.ScrollView>
-                <UI.View style={{ padding: 30, flexDirection: "row" }}>
-                  <UI.View style={styles.searchRow}>
-                    <UI.ConnectedCbInput
-                      id="Search"
-                      labelRequired={false}
-                      style={styles.input}
-                      // multiline={true}
-                      formId={pageId}
-                      placeholder="Search by Member Last Name"
-                      placeholderTextColor="#565c5f"
-                    />
-
-                    <UI.TouchableOpacity
-                      style={[
-                        styles.searchButton,
-                        this.state.hover === "search" && {
-                          backgroundColor: "black",
-                          borderColor: "#000",
-                        },
-                      ]}
-                      onMouseEnter={() => this.setState({ hover: "search" })}
-                      onMouseLeave={() => this.setState({ hover: null })}
-                    >
-                      <Text
-                        style={[
-                          styles.searchClearButtonText,
-                          this.state.hover === "search" && { color: "white" },
-                        ]}
-                      >
-                        Search
-                      </Text>
-                    </UI.TouchableOpacity>
-                    <UI.TouchableOpacity
-                      style={[
-                        styles.clearButton,
-                        this.state.hover === "clear" && {
-                          backgroundColor: "black",
-                          borderColor: "#000",
-                        },
-                      ]}
-                      onMouseEnter={() => this.setState({ hover: "clear" })}
-                      onMouseLeave={() => this.setState({ hover: null })}
-                      // onPress={this.clear}
-                    >
-                      <Text
-                        style={[
-                          styles.searchClearButtonText,
-                          this.state.hover === "clear" && { color: "white" },
-                        ]}
-                      >
-                        Clear
-                      </Text>
-                    </UI.TouchableOpacity>
-                  </UI.View>
-
-                  <UI.View
-                    style={{
-                      alignItems: "center",
-                      justifyContent: "center",
-                      width: "50%",
-                    }}
-                  >
-                    <UI.View
-                      onMouseEnter={() => this.setState({ hover: "checkbox" })}
-                      onMouseLeave={() => this.setState({ hover: null })}
-                      style={{
-                        borderWidth: 1,
-                        borderColor: "#5773A2",
-                        paddingHorizontal: 10,
-                        paddingVertical: 6,
-                        borderRadius: 20,
-                        backgroundColor:
-                          this.state.hover === "checkbox"
-                            ? "#000"
-                            : "transparent",
-                      }}
-                    >
-                      <UI.TouchableOpacity
-                        onPress={this.handleCheckBox}
-                        activeOpacity={1}
-                      >
-                        <Checkbox
-                          size="md"
-                          isInvalid={false}
-                          isDisabled={false}
-                          style={{
-                            flexDirection: "row",
-                            justifyContent: "center",
-                            alignItems: "center",
-                          }}
-                          value=""
-                        >
-                          <CheckboxIndicator
-                            style={{
-                              borderWidth: 1,
-                              width: 25,
-                              height: 25,
-                              borderRadius: 5,
-                              // borderColor: "#e0e0e0",
-                              marginRight: 10,
-                              backgroundColor: "#000",
-                            }}
-                          >
-                            <CheckboxIcon as={CheckIcon} stroke="#fff" />
-                          </CheckboxIndicator>
-                          <CheckboxLabel
-                            style={[
-                              styles.checkboxLabel,
-                              {
-                                color:
-                                  this.state.hover === "checkbox"
-                                    ? "#fff"
-                                    : "#5773A2",
-                              },
-                            ]}
-                          >
-                            Add to My Buddy List
-                          </CheckboxLabel>
-                        </Checkbox>
-                      </UI.TouchableOpacity>
-                    </UI.View>
-                  </UI.View>
-                </UI.View>
-
-                <UI.FlatList
-                  contentContainerStyle={styles.memberList}
-                  data={this.getCurrentPageData()}
-                  renderItem={this.renderMemberItem}
-                  keyExtractor={(item, index) => index.toString()}
-                  numColumns={4}
-                  scrollEnabled={false}
-                />
-
-                {this.renderPagination()}
-              </UI.ScrollView>
-            </UI.View>
-          </UI.View>
-        </Modal>
-        {/*Model for the  Guest*/}
-        <Modal
-          animationType="fade"
-          transparent={true}
-          visible={this.state.showGuestModal}
-          onRequestClose={this.toggleGuestModel}
-        >
-          <UI.View style={styles.modalBackground}>
-            <UI.View style={styles.modalContainer}>
-              <UI.View style={styles.modalHeader}>
-                <UI.Text style={styles.modalTitle}>Add Guest</UI.Text>
-              </UI.View>
-
-              <UI.ScrollView>
-                <UI.View style={{ padding: 30, flexDirection: "row" }}>
-                  <UI.View style={styles.searchRow}>
-                    <UI.ConnectedCbInput
-                      id="Search"
-                      labelRequired={false}
-                      style={styles.input}
-                      // multiline={true}
-                      formId={pageId}
-                      placeholder="Search Guest Name"
-                      placeholderTextColor="#565c5f"
-                    />
-
-                    <UI.TouchableOpacity
-                      style={[
-                        styles.searchButton,
-                        this.state.hover === "search" && {
-                          backgroundColor: "black",
-                          borderColor: "#000",
-                        },
-                      ]}
-                      onMouseEnter={() => this.setState({ hover: "search" })}
-                      onMouseLeave={() => this.setState({ hover: null })}
-                    >
-                      <Text
-                        style={[
-                          styles.searchClearButtonText,
-                          this.state.hover === "search" && { color: "white" },
-                        ]}
-                      >
-                        Search
-                      </Text>
-                    </UI.TouchableOpacity>
-                    <UI.TouchableOpacity
-                      style={[
-                        styles.clearButton,
-                        this.state.hover === "clear" && {
-                          backgroundColor: "black",
-                          borderColor: "#000",
-                        },
-                      ]}
-                      onMouseEnter={() => this.setState({ hover: "clear" })}
-                      onMouseLeave={() => this.setState({ hover: null })}
-                      // onPress={this.clear}
-                    >
-                      <Text
-                        style={[
-                          styles.searchClearButtonText,
-                          this.state.hover === "clear" && { color: "white" },
-                        ]}
-                      >
-                        Clear
-                      </Text>
-                    </UI.TouchableOpacity>
-                  </UI.View>
-                </UI.View>
-
-                <UI.FlatList
-                  contentContainerStyle={styles.memberList}
-                  data={this.getCurrentPageData()}
-                  renderItem={this.renderMemberItem}
-                  keyExtractor={(item, index) => index.toString()}
-                  numColumns={4}
-                  scrollEnabled={false}
-                />
-
-                {this.renderPagination()}
-              </UI.ScrollView>
-            </UI.View>
-          </UI.View>
-        </Modal>
-
-        {/*MODEL FOR THE TIME OUT*/}
-        <Modal
-          animationType="fade"
-          transparent={true}
-          visible={this.state.showSecondModal}
-          onRequestClose={this.toggleSecondModal}
-        >
-          <UI.View style={styles.modalBackground}>
-            <UI.View
-              style={[
-                styles.modalContainer,
-                {
-                  height: "50%",
-                  justifyContent: "center",
-                  alignItems: "center",
-                },
-              ]}
-            >
-              <Image source={require("@/assets/images/icons/tennis.jpg")} />
-              <Text style={[styles.txt2, { marginVertical: 10 }]}>
-                our Time has expired, you are no longer holding this
-                reservation. Please return to the reservation screen and try
-                again.
-              </Text>
-              <UI.View style={styles.SubmitContainer}>
-                <UI.Pressable
-                  style={[
-                    styles.SubmitBtn,
-                    {
-                      backgroundColor:
-                        this.state.hover === "ok" ? "#000" : "transparent",
-                    },
-                  ]}
-                  onPress={this.toggleSecondModal}
-                  onMouseEnter={() => this.setState({ hover: "ok" })}
-                  onMouseLeave={() => this.setState({ hover: null })}
-                >
-                  <Text
-                    style={[
-                      styles.submitTxt,
-                      {
-                        color: this.state.hover === "ok" ? "#fff" : " #5773A2,",
-                      },
-                    ]}
-                  >
-                    Ok
-                  </Text>
-                </UI.Pressable>
-              </UI.View>
-            </UI.View>
-          </UI.View>
-        </Modal>
         {/*MODEL FOR THE THANK  YOU */}
         <Modal
           animationType="fade"
@@ -975,10 +361,16 @@ class ReservationUI extends useReservationLogic {
 const mapStateToProps = (state: RootState) => {
   return {
     dropDownIndex: state?.reservation?.dropDownIndex,
+    OpenAddmemberModel: state?.reservation?.OpenAddmemberModel,
+    OpenMemberModel: state?.addMember?.OpenMemberModel,
+    closeMemberModel: state?.reservation?.closeMemberModel,
   };
 };
 const mapDispatchToProps = {
   setAdddropDownIndex,
+  setOpenAddmemberModel,
+  setClosememberModel,
+  setOpenMembersModel,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(ReservationUI);
