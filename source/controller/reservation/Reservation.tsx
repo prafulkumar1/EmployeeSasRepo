@@ -417,8 +417,11 @@ class ReservationLogic extends Component<Props, ControllerState> {
   onDateChange = (date: any) => {
     const formattedDate = moment(new Date(date)).format("DD-MMM-YYYY");
     const selecteditem = this.state.dateRange.find((d) => d === formattedDate);
+    const selectedIndex = this.state.dateRange.findIndex(d => d === formattedDate);
     if (selecteditem) {
-      this.setState({ selectedItem: selecteditem});
+      this.setState({ selectedItem: selecteditem},() => {
+        this.scrollToIndex(selectedIndex); 
+      });
     } else {
     }
     this.toggleCalendar();

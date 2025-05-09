@@ -8,7 +8,7 @@ const CalendarComponent = ({ onDateChange, currentDate, sixtyDaysLater }) => (
   <UI.View style={styles.calendar}>
     <UI.View style={{ transform: [{ scale: 0.85 }], marginTop: -15 }}>
       <CalendarPicker
-        onDateChange={onDateChange} // Pass function to handle date change
+        onDateChange={onDateChange}
         selectedDayColor="#002c5f"
         selectedDayTextColor="#000"
         textStyle={{ color: "#000" }}

@@ -127,7 +127,6 @@ export const styles = StyleSheet.create({
     width: 250,
     height: 240,
     backgroundColor: "#fff",
-    // borderRadius: 10,
     overflow: "hidden",
     elevation: 10,
     shadowColor: "#000",
@@ -188,7 +187,8 @@ export const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 5,
     borderColor: '#ccc',
-    zIndex: 1
+    zIndex: 1,
+    
   },
   providerText: {
     fontSize: 16, color: '#000', fontFamily: "SourceSansPro_Italic",

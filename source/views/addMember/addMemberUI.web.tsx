@@ -171,7 +171,7 @@ class AddMemberUI extends useAddMemberLogic {
                 </UI.TouchableOpacity>
               </UI.View>
               {this.state.showplayedpopup && (
-                <UI.View style={[styles.MutiplepopupContainer]}>
+                <UI.View style={[styles.MutiplepopupContainer, {zIndex:1}]}>
                   <UI.Pressable
                     style={[
                       styles.popupButton,
@@ -223,7 +223,7 @@ class AddMemberUI extends useAddMemberLogic {
                 {this.renderMemberInputRows()}
               </UI.View>
 
-              <UI.Box style={{ marginTop: 10, padding: 12 }}>
+              <UI.Box style={{ marginTop: 10, padding: 12 , zIndex:-1}}>
                   <UI.Text style={styles.commentTxt}>Comments</UI.Text>
 
                 <UI.ConnectedCbInput

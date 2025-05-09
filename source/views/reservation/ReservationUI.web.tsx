@@ -17,7 +17,7 @@ import { setOpenMembersModel } from "@/components/redux/reducers/addMemberReduce
 const pageId = "Reservation";
 class ReservationUI extends useReservationLogic {
   renderItem = ({ item, index }) => {
-    const [day, month, year] = item.split("-");
+    const [day, month] = item.split("-");
 
     return (
       <UI.TouchableOpacity
