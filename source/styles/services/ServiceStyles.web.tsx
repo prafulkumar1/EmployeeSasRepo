@@ -33,20 +33,20 @@ cardBox: {
     marginHorizontal: 5,
     width: responsiveWidth(45)
 },
-card: {
-    width: "100%",
-    height: "70%",
-    backgroundColor: "#5e4c4c",
-    borderTopRightRadius: 10,
-    borderTopLeftRadius: 10,
-    justifyContent: "center",
-    alignItems: "center",
-},
-icon: {
-    width: 50,
-    height: 50,
-    resizeMode: "contain",
-},
+// card: {
+//     width: "100%",
+//     height: "70%",
+//     backgroundColor: "#5e4c4c",
+//     borderTopRightRadius: 10,
+//     borderTopLeftRadius: 10,
+//     justifyContent: "center",
+//     alignItems: "center",
+// },
+// icon: {
+//     width: 50,
+//     height: 50,
+//     resizeMode: "contain",
+// },
 photo: {
     width: "100%",
     height: "100%",
@@ -67,5 +67,65 @@ cardTitle: {
 },
 cardContainer: { backgroundColor :'red',justifyContent: "center", alignItems: "center", alignSelf: "center", marginTop: 20 },
 topServiceContainer: { marginTop: 10, alignItems: "center" },
-serviceTopBar:{ width: '100%', alignItems: 'center' }
+serviceTopBar:{ width: '100%', alignItems: 'center' },
+
+container: {
+    padding: 20,
+  },
+  tabs: {
+    flexDirection: "row",
+    justifyContent: "center",
+    marginBottom: 20,
+    flexWrap: "wrap",
+  },
+  tab: {
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+    borderBottomWidth: 2,
+    borderColor: "transparent",
+    marginHorizontal: 8,
+  },
+  tabSelected: {
+    borderColor: "#007AFF",
+  },
+  tabText: {
+    fontSize: 16,
+    color: "#555",
+  },
+  tabTextSelected: {
+    color: "#007AFF",
+    fontWeight: "bold",
+  },
+  grid: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    justifyContent: "flex-start",
+  },
+  card: {
+    backgroundColor: "#fff",
+    padding: 16,
+    margin: 10,
+    borderRadius: 10,
+    shadowColor: "#000",
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 2,
+  },
+  icon: {
+    width: 40,
+    height: 40,
+    marginBottom: 10,
+    alignSelf: "center",
+  },
+  title: {
+    fontSize: 16,
+    fontWeight: "600",
+    marginBottom: 4,
+    textAlign: "center",
+  },
+  duration: {
+    fontSize: 14,
+    color: "#666",
+    textAlign: "center",
+  },
 });

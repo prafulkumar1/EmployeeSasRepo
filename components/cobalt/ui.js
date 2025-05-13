@@ -566,6 +566,13 @@ class CbText extends React.Component {
     } catch (error) {}
   };
 
+  flattenStyle(inputStyle) {
+    if (Array.isArray(inputStyle)) {
+      return inputStyle.reduce((acc, style) => ({ ...acc, ...style }), {});
+    }
+    return inputStyle || {};
+  }
+
   render() {
     const { ControlConfig } = this.state;
     const StrikeThrough = ControlConfig?.StrikeThrough || this.strikeThrough;
@@ -576,10 +583,16 @@ class CbText extends React.Component {
         ? Object.values(StyleProps)[0]
         : this.styles;
     const LabelText = ControlConfig?.LabelText || this.props.children;
+    const combinedStyle = {
+      ...this.flattenStyle(dynamicStyle),
+      ...this.flattenStyle(this.Conditionalstyle),
+    };
+
+
     return (
       <Text
         strikeThrough={StrikeThrough}
-        style={{ ...dynamicStyle, ...this.Conditionalstyle }}
+        style={combinedStyle}
         numberOfLines={this.numberOfLines}
       >
         {LabelText}
@@ -828,6 +841,8 @@ class CbView extends React.Component {
     setTimeout(() => {
       this.loadPageConfig();
     }, 500);
+   console.log('combinedStyleindsideee', this.styles);
+        
   }
   loadPageConfig = () => {
     try {
@@ -838,6 +853,12 @@ class CbView extends React.Component {
       this.setState({ ControlConfig });
     } catch (error) {}
   };
+  flattenStyle(inputStyle) {
+    if (Array.isArray(inputStyle)) {
+      return inputStyle.reduce((acc, style) => ({ ...acc, ...style }), {});
+    }
+    return inputStyle || {};
+  }
   render() {
     const { ControlConfig } = this.state;
     const Styles = ControlConfig?.Styles;
@@ -846,8 +867,13 @@ class CbView extends React.Component {
       StyleProps && Object.keys(StyleProps).length > 0
         ? Object.values(StyleProps)[0]
         : this.styles;
+        const combinedStyle = {
+          ...this.flattenStyle(dynamicStyle),
+          ...this.flattenStyle(this.Conditionalstyle),
+        };
+
     return (
-      <View style={[dynamicStyle, this.Conditionalstyle]}>
+      <View style={combinedStyle}>
         {this.props.children}
       </View>
     );

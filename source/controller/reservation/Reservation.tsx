@@ -56,15 +56,16 @@ const mappedDates = [
 ];
 
 const servicesOptions = [
-  { label: "Couple Massage - 1hr", value: "massage_1hr" },
-  { label: "Deep Cleansing", value: "deep_cleansing" },
-  { label: "Hydra Facial Treatment", value: "hydra_facial" },
+  { label: "30-Min Aerobic Instruction", value: "30-Min Aerobic Instruction" },
+  { label: "90-Min Aerobic Instruction", value: "90-Min Aerobic Instruction" },
+  // { label: "Hydra Facial Treatment", value: "hydra_facial" },
 ];
 
 const providersdummyData = [
-  { label: "John smith", value: "massage_1hr" },
-  { label: "Lyn", value: "deep_cleansing" },
-  { label: "Hydra", value: "hydra_facial" },
+  { label: "Simon Travers", value: "massage_1hr" },
+  { label: "Jessica Reed", value: "deep_cleansing" },
+  { label: "Michael Carter", value: "Personal Training" },
+  { label: "Daniel Harris", value: "hydra_facial" },
 ];
 const HeaderData = {
   Tennis: {
@@ -401,8 +402,12 @@ class ReservationLogic extends Component<Props, ControllerState> {
   };
 
   handlePrevious = () => {
-    if (this.state.currentIndex > 0) {
+    console.log(this.state.currentIndex, 'this.state.currentIndex');
+    
+    if (this.state.currentIndex > 7) {
       this.scrollToIndex(this.state.currentIndex - 7);
+    } else  {
+      this.scrollToIndex(0);
     }
   };
   handleItemPress = (item: any, index: number) => {

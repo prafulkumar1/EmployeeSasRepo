@@ -221,8 +221,6 @@ export const styles = StyleSheet.create({
   popupContainer: {
     position: 'absolute',
     backgroundColor: '#fff',
-    // borderWidth: .5,
-    // borderRadius: 8,
     elevation: 3,
     padding: 5,
     width: 100,

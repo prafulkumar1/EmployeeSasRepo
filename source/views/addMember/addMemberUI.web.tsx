@@ -22,13 +22,15 @@ class AddMemberUI extends useAddMemberLogic {
     let rows = [];
     for (let i = 0; i < selectedCount; i++) {
       rows.push(
-        <UI.View
+        <UI.ConnectedCbView
           key={i}
           style={[styles.memberFieldWrapper, { position: "relative" }]}
+          pageId={pageId}
+          id="memberFieldWrapper"
         >
-          <UI.View style={styles.memberInputRow}>
+          <UI.ConnectedCbView style={styles.memberInputRow}>
             <UI.Text style={styles.MemberTxt}> Reservation {i + 1}</UI.Text>
-            <UI.View style={styles.iconcontainer}>
+            <UI.ConnectedCbView style={styles.iconcontainer}>
               <UI.TouchableOpacity
                 style={[{ width: 30, height: 30 }]}
                 onPress={(e) => this.handleRemoveMember(i)}
@@ -42,11 +44,12 @@ class AddMemberUI extends useAddMemberLogic {
               >
                 <UI.Icon as={AddIcon} size="sm" color="#08c3f8" />
               </UI.TouchableOpacity>
-            </UI.View>
-          </UI.View>
+            </UI.ConnectedCbView>
+          </UI.ConnectedCbView>
 
           {popupVisibleIndex === Number(i) && (
-            <UI.View style={[styles.popupContainer]}>
+            <UI.ConnectedCbView style={[styles.popupContainer]}         pageId={pageId}
+          id="popupContainer">
               <UI.Pressable
                 style={[
                   styles.popupButton,
@@ -59,7 +62,8 @@ class AddMemberUI extends useAddMemberLogic {
                 onMouseEnter={() => this.setState({ hover: "member" })}
                 onMouseLeave={() => this.setState({ hover: null })}
               >
-                <UI.Text style={styles.popupButtonText}>Members</UI.Text>
+                <UI.ConnectedCbText style={styles.popupButtonText}         pageId={pageId}
+          id="popupButtonText" >Members</UI.ConnectedCbText>
               </UI.Pressable>
               <UI.Pressable
                 style={[
@@ -73,7 +77,8 @@ class AddMemberUI extends useAddMemberLogic {
                 onMouseLeave={() => this.setState({ hover: null })}
                 onPress={() => this.handleSetGuest("Guest")}
               >
-                <UI.Text style={styles.popupButtonText}>Guest</UI.Text>
+                <UI.ConnectedCbText style={styles.popupButtonText}         pageId={pageId}
+          id="popupButtonText">Guest</UI.ConnectedCbText>
               </UI.Pressable>
               <UI.Pressable
                 style={[
@@ -86,11 +91,12 @@ class AddMemberUI extends useAddMemberLogic {
                 onMouseEnter={() => this.setState({ hover: "TBD" })}
                 onMouseLeave={() => this.setState({ hover: null })}
               >
-                <UI.Text style={styles.popupButtonText}>TBD</UI.Text>
+                <UI.ConnectedCbText style={styles.popupButtonText}         pageId={pageId}
+          id="popupButtonText">TBD</UI.ConnectedCbText>
               </UI.Pressable>
-            </UI.View>
+            </UI.ConnectedCbView>
           )}
-        </UI.View>
+        </UI.ConnectedCbView>
       );
     }
     return rows;
@@ -111,31 +117,53 @@ class AddMemberUI extends useAddMemberLogic {
         visible={this.props.OpenAddmemberModel}
         // onRequestClose={this.toggleModal}
       >
-        <UI.View style={styles.modalBackground}>
-          <UI.View style={styles.modalContainer}>
-            <UI.View style={styles.modalTitleContainer}>
-              <Text style={styles.modalTitle}>Add Member</Text>
+        <UI.ConnectedCbView
+          style={styles.modalBackground}
+          pageId={pageId}
+          id="modalBackground"
+        >
+          <UI.ConnectedCbView style={styles.modalContainer}>
+            <UI.ConnectedCbView style={styles.modalTitleContainer}>
+              <UI.ConnectedCbText style={styles.modalTitle}>
+                Add Member
+              </UI.ConnectedCbText>
               <UI.TouchableOpacity
                 onPress={() => this.props.setOpenAddmemberModel()}
                 style={styles.CloseModel}
               >
                 <Icon as={CloseIcon} size="sm" />
               </UI.TouchableOpacity>
-            </UI.View>
+            </UI.ConnectedCbView>
             <UI.ScrollView
               contentContainerStyle={styles.scrollViewContent}
               showsVerticalScrollIndicator={false}
             >
-              <UI.View style={styles.timerRow}>
-                <UI.View style={styles.timerWrapper}>
-                  <UI.Text style={styles.timerText}>
+              <UI.ConnectedCbView
+                style={styles.timerRow}
+                pageId={pageId}
+                id="timerRow"
+              >
+                <UI.ConnectedCbView
+                  style={styles.timerWrapper}
+                  pageId={pageId}
+                  id="timerWrapper"
+                >
+                  <UI.ConnectedCbText
+                    style={styles.timerText}
+                    pageId={pageId}
+                    id="timerText"
+                  >
                     {" "}
                     {this.formatTime(this.state.timeLeft)}
-                  </UI.Text>
-                </UI.View>
-              </UI.View>
+                  </UI.ConnectedCbText>
+                </UI.ConnectedCbView>
+              </UI.ConnectedCbView>
 
-              <UI.View style={styles.playerListRow}>
+              <UI.ConnectedCbView
+                style={styles.playerListRow}
+                pageId={pageId}
+                id="playerListRow"
+              >
                 <UI.FlatList
                   data={[1, 2, 3, 4]}
                   horizontal
@@ -154,7 +182,13 @@ class AddMemberUI extends useAddMemberLogic {
                           },
                         ]}
                       >
-                        <UI.Text style={styles.circleText}>{item}</UI.Text>
+                        <UI.ConnectedCbText
+                          style={styles.circleText}
+                          pageId={pageId}
+                          id="circleText"
+                        >
+                          {item}
+                        </UI.ConnectedCbText>
                       </UI.View>
                     </UI.TouchableOpacity>
                   )}
@@ -165,13 +199,21 @@ class AddMemberUI extends useAddMemberLogic {
                   style={styles.addMultipleBtn}
                   onPress={this.toggleMutiplePlayers}
                 >
-                  <UI.Text style={styles.addMultipleBtnText}>
+                  <UI.ConnectedCbText
+                    style={styles.addMultipleBtnText}
+                    pageId={pageId}
+                    id="addMultipleBtnText"
+                  >
                     Add Multiple Players
-                  </UI.Text>
+                  </UI.ConnectedCbText>
                 </UI.TouchableOpacity>
-              </UI.View>
+              </UI.ConnectedCbView>
               {this.state.showplayedpopup && (
-                <UI.View style={[styles.MutiplepopupContainer, {zIndex:1}]}>
+                <UI.ConnectedCbView
+                  style={[styles.MutiplepopupContainer, { zIndex: 1 }]}
+                  pageId={pageId}
+                  id="MutiplepopupContainer"
+                >
                   <UI.Pressable
                     style={[
                       styles.popupButton,
@@ -198,33 +240,67 @@ class AddMemberUI extends useAddMemberLogic {
                     onMouseLeave={() => this.setState({ hover: null })}
                     onPress={() => this.handleSetGuest("Guest")}
                   >
-                    <UI.Text style={styles.popupButtonText}>Guest</UI.Text>
+                    <UI.ConnectedCbText style={styles.popupButtonText}>
+                      Guest
+                    </UI.ConnectedCbText>
                   </UI.Pressable>
-                </UI.View>
+                </UI.ConnectedCbView>
               )}
 
-              <UI.View style={styles.memberSection}>
-                <UI.View style={styles.Pluscontainer}>
-                  <UI.Text style={styles.sectionNote}>
+              <UI.ConnectedCbView
+                style={styles.memberSection}
+                pageId={pageId}
+                id="memberSection"
+              >
+                <UI.ConnectedCbView
+                  style={styles.Pluscontainer}
+                  pageId={pageId}
+                  id="Pluscontainer"
+                >
+                  <UI.ConnectedCbText
+                    style={styles.sectionNote}
+                    pageId={pageId}
+                    id="sectionNote"
+                  >
                     Please click on{"  "}
-                  </UI.Text>
-                  <UI.View style={styles.plusCircle}>
-                    <UI.Text style={styles.plusText}>+</UI.Text>
-                  </UI.View>
-                  <UI.Text style={styles.sectionNote}>
+                  </UI.ConnectedCbText>
+                  <UI.ConnectedCbView
+                    style={styles.plusCircle}
+                    pageId={pageId}
+                    id="plusCircle"
+                  >
+                    <UI.ConnectedCbText
+                      style={styles.plusText}
+                      pageId={pageId}
+                      id="plusText"
+                    >
+                      +
+                    </UI.ConnectedCbText>
+                  </UI.ConnectedCbView>
+                  <UI.ConnectedCbText
+                    style={styles.sectionNote}
+                    pageId={pageId}
+                    id="sectionNote"
+                  >
                     {"  "}
                     to select Member, Guest or My Buddies
-                  </UI.Text>
-                </UI.View>
-              </UI.View>
-              <UI.View
-                style={styles.memberCardsContainer}
-              >
+                  </UI.ConnectedCbText>
+                </UI.ConnectedCbView>
+              </UI.ConnectedCbView>
+              <UI.ConnectedCbView style={styles.memberCardsContainer}>
                 {this.renderMemberInputRows()}
-              </UI.View>
+              </UI.ConnectedCbView>
 
-              <UI.Box style={{ marginTop: 10, padding: 12 , zIndex:-1}}>
-                  <UI.Text style={styles.commentTxt}>Comments</UI.Text>
+              <UI.ConnectedCbBox
+                style={{ marginTop: 10, padding: 12, zIndex: -1 }}
+              >
+                <UI.ConnectedCbText
+                  style={styles.commentTxt}
+                  pageId={pageId}
+                  id="commentTxt"
+                >
+                  Comments
+                </UI.ConnectedCbText>
 
                 <UI.ConnectedCbInput
                   id="Comments"
@@ -233,18 +309,32 @@ class AddMemberUI extends useAddMemberLogic {
                   numberOfLines={4}
                   formId={pageId}
                 />
-              </UI.Box>
+              </UI.ConnectedCbBox>
             </UI.ScrollView>
-            <UI.View style={styles.SubmitContainer}>
+            <UI.ConnectedCbView
+              style={styles.SubmitContainer}
+              pageId={pageId}
+              id="SubmitContainer"
+            >
               <UI.TouchableOpacity style={styles.SubmitBtn}>
-                <UI.Text style={styles.submitTxt}>Submit</UI.Text>
+                <UI.ConnectedCbText
+                  style={styles.submitTxt}
+                  pageId={pageId}
+                  id="submitTxt"
+                >
+                  Submit
+                </UI.ConnectedCbText>
               </UI.TouchableOpacity>
-            </UI.View>
+            </UI.ConnectedCbView>
 
-            <UI.Text style={styles.txt1}>SPA POLICIES</UI.Text>
-            <UI.Text style={styles.txt2}>Hilcox, Loreson | #13310-00</UI.Text>
-          </UI.View>
-        </UI.View>
+            <UI.ConnectedCbText style={styles.txt1} pageId={pageId} id="txt1">
+              SPA POLICIES
+            </UI.ConnectedCbText>
+            <UI.ConnectedCbText style={styles.txt2} pageId={pageId} id="txt2">
+              Hilcox, Loreson | #13310-00
+            </UI.ConnectedCbText>
+          </UI.ConnectedCbView>
+        </UI.ConnectedCbView>
       </Modal>
     );
   }

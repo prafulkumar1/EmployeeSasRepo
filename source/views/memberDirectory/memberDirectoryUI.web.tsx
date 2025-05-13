@@ -10,7 +10,7 @@ import {CheckIcon,ChevronLeftIcon,ChevronRightIcon,ChevronsLeftIcon,ChevronsRigh
 import useMemberDirectoryLogic from "@/source/controller/memberDirectory/memberDirectory";
 import { setOpenMembersModel } from "@/components/redux/reducers/addMemberReducer";
 
-const pageId = "Dashboard";
+const pageId = "MemberDiretory";
 class MemberDirectoryUI extends useMemberDirectoryLogic {
   renderMemberItem = ({ item }: { item: any }) => {
     return (
@@ -135,13 +135,17 @@ class MemberDirectoryUI extends useMemberDirectoryLogic {
         visible={this.props.OpenMemberModel}
         // onRequestClose={this.toggleMemberModel}
       >
-        <UI.View style={styles.modalBackground}>
-          <UI.View style={styles.modalContainer}>
-            <UI.View style={styles.modalHeader}>
-              <UI.Text style={styles.modalTitle}>
+        <UI.ConnectedCbView style={styles.modalBackground}   pageId={pageId}
+              id="modalBackground" >
+          <UI.ConnectedCbView style={styles.modalContainer}  pageId={pageId}
+              id="modalContainer" >
+            <UI.ConnectedCbView style={styles.modalHeader}  pageId={pageId}
+              id="modalHeader">
+              <UI.ConnectedCbText style={styles.modalTitle}  pageId={pageId}
+              id="modalTitle">
                 {this.props.ChangeToGuest === "Guest" ? "Add Guest" : "Add Member"}
-              </UI.Text>
-            </UI.View>
+              </UI.ConnectedCbText>
+            </UI.ConnectedCbView>
 
             <UI.TouchableOpacity
               onPress={() => this.props.setOpenMembersModel()}
@@ -159,8 +163,9 @@ class MemberDirectoryUI extends useMemberDirectoryLogic {
             </UI.TouchableOpacity>
 
             <UI.ScrollView>
-              <UI.View style={{ padding: 30, flexDirection: "row" }}>
-                <UI.View style={styles.searchRow}>
+              <UI.ConnectedCbView style={{ padding: 30, flexDirection: "row" }}>
+                <UI.ConnectedCbView style={styles.searchRow}  pageId={pageId}
+              id="searchRow">
                   <UI.ConnectedCbInput
                     id="Search"
                     labelRequired={false}
@@ -212,16 +217,17 @@ class MemberDirectoryUI extends useMemberDirectoryLogic {
                       Clear
                     </Text>
                   </UI.TouchableOpacity>
-                </UI.View>
+                </UI.ConnectedCbView>
 
-                {this.props.ChangeToGuest !== "Guest" && <UI.View
+                {this.props.ChangeToGuest !== "Guest" && <UI.ConnectedCbView
                   style={{
                     alignItems: "center",
                     justifyContent: "center",
                     width: "50%",
                   }}
-                >
-                  <UI.View
+                  pageId={pageId}
+                  id="SubmitContainer">
+                  <UI.ConnectedCbView
                     onMouseEnter={() => this.setState({ hover: "checkbox" })}
                     onMouseLeave={() => this.setState({ hover: null })}
                     style={{
@@ -235,7 +241,8 @@ class MemberDirectoryUI extends useMemberDirectoryLogic {
                           ? "#000"
                           : "transparent",
                     }}
-                  >
+                    pageId={pageId}
+                    id="SubmitContainer">
                     <UI.TouchableOpacity
                       onPress={this.handleCheckBox}
                       activeOpacity={1}
@@ -279,9 +286,9 @@ class MemberDirectoryUI extends useMemberDirectoryLogic {
                         </CheckboxLabel>
                       </Checkbox>
                     </UI.TouchableOpacity>
-                  </UI.View>
-                </UI.View>}
-              </UI.View>
+                  </UI.ConnectedCbView>
+                </UI.ConnectedCbView>}
+              </UI.ConnectedCbView>
 
               <UI.FlatList
                 contentContainerStyle={styles.memberList}
@@ -294,8 +301,8 @@ class MemberDirectoryUI extends useMemberDirectoryLogic {
 
               {this.renderPagination()}
             </UI.ScrollView>
-          </UI.View>
-        </UI.View>
+          </UI.ConnectedCbView>
+        </UI.ConnectedCbView>
       </Modal>
     );
   }

@@ -7,7 +7,8 @@ const initialState = {
   AppConfigJson:null,
   dropDownIndex: null as number | null,
   OpenAddmemberModel: false ,
-  closeMemberModel:false
+  closeMemberModel:false,
+  ThankYouModel:false
 };
 
 export const getAppConfiguration = createAsyncThunk(

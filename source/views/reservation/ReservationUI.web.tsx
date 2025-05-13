@@ -33,8 +33,10 @@ class ReservationUI extends useReservationLogic {
             },
           ]}
         >
-          <UI.Text style={styles.dateText}>{day}</UI.Text>
-          <UI.Text style={styles.dateText}>{month}</UI.Text>
+          <UI.ConnectedCbText style={styles.dateText}   pageId={pageId}
+          id="dateText">{day}</UI.ConnectedCbText>
+          <UI.ConnectedCbText style={styles.dateText}   pageId={pageId}
+          id="dateText">{month}</UI.ConnectedCbText>
         </UI.View>
       </UI.TouchableOpacity>
     );
@@ -44,19 +46,23 @@ class ReservationUI extends useReservationLogic {
   renderGenderSelector = () => {
     const { selectedGender } = this.state;
     return (
-      <UI.ConnectedCbView style={styles.RadioContainer}>
+      <UI.ConnectedCbView style={styles.RadioContainer}   pageId={pageId}
+      id="RadioContainer">
         {["Male", "Female", "Any"].map((gender) => (
           <TouchableOpacity
             key={gender}
             style={styles.optionContainer}
             onPress={() => this.setState({ selectedGender: gender })}
           >
-            <UI.ConnectedCbView style={styles.radioOuter}>
+            <UI.ConnectedCbView style={styles.radioOuter}   pageId={pageId}
+          id="radioOuter">
               {selectedGender === gender && (
-                <UI.ConnectedCbView style={styles.radioInner} />
+                <UI.ConnectedCbView style={styles.radioInner}   pageId={pageId}
+                id="radioInner" />
               )}
             </UI.ConnectedCbView>
-            <UI.ConnectedCbText style={styles.label}>{gender}</UI.ConnectedCbText>
+            <UI.ConnectedCbText style={styles.label}   pageId={pageId}
+          id="label">{gender}</UI.ConnectedCbText>
           </TouchableOpacity>
         ))}
       </UI.ConnectedCbView>
@@ -75,7 +81,7 @@ class ReservationUI extends useReservationLogic {
         disabled={isDisabled}
         onPress={() => this.handleSelectTime(item.label, item.disabled)}
       >
-        <Text
+        <UI.ConnectedCbText
           style={[
             styles.slotText,
             isSelectedTime && styles.selectedText,
@@ -83,7 +89,7 @@ class ReservationUI extends useReservationLogic {
           ]}
         >
           {item.label}
-        </Text>
+        </UI.ConnectedCbText>
       </UI.TouchableOpacity>
     );
   };
@@ -95,13 +101,13 @@ class ReservationUI extends useReservationLogic {
     const isSelected = this.state.selectedTimePeriod === item.id;
 
     return (
-      <UI.View
+      <UI.ConnectedCbView
         style={[
           styles.timePeriodContainer,
           shouldAlignLeft && { alignItems: "center" },
         ]}
       >
-        <UI.Text style={styles.timePeriodTxt}>{item.label}</UI.Text>
+        <UI.ConnectedCbText style={styles.timePeriodTxt}>{item.label}</UI.ConnectedCbText>
         <UI.TouchableOpacity
           style={[
             styles.timeSlotsBtn,
@@ -118,7 +124,7 @@ class ReservationUI extends useReservationLogic {
             {item.time}
           </Text>
         </UI.TouchableOpacity>
-      </UI.View>
+      </UI.ConnectedCbView>
     );
   };
 
@@ -156,12 +162,12 @@ class ReservationUI extends useReservationLogic {
               style={[styles.calendarBox]}
               onPress={() => this.toggleCalendar()}
             >
-              <UI.Box style={styles.calendarIcon}>
+              <UI.ConnectedCbBox style={styles.calendarIcon}>
                 <Icon as={CalendarDaysIcon} size="md" color="#00c6ff" />
-              </UI.Box>
-              <UI.Text style={styles.calendarText}>
+              </UI.ConnectedCbBox>
+              <UI.ConnectedCbText style={styles.calendarText}>
                 {this.state.selectedItem}
-              </UI.Text>
+              </UI.ConnectedCbText>
             </UI.TouchableOpacity>
           </UI.ConnectedCbView>
 
@@ -211,36 +217,36 @@ class ReservationUI extends useReservationLogic {
             </UI.ConnectedCbText>
           </UI.ConnectedCbView>
         </UI.ConnectedCbView>
-        <UI.View style={[styles.selectorcontainer, { zIndex: -1 }]}>
+        <UI.ConnectedCbView style={[styles.selectorcontainer, { zIndex: -1 }]}>
           <UI.ConnectedCbSelectDropDown
             options={this.providersdummyData}
             customstyle={styles.selectorcustomstyle}
             onSelect={(values: any) => console.log(values, "--->>>")} // Pass the handleSelect method to the dropdown
             placeholder={"Select the Provider"}
           />
-        </UI.View>
+        </UI.ConnectedCbView>
 
-        <UI.View style={[{ width: "100%", zIndex: -2 }]}>
+        <UI.ConnectedCbView style={[{ width: "100%", zIndex: -2 }]}>
           <UI.ConnectedCbFlatList
             flatlistData={this.timeData}
             children={this.renderTimePeriods}
             numColumns={3}
             columnWrapperStyle={{ justifyContent: "flex-start" }}
           />
-        </UI.View>
+        </UI.ConnectedCbView>
 
-        <UI.View style={styles.slotTimeContainer}>
+        <UI.ConnectedCbView style={styles.slotTimeContainer}>
           {this.getCurrentTimeSlots().map(this.renderSlot)}
-        </UI.View>
+        </UI.ConnectedCbView>
 
-        <UI.View style={styles.addMemberBtncontainer}>
+        <UI.ConnectedCbView style={styles.addMemberBtncontainer}>
           <UI.TouchableOpacity
             style={styles.addMemberBtn}
             onPress={() => this.props.setOpenAddmemberModel()}
           >
-            <UI.Text style={styles.addMemberBtnTxt}> Add Member</UI.Text>
+            <UI.ConnectedCbText style={styles.addMemberBtnTxt}> Add Member</UI.ConnectedCbText>
           </UI.TouchableOpacity>
-        </UI.View>
+        </UI.ConnectedCbView>
 
         {/* Conditionally show AddMemberUIWeb only on Web and if modal open */}
         {this.props.OpenAddmemberModel && <AddMemberUIWeb />}
