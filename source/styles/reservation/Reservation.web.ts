@@ -1,4 +1,5 @@
 import { Dimensions, StyleSheet } from 'react-native';
+import { responsiveHeight } from 'react-native-responsive-dimensions';
 const { width, height } = Dimensions.get('window');
 
 export const styles = StyleSheet.create({
@@ -723,4 +724,6 @@ export const styles = StyleSheet.create({
   boxText: {
     fontSize: 16,
   },
+
+    loaderTrans:{ position: "absolute", alignSelf: "center", flex: 1, top: responsiveHeight(50),backgroundColor:"red" },
 });

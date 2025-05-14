@@ -244,6 +244,10 @@ class cbInput extends React.Component {
     this.props = props.labelRequired;
     this.isPasswordVisible = props.isPasswordVisible;
     this.placeholderTextColor = props.placeholderTextColor;
+    this.onFocus =
+      typeof props.onFocus === "function"
+        ? props.onFocus
+        : () => {};
   }
 
   render() {
@@ -293,15 +297,17 @@ class cbInput extends React.Component {
                 controlId: this.id,
               });
             }}
-            onFocus={() =>
-              this.props?.setFormFieldData({
-                formId: this.props?.formId,
-                type: "input",
-                id: this.id,
-                value,
-                controlId: this.id,
-              })
-            }
+            // onFocus={() =>
+            //   this.props?.setFormFieldData({
+            //     formId: this.props?.formId,
+            //     type: "input",
+            //     id: this.id,
+            //     value,
+            //     controlId: this.id,
+            //   })
+            // }
+            onFocus={() => this.onFocus()}
+            
           />
         </Input>
         {isRequiredprop && errorMessageprop && (
@@ -432,6 +438,7 @@ class CbSelectDropDown extends React.Component {
       typeof props.openDropDown === "function" ? props.openDropDown : () => {};
     this.placeholder = props.placeholder || "Select Option";
     this.customstyle = props.customstyle || {};
+    this.dropdownCustom = props.dropdownCustom || {};
     this.selectItemId = props.selectItemId;
   }
   componentDidUpdate(prevProps) {
@@ -469,7 +476,7 @@ class CbSelectDropDown extends React.Component {
   renderDropdown = () => {
     return (
       <FlatList
-        style={styles.dropdown}
+        style={[styles.dropdown, this.props.dropdownCustom]}
         data={this.options}
         keyExtractor={(_, index) => index.toString()}
         renderItem={({ item, index }) => (

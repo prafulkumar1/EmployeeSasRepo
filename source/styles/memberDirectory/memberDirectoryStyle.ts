@@ -237,5 +237,60 @@ export const styles = StyleSheet.create({
   container:{
     marginVertical: 20,
     justifyContent: "flex-start",
-  }
+  },
+
+  //GUEST UI
+  GuestmainContainer: {
+    flex: 1,
+    // paddingVertical: 50,
+    backgroundColor: "#fff",
+  },
+  innerContainers:{ paddingHorizontal: 20, paddingVertical: 20 },
+  gap:{ height: 5, backgroundColor: "#e9e9e9" },
+  input: {
+    width: "100%",
+    height: 50,
+    borderWidth: 1,
+    borderColor: "#ccc",
+    borderRadius: 5,
+    paddingHorizontal: 15,
+    marginBottom: 15,
+    fontSize: 16,
+    backgroundColor: "#fff",
+  },
+  serviceBtn: {
+    marginBottom: 15,
+    zIndex : 1
+  },
+  optionalTitle: {
+    fontSize: 16,
+    fontWeight: "bold",
+    marginBottom: 10,
+    marginTop: 10,
+    color: "#333",
+  },
+  Guestlabel: {
+    fontSize: 14,
+    color: "#000",
+    marginVertical: 10,
+ fontFamily: "SourceSansPro_Regular"
+  },
+  dobContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    borderWidth: 1,
+    borderColor: "#ccc",
+    borderRadius: 10,
+    marginBottom: 15,
+    paddingHorizontal: 10,
+    backgroundColor: "#fff",
+  },
+  dobInput: {
+    flex: 1,
+    height: 50,
+    fontSize: 16,
+  },
+  calendarIcon: {
+    paddingLeft: 10,
+  },
 });

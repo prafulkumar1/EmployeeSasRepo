@@ -77,11 +77,11 @@ export const styles = StyleSheet.create({
     padding: 8,
     borderRadius: 5,
     flexGrow: 1,
-    minWidth: '35%',
+    minWidth: '30%',
   },
   searchButton: {
     borderWidth: 1,
-    borderColor: "#5773A2",
+    borderColor: "#0b2335",
     justifyContent: "center",
     alignItems: "center",
     paddingVertical: 6,
@@ -101,7 +101,7 @@ export const styles = StyleSheet.create({
   },
   searchClearButtonText: {
     fontSize: 18,
-    color: "#5773A2",
+    color: "#0b2335",
     fontWeight: '600',
   },
   checkboxButton: {
@@ -161,6 +161,78 @@ export const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     width: "50%",
-  }
+  },
+  //Radio
+  RadioContainer: {
+    flex: 0.5,
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    paddingHorizontal: 10,
+    marginVertical: 20,
+    zIndex: -1,
+  },
+  optionContainer: {
+    flex: 1,
+    flexDirection: "row",
+    alignItems: "center",
+    marginHorizontal: 40,
+  },
+  radioOuter: {
+    height: 26,
+    width: 26,
+    borderRadius: 12,
+    borderWidth: 2,
+    borderColor: "#ccc",
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#fff",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.2,
+    shadowRadius: 2,
+    elevation: 3,
+  },
+  radioInner: {
+    height: 12,
+    width: 12,
+    borderRadius: 6,
+    backgroundColor: "#000",
+  },
 
+  label: {
+    marginLeft: 10,
+    fontSize: 16,
+    color: "#000",
+  },
+  //new guest
+  newGuestRow1: {
+    flexDirection :'row',
+    justifyContent: "space-between",
+    width: "70%",
+    paddingVertical: 30,
+    borderBottomWidth: 0.5,
+    borderBlockColor: "#aaa",
+    backgroundColor :'#fff',
+    gap:10
+  },
+
+  //Addbutton
+  addMemberBtncontainer: {
+    alignItems: "center", justifyContent :"center", marginVertical: 25 
+  },
+  addMemberBtn: {
+    borderWidth: 1,
+    borderColor: "#0b2335",
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 12,
+    paddingVertical: 8,
+    paddingHorizontal: 15,
+  },
+  addMemberBtnTxt: {
+    color: "#0b2335",
+    fontSize: 20,
+    fontFamily: "SourceSansPro_SemiBold",
+  },
 });

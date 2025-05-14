@@ -113,7 +113,7 @@ export default class useAddMemberLogic extends Component<IProps, IState> {
     if(prevState.timeLeft !==this.state.timeLeft){
       if(this.state.timeLeft === 0){
         this.setState({isTimeOutModal:true})
-        this?.props?.setClosememberModel()
+        // this?.props?.setClosememberModel()
       }
     } 
   }

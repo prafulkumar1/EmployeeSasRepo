@@ -6,7 +6,8 @@ import { isPlatformAndroid, setApiUrl } from "../constants/Matrices";
 
 // https://cobaltportal.mycobaltsoftware.com/cssi.cobalt.member.wrapper.EngDev/api/   ---------->>> Dev url
 // export const baseURL = isPlatformAndroid()?"https://cobaltportal.mycobaltsoftware.com/cssi.cobalt.member.wrapper.EngDev/api/":global.apiURL;
-export const baseURL = "https://cobaltportal.mycobaltsoftware.com/cssi.cobalt.member.wrapper.EngDev/api/"
+// export const baseURL = "https://cobaltportal.mycobaltsoftware.com/cssi.cobalt.member.wrapper.EngDev/api/"
+export const baseURL = "https://cobaltportal.mycobaltsoftware.com/MemberAppService.Wrapper.CobaltTest/API/"  // Testing baseurl api
 
 export const endpoints = {
     AUTHENTICATE_USER:{
@@ -23,5 +24,11 @@ export const endpoints = {
    },
    MEMBER_DIRECTORY:{
     GET_MEMBER_DIRECTORY:"Member/GetMemberSpouseList"
-   }
+   },
+   VALIDATE_NEW_GUEST:{
+    VALIDATE_ADD_NEW_GUEST:"Member/GetGuestValidation"
+   },
+   NEW_GUEST:{
+    ADD_NEW_GUEST:"Golf/AddGuestList"
+   },
 }
