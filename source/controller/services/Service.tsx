@@ -7,6 +7,11 @@ const pageId = "Service";
 interface IProps {
     getServiceClasses?:() =>void
     storeSingleService?:(serviceDetails:ServiceType) => void
+    serviceClassList:{
+      "BookingTypeID": string
+      "BookingTypeName": string
+      "ServiceClass": ServiceType[]
+    }[]
 }
 
 interface IState {

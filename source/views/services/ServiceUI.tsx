@@ -88,6 +88,7 @@ class ServiceUI extends ServiceLogic {
 const mapStateToProps = (state: RootState) => {
     return {
         loading: state.services.loading,
+        serviceClassList:state.services.serviceClassList
     }
 }
 const mapDispatchToProps = {
