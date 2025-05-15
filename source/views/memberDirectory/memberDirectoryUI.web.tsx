@@ -395,14 +395,14 @@ class MemberDirectoryUI extends useMemberDirectoryLogic {
                         color: "#6D6D6D",
                         width: this.state.screenWidth <= 780 ? "100%" : "30%",
                       }}
-                      dropdownCustom={{zIndex :1}}
+                      dropdownCustom={{ zIndex: 1 }}
                     />
                   </UI.ConnectedCbView>
 
                   <UI.ConnectedCbView
                     style={{
                       width: this.state.screenWidth <= 1024 ? "90%" : "70%",
-                      zIndex :-1
+                      zIndex: -1,
                     }}
                   >
                     <UI.ConnectedCbText
@@ -533,9 +533,11 @@ class MemberDirectoryUI extends useMemberDirectoryLogic {
                   style={styles.addMemberBtn}
                   // onPress={() => this.props.setOpenAddmemberModel()}
                 >
-                  <UI.ConnectedCbText style={[styles.addMemberBtnTxt, {zIndex :-3}]}>
+                  <UI.ConnectedCbText
+                    style={[styles.addMemberBtnTxt, { zIndex: -3 }]}
+                  >
                     {" "}
-                    Add 
+                    Add
                   </UI.ConnectedCbText>
                 </UI.TouchableOpacity>
               </UI.ConnectedCbView>

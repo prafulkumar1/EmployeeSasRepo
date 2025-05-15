@@ -216,7 +216,7 @@ class ReservationUI extends useReservationLogic {
             </UI.ConnectedCbText>
           </UI.ConnectedCbView>
         </UI.ConnectedCbView>
-        <UI.ConnectedCbView style={[styles.selectorcontainer, { zIndex: -1 }]}>
+        <UI.ConnectedCbView style={[styles.selectorcontainer]}>
           <UI.ConnectedCbSelectDropDown
             options={this.providersdummyData}
             customstyle={styles.selectorcustomstyle}
@@ -238,7 +238,7 @@ class ReservationUI extends useReservationLogic {
           {this.getCurrentTimeSlots().map(this.renderSlot)}
         </UI.ConnectedCbView>
 
-        <UI.ConnectedCbView style={styles.addMemberBtncontainer}>
+        <UI.ConnectedCbView style={[styles.addMemberBtncontainer, {zIndex :-1}]}>
           <UI.TouchableOpacity
             style={styles.addMemberBtn}
             onPress={() => this.props.setOpenAddmemberModel()}
