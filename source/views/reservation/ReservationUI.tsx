@@ -18,7 +18,7 @@ class ReservationUI extends ReservationLogic {
     const isToday = item?.fullDate === moment()?.format("YYYY-MM-DD");
     const showHighlight = isSelected || (!this.state.selectedDateId && isToday);
     return (
-      <UI.TouchableOpacity onPress={() => this.handleSelectDate(item.id)}>
+      <UI.TouchableOpacity activeOpacity={1} onPress={() => this.handleSelectDate(item.id)}>
         <UI.Box
           style={[
             styles.dateBox,
@@ -232,15 +232,12 @@ class ReservationUI extends ReservationLogic {
             options={this.servicesOptions}
             customstyle={[
               styles.serviceBtn,
-              { zIndex: this.state.isServiceSelected ? 1 : -1 },
             ]}
             onSelect={(value: string) => this.selectService(value)}
-            openDropDown={() =>
-              this.setState({
-                isServiceSelected: !this.state.isServiceSelected,
-              })
-            }
             placeholder={"Select the Service"}
+            setAddMemberIndex={this.setAddMemberIndex}
+            addMemberIndex={this.state.addMemberIndex}
+            selectItemId={0}
           />
 
           <UI.ConnectedCbBox
@@ -266,10 +263,12 @@ class ReservationUI extends ReservationLogic {
             options={this.providersdummyData}
             customstyle={[
               styles.dropDownBtn,
-              { zIndex: !this.state.isServiceSelected ? 1 : -1 },
             ]}
             onSelect={(value: string) => this.selectProvider(value)}
             placeholder={"Select the Provider"}
+            setAddMemberIndex={this.setAddMemberIndex}
+            addMemberIndex={this.state.addMemberIndex}
+            selectItemId={1}
           />
 
           <UI.FlatList

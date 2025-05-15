@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import "@/global.css";
 import 'react-native-gesture-handler';
 import { GluestackUIProvider } from "@/components/ui/gluestack-ui-provider";
-import { StyleSheet } from 'react-native';
+import { BackHandler, StyleSheet } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
@@ -19,6 +19,14 @@ const Stack = createNativeStackNavigator();
 
 export default function App(props) {
   const [fontsLoaded, setFontsLoaded] = useState(false);
+  useEffect(() => {
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      () => true
+    );
+
+    return () => backHandler.remove();
+  }, []);
 
   if (!fontsLoaded) {
     return (
@@ -33,7 +41,10 @@ export default function App(props) {
       <Provider store={store}>
         <GestureHandlerRootView style={{ flex: 1 }}>
           <NavigationContainer >
-            <Stack.Navigator>
+            <Stack.Navigator
+              screenOptions={{
+                gestureEnabled: false,
+              }}>
               <Stack.Screen
                 name="NormalClubNavigation"
                 component={NormalClubNavigation}

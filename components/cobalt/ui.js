@@ -946,7 +946,7 @@ class CbHeader extends React.Component {
             </TouchableOpacity>
             <Text style={styles.headerTitle}>{this.headerTitle}</Text>
           </View>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={() => this.props?.navigation?.navigate("ServiceUI")}>
             {ImageSource ? (
               <Image
                 source={{ uri: ImageSource }}

@@ -73,6 +73,13 @@ class AddMemberUI extends useAddMemberLogic {
       </LinearGradient>
     )
   }
+  renderAddMember = ({ item, index }) => {
+    return (
+      <UI.TouchableOpacity onPress={() => this.handleMembersCount(item.id,item.number)} style={[styles.memberCountBtn,{backgroundColor:item.isCountActive?"#1dc6ff":"#fff"}]}>
+        <UI.Text style={[styles.memberCountTxt,{color:item.isCountActive?"#fff":"#2a4e7d"}]}>{item.number}</UI.Text>
+      </UI.TouchableOpacity>
+    )
+  }
   render() {
     if(!this.props.isScreenLoaded){
       return (
@@ -115,13 +122,7 @@ class AddMemberUI extends useAddMemberLogic {
                 data={this.state.membersCountList}
                 horizontal
                 style={{ minHeight: 40, maxHeight: 60 }}
-                renderItem={({ item, index }) => {
-                  return (
-                    <UI.TouchableOpacity onPress={() => this.handleMembersCount(item.id,item.number)} style={[styles.memberCountBtn,{backgroundColor:item.isCountActive?"#1dc6ff":"#fff"}]}>
-                      <UI.Text style={[styles.memberCountTxt,{color:item.isCountActive?"#fff":"#2a4e7d"}]}>{item.number}</UI.Text>
-                    </UI.TouchableOpacity>
-                  )
-                }}
+                renderItem={this.renderAddMember}
               />
               <UI.Text style={styles.addMessageTxt}>Please click on "+" to select Members,Guests or My Buddies</UI.Text>
             </UI.Box>

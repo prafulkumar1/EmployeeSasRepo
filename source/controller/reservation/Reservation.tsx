@@ -121,6 +121,7 @@ export interface ControllerState {
   loadingMore: boolean;
   calenderSelectedDate: string;
   mainServiceName: string;
+  addMemberIndex: null|number
   //webstate
   currentIndex: number;
   selectedItem: string;
@@ -203,6 +204,7 @@ class ReservationLogic extends Component<Props, ControllerState> {
       loadingMore: false,
       calenderSelectedDate: "",
       mainServiceName: "",
+      addMemberIndex:null,
       //webstate
       currentIndex: 0,
       selectedItem: "",
@@ -587,7 +589,10 @@ class ReservationLogic extends Component<Props, ControllerState> {
         this.props.setOpenMembersModel();
       }
   }
-  //
+  setAddMemberIndex = (index:number) => {
+    this.setState({ addMemberIndex: index });
+  };
+ 
 }
 
 export default ReservationLogic;

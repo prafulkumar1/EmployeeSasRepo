@@ -223,8 +223,8 @@ export const styles = StyleSheet.create({
     shadowOpacity: 0.2,
     shadowRadius: 3,
   },
-  dropDownBtn: { width: "100%", marginBottom: 30 },
-  serviceBtn: { width: "100%" },
+  dropDownBtn: { width: "100%", marginBottom: 30,zIndex:1 },
+  serviceBtn: { width: "100%",zIndex:2 },
   timePeriodContainers: { flex: 1, maxHeight: 160, minHeight: 80 },
   calenderLoader:{justifyContent:"center",alignItems:"center",alignSelf:"center",paddingTop:25}
 });
