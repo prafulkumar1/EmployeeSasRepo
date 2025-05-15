@@ -17,7 +17,7 @@ export const styles = StyleSheet.create({
   },
   tab: {
     paddingVertical: 10,
-    marginHorizontal: 40,
+    marginHorizontal: 20,
   },
   tabText: {
     color: "#000",
@@ -31,7 +31,7 @@ export const styles = StyleSheet.create({
   },
   activeTabText: {
     color: "#08c3f8",
-    fontWeight: "bold",
+    fontFamily: "SourceSansPro_SemiBold",
   },
   list: {
     paddingHorizontal: 10,

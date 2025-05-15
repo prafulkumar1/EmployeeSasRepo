@@ -2,6 +2,7 @@ import { navigateToScreen } from "@/components/constants/Navigations";
 import { Component, createRef } from "react";
 import moment from "moment";
 import { Dimensions, FlatList } from "react-native";
+import { ServiceType } from "@/components/constants/Types";
 
 //webinterface
 interface Member {
@@ -31,6 +32,7 @@ interface Props {
   OpenAddmemberModel?:boolean
   OpenMemberModel?:boolean
   closeMemberModel?:boolean
+  singleServiceItem?:ServiceType
 }
 
 //webdummydata

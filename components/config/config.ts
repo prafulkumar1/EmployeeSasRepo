@@ -13,6 +13,9 @@ export const endpoints = {
     AUTHENTICATE_USER:{
         AUTHENTICATE_USER : "Account/AuthenticateUser"
     },
+    SERVICES:{
+        GET_SERVICE_LIST : "Bookings/GetBmsBookingTypes"
+    },
     UI_CONFIGURATIONS:{
         GET_UI_CONFIGURATIONS:"MobileOrdering/MO_GetControlsInfo"
     },

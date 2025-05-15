@@ -4,6 +4,7 @@ import dashboard from  "./reducers/dashboardReducer"
 import addMember from  "./reducers/addMemberReducer"
 import memberDirectory from  "./reducers/memberDirectoryReducer"
 import reservation from  "./reducers/reservationReducer"
+import services from  "./reducers/serviceReducer"
 
 export const store = configureStore({
   reducer: {
@@ -11,7 +12,8 @@ export const store = configureStore({
     dashboard,
     addMember,
     memberDirectory,
-    reservation
+    reservation,
+    services
   }
 })
 
