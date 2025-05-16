@@ -125,14 +125,14 @@ class MemberDirectoryUI extends useMemberDirectoryLogic {
                   id="firstName"
                   placeholder="First Name"
                   style={styles.input}
-                  pageId={pageId}
+                  formId={pageId}
                   setFormFieldData={setFormFieldData}
                 />
                 <UI.ConnectedCbInput
                   id="lastName"
                   placeholder="Last Name"
                   style={styles.input}
-                  pageId={pageId}
+                  formId={pageId}
                   setFormFieldData={setFormFieldData}
                 />
                 <UI.ConnectedCbSelectDropDown
@@ -204,7 +204,7 @@ class MemberDirectoryUI extends useMemberDirectoryLogic {
                   style={styles.input}
                   keyboardType="phone-pad"
                   setFormFieldData={setFormFieldData}
-                  pageId={pageId}
+                  formId={pageId}
                 />
 
                 <UI.Text style={styles.Guestlabel}>Primary Email</UI.Text>
@@ -214,7 +214,7 @@ class MemberDirectoryUI extends useMemberDirectoryLogic {
                   style={styles.input}
                   keyboardType="email-address"
                   setFormFieldData={setFormFieldData}
-                  pageId={pageId}
+                  formId={pageId}
                 />
               </UI.ConnectedCbBox>
             </UI.ScrollView>
@@ -252,7 +252,11 @@ class MemberDirectoryUI extends useMemberDirectoryLogic {
 
     return (
       <UI.Box style={styles.mainContainer}>
-        <UI.ConnectedCbHeader headerTitle={"Members Directory"} goBack={() => this.navigateToReservation()}/>
+        <UI.ConnectedCbHeader
+          headerTitle={"Members Directory"}
+          goBack={() => this.navigateToReservation()}
+          goHome={() => this.navigateToService()}
+        />
         <StatusBar hidden={true} />
 
         {/* Header Component */}

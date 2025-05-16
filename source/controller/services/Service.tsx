@@ -131,4 +131,7 @@ export default class ServiceLogic extends Component<IProps, IState> {
     });
     this.props.storeSingleService(serviceDetails)
   };
+  navigateToService =() => {
+    navigateToScreen(this.props, "ServiceUI", true, {})
+}
 }

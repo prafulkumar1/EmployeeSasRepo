@@ -67,6 +67,7 @@ interface IProps {
     errorMessage,
   }) => void;
   pageId?: string;
+  props?:any
 }
 //webinterface
 interface Member {
@@ -771,6 +772,6 @@ export default class useMemberDirectoryLogic extends Component<
     this.setState({ selectedGender: value });
   };
   navigateToService =() => {
-    navigateToScreen(this.props, "ServiceUI", true, {})
+    this.props?.props?.navigation?.navigate("ServiceUI")
 }
 }

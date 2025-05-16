@@ -40,7 +40,7 @@ class ServiceUI extends ServiceLogic {
         const activeServiceClass = this.ServiceData?.BookingTypes?.find((service) => service?.BookingTypeName === activeTab)?.ServiceClass || [];
         return (
             <UI.ConnectedCbBox id="ServiceMainContainer" pageId={pageId} style={styles.serviceMainContainer}>
-                <UI.ConnectedCbHeader id="ServiceHeaderContainer" pageId={pageId} headerTitle={"Book A Lesson"} props={this.props} />
+                <UI.ConnectedCbHeader id="ServiceHeaderContainer" pageId={pageId} headerTitle={"Book A Lesson"} props={this.props} goHome={() => this.navigateToService()}/>
                 <StatusBar hidden={true} />
 
 

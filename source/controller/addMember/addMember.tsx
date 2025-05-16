@@ -96,8 +96,15 @@ export default class useAddMemberLogic extends Component<IProps, IState> {
   componentDidMount(): void {
     const updateCountList = Array.from(
       { length: this.state.membersCount },
-      (_, index) => ({ number: index + 1,isCountActive:false ,id:`${Date.now()}_${Math.random().toString(36).substring(2, 9)}`})
+      (_, index) => {
+        if(index == 0){
+          return{ number: index + 1,isCountActive:true ,id:`${Date.now()}_${Math.random().toString(36).substring(2, 9)}`}
+        }else{
+          return{ number: index + 1,isCountActive:false ,id:`${Date.now()}_${Math.random().toString(36).substring(2, 9)}`}
+        }
+      }
     );
+    this.props.setMembersList(1)
     this.setState({ membersCountList: updateCountList });
     this.startTimer();
     this.registerBackgroundTask();
@@ -170,7 +177,7 @@ export default class useAddMemberLogic extends Component<IProps, IState> {
   };
   handleNavToReservation = () => {
     this.setState({isSuccessModalOpen:false},() => {
-      navigateToScreen(this.props, "ReservationUI", true, {})
+      navigateToScreen(this.props, "ServiceUI", true, {})
     })
   }
 
@@ -209,7 +216,7 @@ export default class useAddMemberLogic extends Component<IProps, IState> {
     this.setState(prevState => ({
       membersCountList: prevState.membersCountList.map(item => ({
         ...item,
-        isCountActive: item.id === id ? !item.isCountActive : false
+        isCountActive: item.id === id ? true : false
       }))
     }));
     

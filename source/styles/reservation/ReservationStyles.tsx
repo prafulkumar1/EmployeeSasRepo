@@ -99,7 +99,7 @@ export const styles = StyleSheet.create({
   },
   timePeriodContainer: {
     paddingBottom: 20,
-    paddingRight: 12,
+    paddingRight: 10,
     alignItems: "center",
   },
   timePeriodTxt: {
@@ -116,7 +116,7 @@ export const styles = StyleSheet.create({
     shadowOffset: { width: 1, height: 1 },
     shadowOpacity: 0.2,
     shadowRadius: 3,
-    width:responsiveWidth(46),
+    width:responsiveWidth(45.5),
     paddingVertical: 10,
   },
   timePeriodBtnTxt: {

@@ -897,6 +897,7 @@ class CbHeader extends React.Component {
     this.source = props.source;
     this.headerTitle = props.headerTitle;
     this.goBack = typeof props.goBack === "function" ? props.goBack : () => {};
+    this.goHome = typeof props.goHome === "function" ? props.goHome : () => {};
     this.state = {
       ControlConfig: [],
     };
@@ -946,7 +947,7 @@ class CbHeader extends React.Component {
             </TouchableOpacity>
             <Text style={styles.headerTitle}>{this.headerTitle}</Text>
           </View>
-          <TouchableOpacity onPress={() => this.props?.navigation?.navigate("ServiceUI")}>
+          <TouchableOpacity onPress={() => this.goHome()}>
             {ImageSource ? (
               <Image
                 source={{ uri: ImageSource }}

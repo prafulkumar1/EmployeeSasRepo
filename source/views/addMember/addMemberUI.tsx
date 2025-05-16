@@ -215,7 +215,7 @@ class AddMemberUI extends useAddMemberLogic {
       );
     }else{
       return (
-        <MemberDirectoryUI />
+        <MemberDirectoryUI props={this.props}/>
       )
     }
   }

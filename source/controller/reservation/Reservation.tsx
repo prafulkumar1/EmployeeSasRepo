@@ -592,6 +592,10 @@ class ReservationLogic extends Component<Props, ControllerState> {
   setAddMemberIndex = (index:number) => {
     this.setState({ addMemberIndex: index });
   };
+
+  navigateToService =() => {
+    this.props?.navigation?.navigate("ServiceUI")
+  }
  
 }
 
