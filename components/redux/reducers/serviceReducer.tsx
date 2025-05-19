@@ -26,6 +26,8 @@ export const getServiceClasses = createAsyncThunk(
         } else {
           return rejectWithValue(servicesResponse.response);
         }
+      }else if(servicesResponse.response?.ResponseMessage !== ""){
+        Alert.alert("",servicesResponse.response?.ResponseMessage)
       }else{
         return rejectWithValue(servicesResponse.response);
       }
@@ -52,7 +54,7 @@ const serviceSlice = createSlice({
     .addCase(getServiceClasses.rejected, (state, action:any) => {
       state.loading = false;
       state.errorMessage = action?.payload?.ResponseMessage
-      Alert.alert("",action.response?.ResponseMessage)
+      // Alert.alert("",action.response?.ResponseMessage)
     });
   },
 })

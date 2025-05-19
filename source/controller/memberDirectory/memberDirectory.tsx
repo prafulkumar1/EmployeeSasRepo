@@ -788,5 +788,6 @@ export default class useMemberDirectoryLogic extends Component<
   
   navigateToService =() => {
     this.props?.props?.navigation?.navigate("ServiceUI")
+    this.props.resetLoadedScreen()
 }
 }
