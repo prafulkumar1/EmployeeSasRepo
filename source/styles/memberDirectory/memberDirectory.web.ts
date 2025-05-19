@@ -74,7 +74,7 @@ export const styles = StyleSheet.create({
   input: {
     borderWidth: 1,
     borderColor: "#ccc",
-    padding: 8,
+    padding: 12,
     borderRadius: 5,
     flexGrow: 1,
     minWidth: '30%',
@@ -206,33 +206,112 @@ export const styles = StyleSheet.create({
     color: "#000",
   },
   //new guest
+  NewguestContainer: { width: "100%", alignItems: "center" },
   newGuestRow1: {
-    flexDirection :'row',
+    flexDirection: 'row',
     justifyContent: "space-between",
     width: "70%",
     paddingVertical: 30,
     borderBottomWidth: 0.5,
     borderBlockColor: "#aaa",
-    backgroundColor :'#fff',
-    gap:10
+    backgroundColor: '#fff',
+    gap: 10
   },
+  OptionalContainer: {
+    width: '70%',
+    zIndex: -1,
 
+  },
+  optinalTxt: {
+    color: "#6D6D6D",
+    fontSize: 18,
+    paddingTop: 10,
+    paddingBottom: 10,
+  },
+  formContiner: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    paddingHorizontal: 50,
+
+  },
+  formTxt: {
+    color: "#6D6D6D",
+    fontSize: 16,
+    paddingBottom: 10,
+  },
+  textstyles: {
+    color: "#6D6D6D",
+    fontSize: 16,
+    paddingTop: 10,
+    paddingBottom: 10,
+
+  },
+  genderContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    paddingHorizontal: 50,
+
+  },
+    GenderTxt: {
+    color: "#6D6D6D",
+    fontSize: 16,
+    paddingTop: 10,
+  },
+  genderoptionsStyles: {
+    width: "100%",
+    color: "#6D6D6D",
+   padding:10
+  },
   //Addbutton
   addMemberBtncontainer: {
-    alignItems: "center", justifyContent :"center", marginVertical: 25 
+    alignItems: "center", justifyContent: "center", marginVertical: 25
   },
   addMemberBtn: {
     borderWidth: 1,
     borderColor: "#0b2335",
     justifyContent: "center",
     alignItems: "center",
-    borderRadius: 12,
+    borderRadius: 30,
     paddingVertical: 8,
-    paddingHorizontal: 15,
+    paddingHorizontal: 25,
   },
   addMemberBtnTxt: {
     color: "#0b2335",
     fontSize: 20,
     fontFamily: "SourceSansPro_SemiBold",
+  },
+  //calnder
+  calendar: {
+    position: "absolute",
+    top: -100,
+    right: -100,
+    width: 250,
+    height: 240,
+    backgroundColor: "#fff",
+    overflow: "hidden",
+    elevation: 10,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+    zIndex: 99,
+  },
+  dobContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    borderWidth: 1,
+    borderColor: "#ccc",
+    borderRadius: 5,
+    marginBottom: 15,
+    paddingHorizontal: 10,
+    backgroundColor: "#fff",
+  },
+  dobInput: {
+    flex: 1,
+    height: 40,
+    fontSize: 16,
+  },
+  calendarIcon: {
+    paddingLeft: 10,
   },
 });

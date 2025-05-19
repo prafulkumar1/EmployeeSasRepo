@@ -31,6 +31,7 @@ interface IState {
   showMemberModal: boolean,
   showThankModal: boolean,
   showGuestModal: boolean,
+  addmemberloading: boolean,
   //Webcode
 }
 
@@ -57,7 +58,9 @@ interface IProps {
   setOpenAddmemberModel?:()=>void
   setOpenMembersModel?:()=>void
   setClosememberModel?:()=>void
+  setLoader?:()=>void
   setChangeToGuest?:({userType})=>void
+  
 }
 
 const BACKGROUND_TASK = 'background-timer-task';
@@ -88,6 +91,7 @@ export default class useAddMemberLogic extends Component<IProps, IState> {
       showMemberModal: false,
       showThankModal: false,
       showGuestModal: false,
+      addmemberloading: false,
       //webcode
     };
     this.interval = null;
@@ -238,6 +242,8 @@ export default class useAddMemberLogic extends Component<IProps, IState> {
 
 //webcode
 handleCirclePress = (item: number) => {
+  console.log(item, '00000000000000000000000000000000000000');
+  
   this.setState({ selectedCount: item });
 };
 
@@ -256,14 +262,18 @@ handleAddIconPress = (index: number, event: any) => {
 };
 handleRemoveMember = (indexToRemove: number) => {
   const { selectedCount } = this.state;
-
+  
   // Ensure at least one member remains
   if (selectedCount <= 1) return;
+  this.setState({addmemberloading:true})
 
   this.setState((prevState) => ({
     selectedCount: prevState.selectedCount - 1,
     popupVisibleIndex: null, // Close any open popup
   }));
+  setTimeout(() => {
+      this.setState({addmemberloading:false})
+  }, 300);
 };
 
 handleSetGuest = (userType:string) =>{

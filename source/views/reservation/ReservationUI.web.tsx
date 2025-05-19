@@ -12,6 +12,7 @@ import {setAdddropDownIndex,setClosememberModel,setOpenAddmemberModel} from "@/c
 import AddMemberUIWeb from "../addMember/addMemberUI.web";
 import MemberDirectoryUI from "../memberDirectory/memberDirectoryUI.web";
 import { setOpenMembersModel } from "@/components/redux/reducers/addMemberReducer";
+import { setLoader } from "@/components/redux/reducers/uiSlice";
 
 const pageId = "Reservation";
 class ReservationUI extends useReservationLogic {
@@ -376,6 +377,7 @@ const mapDispatchToProps = {
   setOpenAddmemberModel,
   setClosememberModel,
   setOpenMembersModel,
+  setLoader,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(ReservationUI);

@@ -20,6 +20,8 @@ import {
 } from "@/components/ui/icon";
 import useMemberDirectoryLogic from "@/source/controller/memberDirectory/memberDirectory";
 import { setOpenMembersModel } from "@/components/redux/reducers/addMemberReducer";
+import CalendarPicker from "react-native-calendar-picker";
+import { Ionicons } from "@expo/vector-icons";
 
 const pageId = "MemberDiretory";
 class MemberDirectoryUI extends useMemberDirectoryLogic {
@@ -174,6 +176,8 @@ class MemberDirectoryUI extends useMemberDirectoryLogic {
       pageConfigJson && pageConfigJson.Controlls
         ? pageConfigJson.Controlls
         : [];
+    const { setFormFieldData } = this.props;
+
     return (
       <Modal
         animationType="fade"
@@ -379,15 +383,23 @@ class MemberDirectoryUI extends useMemberDirectoryLogic {
                   style={{ width: "100%", alignItems: "center" }}
                 >
                   <UI.ConnectedCbView style={[styles.newGuestRow1]}>
-                    <TextInput
-                      placeholder="Guest First name"
-                      placeholderTextColor={"#6D6D6D"}
+                    <UI.ConnectedCbInput
+                      // formId="guestForm"
+                      id="firstName"
+                      placeholder="First Name"
                       style={styles.input}
+                      pageId={pageId}
+                      // formId={pageId}
+                      setFormFieldData={setFormFieldData}
                     />
-                    <TextInput
-                      placeholder="Guest Last name"
-                      placeholderTextColor={"#6D6D6D"}
+                    <UI.ConnectedCbInput
+                      // formId="guestForm"
+                      id="lastName"
+                      placeholder="Last Name"
                       style={styles.input}
+                      pageId={pageId}
+                      // formId={pageId}
+                      setFormFieldData={setFormFieldData}
                     />
                     <UI.ConnectedCbSelectDropDown
                       options={this.servicesOptions}
@@ -395,7 +407,7 @@ class MemberDirectoryUI extends useMemberDirectoryLogic {
                         color: "#6D6D6D",
                         width: this.state.screenWidth <= 780 ? "100%" : "30%",
                       }}
-                      dropdownCustom={{ zIndex: 1 }}
+                      dropdownCustom={{ zIndex: 1, padding:10 }}
                     />
                   </UI.ConnectedCbView>
 
@@ -405,14 +417,7 @@ class MemberDirectoryUI extends useMemberDirectoryLogic {
                       zIndex: -1,
                     }}
                   >
-                    <UI.ConnectedCbText
-                      style={{
-                        color: "#6D6D6D",
-                        fontSize: 18,
-                        paddingTop: 10,
-                        paddingBottom: 10,
-                      }}
-                    >
+                    <UI.ConnectedCbText style={styles.optinalTxt}>
                       Optional
                     </UI.ConnectedCbText>
 
@@ -430,20 +435,16 @@ class MemberDirectoryUI extends useMemberDirectoryLogic {
                           width: this.state.screenWidth <= 780 ? "100%" : "45%",
                         }}
                       >
-                        <UI.ConnectedCbText
-                          style={{
-                            color: "#6D6D6D",
-                            fontSize: 16,
-                            paddingBottom: 10,
-                          }}
-                        >
+                        <UI.ConnectedCbText style={styles.formTxt}>
                           Cell Phone
                         </UI.ConnectedCbText>
-                        <TextInput
+                        <UI.ConnectedCbInput
+                          placeholder="Cell Phone"
+                          id="Phone"
                           style={styles.input}
-                          placeholder="Enter phone number"
-                          placeholderTextColor={"#6D6D6D"}
                           keyboardType="phone-pad"
+                          setFormFieldData={setFormFieldData}
+                          pageId={pageId}
                         />
                       </UI.ConnectedCbView>
 
@@ -453,89 +454,104 @@ class MemberDirectoryUI extends useMemberDirectoryLogic {
                           width: this.state.screenWidth <= 780 ? "100%" : "45%",
                         }}
                       >
-                        <UI.ConnectedCbText
-                          style={{
-                            color: "#6D6D6D",
-                            fontSize: 16,
-                            paddingTop: 10,
-                            paddingBottom: 10,
-                          }}
-                        >
+                        <UI.ConnectedCbText  style={styles.formTxt}>
                           Primary Email
                         </UI.ConnectedCbText>
-                        <TextInput
+                        <UI.ConnectedCbInput
+                          placeholder="Primary Email"
+                          id="email"
                           style={styles.input}
-                          placeholder="Enter email"
-                          placeholderTextColor={"#6D6D6D"}
                           keyboardType="email-address"
+                          setFormFieldData={setFormFieldData}
+                          pageId={pageId}
                         />
                       </UI.ConnectedCbView>
                     </UI.ConnectedCbView>
-                    <UI.ConnectedCbView
-                      style={{
-                        flexDirection: "row",
-                        justifyContent: "space-between",
-                        paddingHorizontal: 50,
-                      }}
-                    >
-                      <UI.View
+                    <UI.ConnectedCbView style={styles.genderContainer}>
+                      <UI.ConnectedCbView
                         style={{
                           width: this.state.screenWidth <= 780 ? "100%" : "45%",
                         }}
                       >
-                        <UI.ConnectedCbText
-                          style={{
-                            color: "#6D6D6D",
-                            fontSize: 16,
-                            paddingTop: 10,
-                          }}
-                        >
+                        <UI.ConnectedCbText style={styles.GenderTxt}>
                           Gender
                         </UI.ConnectedCbText>
                         <UI.ConnectedCbSelectDropDown
                           options={this.genderOptions}
-                          customstyle={{
-                            width: "100%",
-                            color: "#6D6D6D",
-                            paddingTop: 10,
-                          }}
+                          customstyle={styles.genderoptionsStyles}
+                          dropdownCustom={{ zIndex: 1 }}
                         />
-                      </UI.View>
-                      <UI.View
+                      </UI.ConnectedCbView>
+
+                      {this.state.Opencalender && (
+                        <UI.ConnectedCbView style={styles.calendar}>
+                          <UI.ConnectedCbView
+                            style={{
+                              transform: [{ scale: 0.85 }],
+                              marginTop: -15,
+                            }}
+                          >
+                            <CalendarPicker
+                              onDateChange={this.onWebDateChange}
+                              selectedDayColor="#002c5f"
+                              selectedDayTextColor="#000"
+                              textStyle={{ color: "#000" }}
+                              yearTitleStyle={{ color: "#000" }}
+                              previousTitle="<"
+                              nextTitle=">"
+                              previousTitleStyle={{
+                                color: "#000",
+                                fontSize: 24,
+                              }}
+                              nextTitleStyle={{ color: "#000", fontSize: 24 }}
+                              width={300}
+                              height={350}
+                              //  minDate={currentDate}
+                              maxDate={new Date()}
+                            />
+                          </UI.ConnectedCbView>
+                        </UI.ConnectedCbView>
+                      )}
+                      <UI.ConnectedCbView
                         style={{
                           width: this.state.screenWidth <= 780 ? "100%" : "45%",
                         }}
                       >
-                        <UI.ConnectedCbText
-                          style={{
-                            color: "#6D6D6D",
-                            fontSize: 16,
-                            paddingTop: 10,
-                          }}
-                        >
-                          Gender
+                        <UI.ConnectedCbText style={styles.textstyles}>
+                          DOB
                         </UI.ConnectedCbText>
-                        <UI.ConnectedCbSelectDropDown
-                          options={this.genderOptions}
-                          customstyle={{
-                            width: "100%",
-                            color: "#6D6D6D",
-                            paddingTop: 10,
-                          }}
-                        />
-                      </UI.View>
+                        <UI.TouchableOpacity
+                          style={styles.dobContainer}
+                          onPress={this.toggleCalendar}
+                          activeOpacity={0.8}
+                        >
+                          <TextInput
+                            placeholder="Date of Birth"
+                            style={styles.dobInput}
+                            value={this.formatDate(this.state.selectedDate)}
+                            editable={false}
+                            pointerEvents="none"
+                          />
+                          <Ionicons
+                            name="calendar-outline"
+                            size={20}
+                            color="#999"
+                            style={styles.calendarIcon}
+                          />
+                        </UI.TouchableOpacity>
+                      </UI.ConnectedCbView>
                     </UI.ConnectedCbView>
                   </UI.ConnectedCbView>
                 </UI.ConnectedCbView>
               )}
-              <UI.ConnectedCbView style={styles.addMemberBtncontainer}>
+              <UI.ConnectedCbView
+                style={[styles.addMemberBtncontainer, { ZIndex: -1 }]}
+              >
                 <UI.TouchableOpacity
                   style={styles.addMemberBtn}
                   // onPress={() => this.props.setOpenAddmemberModel()}
                 >
-                  <UI.ConnectedCbText
-                    style={[styles.addMemberBtnTxt, { zIndex: -3 }]}
-                  >
+                  <UI.ConnectedCbText style={[styles.addMemberBtnTxt]}>
                     {" "}
                     Add
                   </UI.ConnectedCbText>

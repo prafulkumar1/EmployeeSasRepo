@@ -23,13 +23,7 @@ const CalendarComponent = ({ onDateChange, currentDate, sixtyDaysLater }) => (
         maxDate={sixtyDaysLater}
       />
       <UI.Text
-        style={{
-          marginTop: 10,
-          textAlign: "center",
-          color: "#fff",
-          fontSize: 18,
-          fontWeight: "bold",
-        }}
+        style={styles.calendarDate}
       >
         {currentDate}
       </UI.Text>

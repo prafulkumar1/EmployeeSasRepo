@@ -1,11 +1,10 @@
 import { isPlatformWeb } from "@/components/constants/Matrices";
-import { navigateToScreen } from "@/components/constants/Navigations";
 import { MemberListType } from "@/components/constants/Types";
 import { getFormFieldDataSelector } from "@/components/redux/reducers/memberDirectoryReducer";
 import { postApiCall } from "@/components/utlis/api";
 import React, { Component } from "react";
 import { Dimensions, Platform } from "react-native";
-import * as DeviceInfo from "expo-device";
+import moment from "moment";
 
 const pageId = "MemberDirectory";
 
@@ -116,6 +115,8 @@ interface IState {
   addMemberIndex: null | number;
   selectedValue: null | string;
   screenWidth: number;
+  Opencalender:boolean | null ,
+  selectedDate:string |  null
 }
 interface SS {}
 interface GuestDetails {
@@ -393,6 +394,8 @@ export default class useMemberDirectoryLogic extends Component<
       startPage: 1,
       membersPerPage: 16,
       visiblePageLimit: 10,
+      selectedDate: null,
+      Opencalender: false
       //webcode
     };
     this.genderOptions = genderOptions;
@@ -770,4 +773,16 @@ export default class useMemberDirectoryLogic extends Component<
   selectGender = (value) => {
     this.setState({ selectedGender: value });
   };
+    toggleCalendar = () => {
+    this.setState((prevState) => ({
+      Opencalender: !prevState.Opencalender,
+    }));
+  };
+
+    onWebDateChange = (date: any) => {
+      const formattedDate = moment(new Date(date)).format("DD-MMM-YYYY");
+       this.setState({selectedDate :formattedDate})
+      this.toggleCalendar();
+    };
+  
 }

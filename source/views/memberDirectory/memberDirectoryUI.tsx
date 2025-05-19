@@ -1,22 +1,11 @@
 import React from "react";
 import * as UI from "@/components/cobalt/importUI";
-import {
-  getFormFieldDataSelector,
-  setFormFieldData,
-} from "@/components/redux/reducers/memberDirectoryReducer";
 import useMemberDirectoryLogic from "@/source/controller/memberDirectory/memberDirectory";
 import { connect } from "react-redux";
 import { RootState } from "@/components/redux/store";
 import { styles } from "@/source/styles/memberDirectory/memberDirectoryStyle";
-import { Icon } from "@/components/ui/icon";
 import { getMemberList } from "@/components/redux/reducers/memberDirectoryReducer";
-import CbLoader from "@/components/cobalt/cobaltLoader";
-import {
-  addMembersForReservation,
-  resetLoadedScreen,
-  resetSingleMemberDetails,
-  singleMemberDetails,
-} from "@/components/redux/reducers/addMemberReducer";
+import {addMembersForReservation, resetLoadedScreen, resetSingleMemberDetails, singleMemberDetails} from "@/components/redux/reducers/addMemberReducer";
 import { KeyboardAvoidingView, Modal, Platform, TextInput } from "react-native";
 import { guestData } from "@/components/constants/CustomJson";
 import { StatusBar } from "expo-status-bar";
@@ -43,7 +32,7 @@ class MemberDirectoryUI extends useMemberDirectoryLogic {
       </UI.TouchableOpacity>
     );
   };
-  renderMemberList = ({ item, index }) => {
+  renderMemberList = ({ item }) => {
     return (
       <UI.Box
         style={[
@@ -87,7 +76,7 @@ class MemberDirectoryUI extends useMemberDirectoryLogic {
     }
   };
 
-  renderGuestSelector = ({ item, index }) => {
+  renderGuestSelector = ({ item }) => {
     const { selectedGuest } = this.state;
     return (
       <UI.TouchableOpacity

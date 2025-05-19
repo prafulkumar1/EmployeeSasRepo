@@ -28,6 +28,7 @@ interface Props {
   setOpenAddmemberModel?:()=>void
   setClosememberModel?:()=>void
   setOpenMembersModel?:()=>void
+  setLoader?:()=>void
   OpenAddmemberModel?:boolean
   OpenMemberModel?:boolean
   closeMemberModel?:boolean
@@ -303,6 +304,11 @@ class ReservationLogic extends Component<Props, ControllerState> {
   //web handlers functions
 
   componentDidMount(): void {
+    this.props.setLoader()
+    
+    setTimeout(() => {
+      this.props.setLoader()
+    }, 2500);
     // let name = this.props?.route?.params?.serviceDetails?.title
     // console.log(this.props?.route?.params?.serviceDetails,"---1111111")
     this.setState({

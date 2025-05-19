@@ -1,7 +1,7 @@
 import React from "react";
 import * as UI from "@/components/cobalt/importUI";
 import ServiceLogic from "@/source/controller/services/Service";
-import { FlatList, Image } from "react-native";
+import { FlatList,  } from "react-native";
 import { styles } from "@/source/styles/services/ServiceStyles.web";
 class ServiceUI extends ServiceLogic {
   renderItem = ({ item }) => (
@@ -20,41 +20,59 @@ class ServiceUI extends ServiceLogic {
       </UI.TouchableOpacity>
     </UI.ConnectedCbView>
   );
+  renderTab = ({ item }) => (
+    <UI.TouchableOpacity
+      key={item}
+      style={[styles.tab, this.state.activeTab === item && styles.activeTab]}
+      onPress={() => this.setState({ activeTab: item })}
+    >
+      <UI.ConnectedCbText
+        style={[
+          styles.tabText,
+          this.state.activeTab === item && styles.activeTabText,
+        ]}
+      >
+        {item}
+      </UI.ConnectedCbText>
+    </UI.TouchableOpacity>
+  );
 
   render() {
     const { activeTab } = this.state;
-    const tabs = this.ServiceData.BookingTypes.map((service) => service.BookingTypeName);
-    const activeServiceClass = this.ServiceData.BookingTypes.find( (service) => service.BookingTypeName === activeTab)?.ServiceClass || [];
+    const tabs = this.ServiceData.BookingTypes.map(
+      (service) => service.BookingTypeName
+    );
+    const activeServiceClass =
+      this.ServiceData.BookingTypes.find(
+        (service) => service.BookingTypeName === activeTab
+      )?.ServiceClass || [];
     return (
-      <UI.ConnectedCbView style={styles.container}>
-        <UI.ConnectedCbView style={styles.tabContainer}>
-          {tabs?.map((tab) => (
-            <UI.TouchableOpacity
-              key={tab}
-              style={[styles.tab, activeTab === tab && styles.activeTab]}
-              onPress={() => this.setState({ activeTab: tab })}
-            >
-              <UI.ConnectedCbText
-                style={[
-                  styles.tabText,
-                  activeTab === tab && styles.activeTabText,
-                ]}
-              >
-                {tab}
-              </UI.ConnectedCbText>
-            </UI.TouchableOpacity>
-          ))}
-        </UI.ConnectedCbView>
-
+      <UI.ScrollView style={styles.container}>
+        <FlatList
+          data={tabs}
+          keyExtractor={(item) => item}
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          renderItem={this.renderTab}
+          contentContainerStyle={styles.tabContainer}
+        />
         <FlatList
           data={activeServiceClass}
           keyExtractor={(item) => item.id}
           renderItem={this.renderItem}
-          numColumns={2}
+          numColumns={3}
           contentContainerStyle={styles.list}
           columnWrapperStyle={{ justifyContent: "center" }}
-        />
-      </UI.ConnectedCbView>
+        /> 
+
+
+        
+        {/* {true && (
+          <UI.Box style={{flex:1,  backgroundColor :'red'}}>
+            <CbLoader  visible={true}/>
+          </UI.Box>
+        )} */}
+      </UI.ScrollView>
     );
   }
 }

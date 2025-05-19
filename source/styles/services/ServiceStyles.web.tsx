@@ -7,17 +7,20 @@ export const styles = StyleSheet.create({
     flex: 1,
     paddingTop: 50,
     backgroundColor: "#fff",
+    width :"100%"
   },
   tabContainer: {
+    flex:1,
     flexDirection: "row",
     marginBottom: 10,
     borderBottomWidth: 3,
-    borderColor: "#eee",
-    marginHorizontal: 20,
+    borderColor: "#ccc",
+   marginHorizontal:20
   },
   tab: {
     paddingVertical: 10,
     marginHorizontal: 40,
+    alignItems: 'center'
   },
   tabText: {
     color: "#000",
@@ -28,6 +31,7 @@ export const styles = StyleSheet.create({
     top: 2,
     borderBottomWidth: 3,
     borderBottomColor: "#08c3f8",
+    //  marginBottom: -3,
   },
   activeTabText: {
     color: "#08c3f8",
@@ -48,7 +52,7 @@ export const styles = StyleSheet.create({
     shadowRadius: 5,
     elevation: 10,
     backgroundColor: "#fff",
-    alignItems: "center", 
+    // alignItems: "center", 
   },
   icon: {
     fontSize: 28,

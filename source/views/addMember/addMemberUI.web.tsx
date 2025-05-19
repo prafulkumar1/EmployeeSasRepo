@@ -14,6 +14,8 @@ import {
   setChangeToGuest,
   setOpenMembersModel,
 } from "@/components/redux/reducers/addMemberReducer";
+import { setLoader } from "@/components/redux/reducers/uiSlice";
+import CbLoader from "@/components/cobalt/webCobaltLoader";
 
 const pageId = "AddMember";
 class AddMemberUI extends useAddMemberLogic {
@@ -48,8 +50,11 @@ class AddMemberUI extends useAddMemberLogic {
           </UI.ConnectedCbView>
 
           {popupVisibleIndex === Number(i) && (
-            <UI.ConnectedCbView style={[styles.popupContainer]}         pageId={pageId}
-          id="popupContainer">
+            <UI.ConnectedCbView
+              style={[styles.popupContainer]}
+              pageId={pageId}
+              id="popupContainer"
+            >
               <UI.Pressable
                 style={[
                   styles.popupButton,
@@ -62,8 +67,13 @@ class AddMemberUI extends useAddMemberLogic {
                 onMouseEnter={() => this.setState({ hover: "member" })}
                 onMouseLeave={() => this.setState({ hover: null })}
               >
-                <UI.ConnectedCbText style={styles.popupButtonText}         pageId={pageId}
-          id="popupButtonText" >Members</UI.ConnectedCbText>
+                <UI.ConnectedCbText
+                  style={styles.popupButtonText}
+                  pageId={pageId}
+                  id="popupButtonText"
+                >
+                  Members
+                </UI.ConnectedCbText>
               </UI.Pressable>
               <UI.Pressable
                 style={[
@@ -77,8 +87,13 @@ class AddMemberUI extends useAddMemberLogic {
                 onMouseLeave={() => this.setState({ hover: null })}
                 onPress={() => this.handleSetGuest("Guest")}
               >
-                <UI.ConnectedCbText style={styles.popupButtonText}         pageId={pageId}
-          id="popupButtonText">Guest</UI.ConnectedCbText>
+                <UI.ConnectedCbText
+                  style={styles.popupButtonText}
+                  pageId={pageId}
+                  id="popupButtonText"
+                >
+                  Guest
+                </UI.ConnectedCbText>
               </UI.Pressable>
               <UI.Pressable
                 style={[
@@ -91,8 +106,13 @@ class AddMemberUI extends useAddMemberLogic {
                 onMouseEnter={() => this.setState({ hover: "TBD" })}
                 onMouseLeave={() => this.setState({ hover: null })}
               >
-                <UI.ConnectedCbText style={styles.popupButtonText}         pageId={pageId}
-          id="popupButtonText">TBD</UI.ConnectedCbText>
+                <UI.ConnectedCbText
+                  style={styles.popupButtonText}
+                  pageId={pageId}
+                  id="popupButtonText"
+                >
+                  TBD
+                </UI.ConnectedCbText>
               </UI.Pressable>
             </UI.ConnectedCbView>
           )}
@@ -110,6 +130,9 @@ class AddMemberUI extends useAddMemberLogic {
       pageConfigJson && pageConfigJson.Controlls
         ? pageConfigJson.Controlls
         : [];
+    const membersCount = this.state.membersCount;
+    const membersCountdata = Array.from({ length: membersCount }, (_, i) => i + 1);
+
     return (
       <Modal
         animationType="fade"
@@ -165,7 +188,7 @@ class AddMemberUI extends useAddMemberLogic {
                 id="playerListRow"
               >
                 <UI.FlatList
-                  data={[1, 2, 3, 4]}
+                  data={membersCountdata}
                   horizontal
                   renderItem={({ item }) => (
                     <UI.TouchableOpacity
@@ -335,6 +358,7 @@ class AddMemberUI extends useAddMemberLogic {
             </UI.ConnectedCbText>
           </UI.ConnectedCbView>
         </UI.ConnectedCbView>
+        <CbLoader visible={this.state.addmemberloading} />
       </Modal>
     );
   }
@@ -352,6 +376,7 @@ const mapDispatchToProps = {
   setOpenMembersModel,
   setClosememberModel,
   setChangeToGuest,
+  setLoader,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(AddMemberUI);
