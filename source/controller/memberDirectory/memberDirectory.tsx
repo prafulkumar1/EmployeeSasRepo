@@ -57,7 +57,7 @@ interface IProps {
   OpenMemberModel?: boolean;
   ChangeToGuest?: string;
   setOpenMembersModel?: () => void;
-  setFormFieldData: ({
+  setFormFieldData?: ({
     formId,
     controlType,
     controlId,
@@ -65,7 +65,8 @@ interface IProps {
     isInvalid,
     errorMessage,
   }) => void;
-  pageId: string;
+  pageId?: string;
+  props?:any
 }
 //webinterface
 interface Member {
@@ -192,7 +193,7 @@ export default class useMemberDirectoryLogic extends Component<
       singleMemberDetails: null,
       errorMessagePopup: false,
       errorMessageTxt: "",
-      selectedGuest: "New Guest",
+      selectedGuest: "Existing Guest",
       date: null,
       showDatePicker: false,
       selectedService: "",
@@ -785,4 +786,7 @@ export default class useMemberDirectoryLogic extends Component<
       this.toggleCalendar();
     };
   
+  navigateToService =() => {
+    this.props?.props?.navigation?.navigate("ServiceUI")
+}
 }

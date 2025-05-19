@@ -5,7 +5,15 @@ import { connect } from "react-redux";
 import { RootState } from "@/components/redux/store";
 import { styles } from "@/source/styles/memberDirectory/memberDirectoryStyle";
 import { getMemberList } from "@/components/redux/reducers/memberDirectoryReducer";
-import {addMembersForReservation, resetLoadedScreen, resetSingleMemberDetails, singleMemberDetails} from "@/components/redux/reducers/addMemberReducer";
+import CbLoader from "@/components/cobalt/cobaltLoader";
+import {ChevronLeftIcon,ChevronRightIcon} from "@/components/ui/icon";
+
+import {
+  addMembersForReservation,
+  resetLoadedScreen,
+  resetSingleMemberDetails,
+  singleMemberDetails,
+} from "@/components/redux/reducers/addMemberReducer";
 import { KeyboardAvoidingView, Modal, Platform, TextInput } from "react-native";
 import { guestData } from "@/components/constants/CustomJson";
 import { StatusBar } from "expo-status-bar";
@@ -93,15 +101,160 @@ class MemberDirectoryUI extends useMemberDirectoryLogic {
     );
   };
 
+  showMemberList = () => {
+    if (this.state.selectedGuest == "New Guest") {
+      return (
+        <UI.ConnectedCbBox style={styles.GuestmainContainer}>
+          <KeyboardAvoidingView
+            style={{ flex: 1 }}
+            behavior={Platform.OS === "ios" ? "padding" : "height"}
+          >
+            <UI.ScrollView
+              contentContainerStyle={{
+                flexGrow: 1,
+                paddingBottom: responsiveHeight(20),
+              }}
+            >
+              <UI.ConnectedCbBox style={styles.innerContainers}>
+                <UI.ConnectedCbInput
+                  id="firstName"
+                  placeholder="First Name"
+                  style={styles.input}
+                  formId={pageId}
+                  setFormFieldData={setFormFieldData}
+                />
+                <UI.ConnectedCbInput
+                  id="lastName"
+                  placeholder="Last Name"
+                  style={styles.input}
+                  formId={pageId}
+                  setFormFieldData={setFormFieldData}
+                />
+                <UI.ConnectedCbSelectDropDown
+                  options={this.servicesOptions}
+                  onSelect={this.selectService}
+                  openDropDown={() => { }}
+                  customstyle={[styles.serviceBtn]}
+                  dropdownCustom={{ zIndex: 1 }}
+                  placeholder={"Select the Service"}
+                  setAddMemberIndex={this.setAddMemberIndex}
+                  addMemberIndex={this.state.addMemberIndex}
+                  selectItemId={0}
+                />
+              </UI.ConnectedCbBox>
+
+              <UI.ConnectedCbBox style={styles.gap} />
+
+              <UI.ConnectedCbBox style={styles.innerContainers}>
+                <UI.Text style={styles.optionalTitle}>Optional</UI.Text>
+
+                <UI.Text style={styles.Guestlabel}>Gender</UI.Text>
+                <UI.ConnectedCbSelectDropDown
+                  options={this.genderOptions}
+                  onSelect={this.selectGender}
+                  openDropDown={() => { }}
+                  customstyle={[{ width: "100%" }]}
+                  dropdownCustom={{ zIndex: 1 }}
+                  placeholder={"Gender"}
+                  setAddMemberIndex={this.setAddMemberIndex}
+                  addMemberIndex={this.state.addMemberIndex}
+                  selectItemId={1}
+                />
+
+                <UI.Text style={styles.Guestlabel}>Date of Birth</UI.Text>
+                <UI.TouchableOpacity
+                  style={styles.dobContainer}
+                  onPress={this.handleShowDatePicker}
+                  activeOpacity={0.8}
+                >
+                  <TextInput
+                    placeholder="Date of Birth"
+                    style={styles.dobInput}
+                    value={this.formatDate(this.state.date)}
+                    editable={false}
+                    pointerEvents="none"
+                  />
+                  <Ionicons
+                    name="calendar-outline"
+                    size={20}
+                    color="#999"
+                    style={styles.calendarIcon}
+                  />
+                </UI.TouchableOpacity>
+
+                {this.state.showDatePicker && (
+                  <DateTimePicker
+                    value={this.state.date || new Date()}
+                    mode="date"
+                    display="default"
+                    maximumDate={new Date()}
+                    onChange={this.onDateChange}
+                  />
+                )}
+
+                <UI.Text style={styles.Guestlabel}>Cell Phone</UI.Text>
+                <UI.ConnectedCbInput
+                  placeholder="Cell Phone"
+                  id="Phone"
+                  style={styles.input}
+                  keyboardType="phone-pad"
+                  setFormFieldData={setFormFieldData}
+                  formId={pageId}
+                />
+
+                <UI.Text style={styles.Guestlabel}>Primary Email</UI.Text>
+                <UI.ConnectedCbInput
+                  placeholder="Primary Email"
+                  id="email"
+                  style={styles.input}
+                  keyboardType="email-address"
+                  setFormFieldData={setFormFieldData}
+                  formId={pageId}
+                />
+              </UI.ConnectedCbBox>
+            </UI.ScrollView>
+          </KeyboardAvoidingView>
+        </UI.ConnectedCbBox>
+      )
+    } else if (this.state.updatedMembersListData?.length > 0) {
+      return (
+        <UI.FlatList
+          data={this.state?.updatedMembersListData}
+          ListFooterComponent={this.renderLoadMoreBtn}
+          style={{ opacity: this.props.loading ? 0.5 : 1 }}
+          renderItem={this.renderMemberList}
+          removeClippedSubviews={true}
+          updateCellsBatchingPeriod={100}
+          windowSize={21}
+          getItemLayout={(_, index) => ({
+            length: 100,
+            offset: 100 * index,
+            index,
+          })}
+        />
+      )
+    } else {
+      return (
+        <UI.Box style={styles.emptyListContainer}>
+          <UI.Text style={styles.emptyMealTxt}>No Record Found</UI.Text>
+        </UI.Box>
+      )
+    }
+  }
+
   render() {
-    const ITEM_HEIGHT = 100;
     const { setFormFieldData } = this.props;
 
     return (
       <UI.Box style={styles.mainContainer}>
-        <UI.ConnectedCbHeader headerTitle={"Members Directory"} />
+        <UI.ConnectedCbHeader
+          headerTitle={"Members Directory"}
+          goBack={() => this.navigateToReservation()}
+          goHome={() => this.navigateToService()}
+        />
         <StatusBar hidden={true} />
 
+        {/* Header Component */}
         {this.props.userType === "Member" ? (
           <UI.ConnectedCbBox style={styles.checkBoxWrapper}>
             <UI.TouchableOpacity
@@ -142,6 +295,8 @@ class MemberDirectoryUI extends useMemberDirectoryLogic {
             />
           </UI.ConnectedCbBox>
         )}
+        
+         {/* Disable search bar for new guest */}
         {this.state.selectedGuest !== "New Guest" && (
           <UI.ConnectedCbBox style={styles.subContainer}>
             <UI.TouchableOpacity style={styles.bellIcon}>
@@ -162,143 +317,29 @@ class MemberDirectoryUI extends useMemberDirectoryLogic {
           </UI.ConnectedCbBox>
         )}
 
-        {this.state.selectedGuest === "New Guest" ? (
-          // Your custom UI for New Guest
-          <UI.ConnectedCbBox style={styles.GuestmainContainer}>
-            <KeyboardAvoidingView
-              style={{ flex: 1 }}
-              behavior={Platform.OS === "ios" ? "padding" : "height"}
-            >
-              <UI.ScrollView
-                contentContainerStyle={{
-                  flexGrow: 1,
-                  paddingBottom: responsiveHeight(20),
-                }}
-              >
-                <UI.ConnectedCbBox style={styles.innerContainers}>
-                  <UI.ConnectedCbInput
-                    // formId="guestForm"
-                    id="firstName"
-                    placeholder="First Name"
-                    style={styles.input}
-                    pageId={pageId}
-                    // formId={pageId}
-                    setFormFieldData={setFormFieldData}
-                  />
-                  <UI.ConnectedCbInput
-                    // formId="guestForm"
-                    id="lastName"
-                    placeholder="Last Name"
-                    style={styles.input}
-                    pageId={pageId}
-                    // formId={pageId}
-                    setFormFieldData={setFormFieldData}
-                  />
-                  <UI.ConnectedCbSelectDropDown
-                    options={this.servicesOptions}
-                    onSelect={this.selectService}
-                    openDropDown={() => {}}
-                    customstyle={[styles.serviceBtn]}
-                    dropdownCustom={{ zIndex: 1 }}
-                    placeholder={"Select the Service"}
-                    setAddMemberIndex={this.setAddMemberIndex}
-                    addMemberIndex={this.state.addMemberIndex}
-                    selectItemId={0}
-                  />
-                </UI.ConnectedCbBox>
-
-                <UI.ConnectedCbBox style={styles.gap} />
-
-                <UI.ConnectedCbBox style={styles.innerContainers}>
-                  <UI.Text style={styles.optionalTitle}>Optional</UI.Text>
-
-                  <UI.Text style={styles.Guestlabel}>Gender</UI.Text>
-                  <UI.ConnectedCbSelectDropDown
-                    options={this.genderOptions}
-                    onSelect={this.selectGender}
-                    openDropDown={() => {}}
-                    customstyle={[{ width: "100%" }]}
-                    dropdownCustom={{ zIndex: 1 }}
-                    placeholder={"Gender"}
-                    setAddMemberIndex={this.setAddMemberIndex}
-                    addMemberIndex={this.state.addMemberIndex}
-                    selectItemId={1}
-                  />
-
-                  <UI.Text style={styles.Guestlabel}>Date of Birth</UI.Text>
-                  <UI.TouchableOpacity
-                    style={styles.dobContainer}
-                    onPress={this.handleShowDatePicker}
-                    activeOpacity={0.8}
-                  >
-                    <TextInput
-                      placeholder="Date of Birth"
-                      style={styles.dobInput}
-                      value={this.formatDate(this.state.date)}
-                      editable={false}
-                      pointerEvents="none"
-                    />
-                    <Ionicons
-                      name="calendar-outline"
-                      size={20}
-                      color="#999"
-                      style={styles.calendarIcon}
-                    />
-                  </UI.TouchableOpacity>
-
-                  {this.state.showDatePicker && (
-                    <DateTimePicker
-                      value={this.state.date || new Date()}
-                      mode="date"
-                      display="default"
-                      maximumDate={new Date()}
-                      onChange={this.onDateChange}
-                    />
-                  )}
-
-                  <UI.Text style={styles.Guestlabel}>Cell Phone</UI.Text>
-                  <UI.ConnectedCbInput
-                    placeholder="Cell Phone"
-                    id="Phone"
-                    style={styles.input}
-                    keyboardType="phone-pad"
-                    setFormFieldData={setFormFieldData}
-                    pageId={pageId}
-                  />
-
-                  <UI.Text style={styles.Guestlabel}>Primary Email</UI.Text>
-                  <UI.ConnectedCbInput
-                    placeholder="Primary Email"
-                    id="email"
-                    style={styles.input}
-                    keyboardType="email-address"
-                    setFormFieldData={setFormFieldData}
-                      pageId={pageId}
-                  />
-                </UI.ConnectedCbBox>
-              </UI.ScrollView>
-            </KeyboardAvoidingView>
-          </UI.ConnectedCbBox>
-        ) : this.state.updatedMembersListData?.length > 0 ? (
-          <UI.FlatList
-            data={this.state?.updatedMembersListData}
-            ListFooterComponent={this.renderLoadMoreBtn}
-            style={{ opacity: this.props.loading ? 0.5 : 1 }}
-            renderItem={this.renderMemberList}
-            removeClippedSubviews={true}
-            updateCellsBatchingPeriod={100}
-            windowSize={21}
-            getItemLayout={(_, index) => ({
-              length: ITEM_HEIGHT,
-              offset: ITEM_HEIGHT * index,
-              index,
-            })}
-          />
-        ) : (
-          <UI.Box style={styles.emptyListContainer}>
-            <UI.Text style={styles.emptyMealTxt}>No Record Found</UI.Text>
+        {/* Disable Alfabet filter for new guest */}
+        {
+          this.state.selectedGuest !== "New Guest" &&
+          <UI.Box style={styles.topBar}>
+            <UI.TouchableOpacity style={styles.arrow} onPress={this.scrollLeft}>
+              <Icon as={ChevronLeftIcon} size="xl" color="#1dc6ff" />
+            </UI.TouchableOpacity>
+            <UI.FlatList
+              ref={this.flatListRef}
+              data={this.membersMock}
+              renderItem={this.renderAlfabet}
+              keyExtractor={(item) => item.id}
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              extraData={this.state.activeTab}
+            />
+            <UI.TouchableOpacity style={styles.arrow} onPress={this.scrollRight}>
+              <Icon as={ChevronRightIcon} size="xl" color="#1dc6ff" />
+            </UI.TouchableOpacity>
           </UI.Box>
-        )}
+        }
+      
+        {this.showMemberList()}
 
         <UI.ConnectedCbBox style={styles.addMemberBtn}>
           <UI.TouchableOpacity
@@ -320,11 +361,11 @@ class MemberDirectoryUI extends useMemberDirectoryLogic {
           </UI.TouchableOpacity>
         </UI.ConnectedCbBox>
 
-        {/* {this.props.loading && (
+        {this.props.loading && (
           <UI.Box style={styles.loaderTrans}>
             <CbLoader />
           </UI.Box>
-        )} */}
+        )}
         <Modal
           transparent={true}
           visible={this.state.errorMessagePopup}

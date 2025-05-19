@@ -2,6 +2,7 @@ import { navigateToScreen } from "@/components/constants/Navigations";
 import { Component, createRef } from "react";
 import moment from "moment";
 import { Dimensions, FlatList } from "react-native";
+import { ServiceType } from "@/components/constants/Types";
 
 //webinterface
 interface Member {
@@ -32,6 +33,7 @@ interface Props {
   OpenAddmemberModel?:boolean
   OpenMemberModel?:boolean
   closeMemberModel?:boolean
+  singleServiceItem?:ServiceType
 }
 
 //webdummydata
@@ -120,6 +122,7 @@ export interface ControllerState {
   loadingMore: boolean;
   calenderSelectedDate: string;
   mainServiceName: string;
+  addMemberIndex: null|number
   //webstate
   currentIndex: number;
   selectedItem: string;
@@ -202,6 +205,7 @@ class ReservationLogic extends Component<Props, ControllerState> {
       loadingMore: false,
       calenderSelectedDate: "",
       mainServiceName: "",
+      addMemberIndex:null,
       //webstate
       currentIndex: 0,
       selectedItem: "",
@@ -591,7 +595,14 @@ class ReservationLogic extends Component<Props, ControllerState> {
         this.props.setOpenMembersModel();
       }
   }
-  //
+  setAddMemberIndex = (index:number) => {
+    this.setState({ addMemberIndex: index });
+  };
+
+  navigateToService =() => {
+    this.props?.navigation?.navigate("ServiceUI")
+  }
+ 
 }
 
 export default ReservationLogic;

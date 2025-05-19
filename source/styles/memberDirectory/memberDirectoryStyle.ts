@@ -66,7 +66,7 @@ export const styles = StyleSheet.create({
   activeTxt:{
     color:"#5A729A",
   },
-  subContainer:{ width: '100%', alignItems: 'center',justifyContent:"center",marginTop:20 },
+  subContainer:{ width: '100%', alignItems: 'center',justifyContent:"center",marginTop:18,marginBottom:14 },
   checkBox:{ flexDirection: "row", },
   checkBoxIndicator:{borderWidth:1,width:20,height:20,borderColor:"#e0e0e0", marginRight:10},
   topBar:{ flexDirection: 'row',justifyContent:"space-between", alignItems: 'center', backgroundColor: '#eee', },
@@ -74,7 +74,7 @@ export const styles = StyleSheet.create({
     borderColor:"#cbcbcb", 
     borderRadius: 20,
     borderWidth:1, 
-    width: responsiveWidth(94),
+    width: responsiveWidth(92),
     backgroundColor: "#fff",
     color: "#000",
     paddingLeft:responsiveWidth(11),

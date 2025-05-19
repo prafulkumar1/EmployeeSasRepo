@@ -18,7 +18,7 @@ class ReservationUI extends ReservationLogic {
     const isToday = item?.fullDate === moment()?.format("YYYY-MM-DD");
     const showHighlight = isSelected || (!this.state.selectedDateId && isToday);
     return (
-      <UI.TouchableOpacity onPress={() => this.handleSelectDate(item.id)}>
+      <UI.TouchableOpacity activeOpacity={1} onPress={() => this.handleSelectDate(item.id)}>
         <UI.Box
           style={[
             styles.dateBox,
@@ -149,7 +149,7 @@ class ReservationUI extends ReservationLogic {
     const displayMonthYear = displayDate.format("MMMM, YYYY");
     return (
       <UI.Box style={styles.mainContainer}>
-        <UI.ConnectedCbHeader headerTitle={this.state.mainServiceName} goBack={() => this.props.navigation?.goBack()}/>
+        <UI.ConnectedCbHeader headerTitle={this.props.singleServiceItem?.ServiceClassName} goHome={() => this.navigateToService()} goBack={() => this.props.navigation?.goBack()}/>
         <StatusBar hidden={true} />
         <UI.ScrollView bounces={false} style={{ padding: 10 }}>
           <UI.ConnectedCbBox
@@ -232,15 +232,12 @@ class ReservationUI extends ReservationLogic {
             options={this.servicesOptions}
             customstyle={[
               styles.serviceBtn,
-              { zIndex: this.state.isServiceSelected ? 1 : -1 },
             ]}
             onSelect={(value: string) => this.selectService(value)}
-            openDropDown={() =>
-              this.setState({
-                isServiceSelected: !this.state.isServiceSelected,
-              })
-            }
             placeholder={"Select the Service"}
+            setAddMemberIndex={this.setAddMemberIndex}
+            addMemberIndex={this.state.addMemberIndex}
+            selectItemId={0}
           />
 
           <UI.ConnectedCbBox
@@ -266,10 +263,12 @@ class ReservationUI extends ReservationLogic {
             options={this.providersdummyData}
             customstyle={[
               styles.dropDownBtn,
-              { zIndex: !this.state.isServiceSelected ? 1 : -1 },
             ]}
             onSelect={(value: string) => this.selectProvider(value)}
             placeholder={"Select the Provider"}
+            setAddMemberIndex={this.setAddMemberIndex}
+            addMemberIndex={this.state.addMemberIndex}
+            selectItemId={1}
           />
 
           <UI.FlatList
@@ -319,7 +318,8 @@ const mapStateToProps = (state:RootState) => {
   return {
     loading:state.dashboard.loading,
     dashboardResponse:state.dashboard.dashboardResponse,
-    errorMessage:state.dashboard.errorMessage
+    errorMessage:state.dashboard.errorMessage,
+    singleServiceItem :state.services.singleServiceItem
   }
 }
 const mapDispatchToProps = {

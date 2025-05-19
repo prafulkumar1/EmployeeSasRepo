@@ -2,7 +2,7 @@ import * as UI from "@/components/cobalt/importUI";
 import { RootState } from "@/components/redux/store";
 import { styles } from "@/source/styles/reservation/Reservation.web";
 import { connect } from "react-redux";
-import { Image, Text, TouchableOpacity, Modal } from "react-native";
+import { Image, Text, TouchableOpacity, Modal, Platform } from "react-native";
 import { Icon } from "@/components/ui/icon";
 import { CloseIcon, } from "@/components/ui/icon";
 import { CalendarDaysIcon } from "@/components/ui/icon";
@@ -285,8 +285,10 @@ class ReservationUI extends useReservationLogic {
                       },
                     ]}
                     onPress={() => this.handleCloseAllModels()}
-                    onMouseEnter={() => this.setState({ hover: "ok" })}
-                    onMouseLeave={() => this.setState({ hover: null })}
+                    {...(Platform.OS === 'web' && {
+                      onMouseEnter: () => this.setState({ hover: "ok" }),
+                      onMouseLeave: () => this.setState({ hover: null }),
+                    })}
                   >
                     <Text
                       style={[
@@ -336,8 +338,12 @@ class ReservationUI extends useReservationLogic {
               <UI.TouchableOpacity
                 onPress={this.toggleThankModal}
                 style={styles.closeIcon}
-                onMouseEnter={() => this.setState({ hover: "close" })}
-                onMouseLeave={() => this.setState({ hover: null })}
+                {...(Platform.OS === 'web'
+                  ? {
+                    onMouseEnter: () => this.setState({ hover: 'close' }),
+                    onMouseLeave: () => this.setState({ hover: null }),
+                  }
+                  : {})}
               >
                 <Icon
                   as={CloseIcon}

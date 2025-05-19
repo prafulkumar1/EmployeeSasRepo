@@ -5,6 +5,7 @@ import addMember from  "./reducers/addMemberReducer"
 import memberDirectory from  "./reducers/memberDirectoryReducer"
 import reservation from  "./reducers/reservationReducer"
 import uiLoader from  "./reducers/uiSlice"
+import services from  "./reducers/serviceReducer"
 
 export const store = configureStore({
   reducer: {
@@ -13,6 +14,7 @@ export const store = configureStore({
     addMember,
     memberDirectory,
     reservation,
+    services,
     uiLoader,
     
   }

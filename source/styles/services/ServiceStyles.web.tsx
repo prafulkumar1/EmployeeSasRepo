@@ -35,7 +35,7 @@ export const styles = StyleSheet.create({
   },
   activeTabText: {
     color: "#08c3f8",
-    fontWeight: "bold",
+    fontFamily: "SourceSansPro_SemiBold",
   },
   list: {
     paddingHorizontal: 10,

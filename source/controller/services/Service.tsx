@@ -1,10 +1,18 @@
 import React, { Component } from "react";
 import { Dimensions, ScaledSize } from "react-native";
 import { navigateToScreen } from "@/components/constants/Navigations";
+import { ServiceType } from "@/components/constants/Types";
 
 const pageId = "Service";
-
-interface IProps {}
+interface IProps {
+    getServiceClasses?:() =>void
+    storeSingleService?:(serviceDetails:ServiceType) => void
+    serviceClassList:{
+      "BookingTypeID": string
+      "BookingTypeName": string
+      "ServiceClass": ServiceType[]
+    }[]
+}
 
 interface IState {
   activeTab: any;
@@ -52,14 +60,32 @@ const ServiceData = {
         {
           ServiceClassID: "cd123bjdbcjd",
           ServiceClassName: "Lesson",
-          ServiceClassImage: "https://example.com/images/living_room.jpg",
+          ServiceClassImage: "https://res.cloudinary.com/people-matters/image/upload/q_auto,f_auto/v1545238540/1545238539.jpg",
           ServiceClassDiscription: "this is a service",
         },
         {
           ServiceClassID: "cd123bjdbcjd",
           ServiceClassName: "Lesson2",
-          ServiceClassImage: "https://example.com/images/living_room.jpg",
+          ServiceClassImage: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRWztHZDKiYmBbSz5YifbfbioTtUTqEefwE4Q&s",
           ServiceClassDiscription: "this is a service2",
+        },
+        {
+          ServiceClassID: "cd123bjdbcjd",
+          ServiceClassName: "Lesson",
+          ServiceClassImage: "https://res.cloudinary.com/people-matters/image/upload/q_auto,f_auto/v1545238540/1545238539.jpg",
+          ServiceClassDiscription: "this is a service",
+        },
+        {
+          ServiceClassID: "cd123bjdbcjd",
+          ServiceClassName: "Lesson2",
+          ServiceClassImage: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRWztHZDKiYmBbSz5YifbfbioTtUTqEefwE4Q&s",
+          ServiceClassDiscription: "this is a service2",
+        },
+        {
+          ServiceClassID: "cd123bjdbcjd",
+          ServiceClassName: "Lesson",
+          ServiceClassImage: "https://res.cloudinary.com/people-matters/image/upload/q_auto,f_auto/v1545238540/1545238539.jpg",
+          ServiceClassDiscription: "this is a service",
         },
       ],
     },
@@ -76,7 +102,7 @@ const ServiceData = {
         {
           ServiceClassID: "cd123bjdbcjd",
           ServiceClassName: "Spa Lesson2",
-          ServiceClassImage: "https://example.com/images/living_room.jpg",
+          ServiceClassImage: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRWztHZDKiYmBbSz5YifbfbioTtUTqEefwE4Q&s",
           ServiceClassDiscription: "this is a service2",
         },
       ],
@@ -97,19 +123,15 @@ export default class ServiceLogic extends Component<IProps, IState> {
   }
   componentDidMount() {
     this.setState({activeTab :ServiceData.BookingTypes[0].BookingTypeName})
+    // this.props.getServiceClasses()
   }
-  navigateToReservation = (serviceDetails: any) => {
+  navigateToReservation = (serviceDetails:ServiceType) => {
     navigateToScreen(this.props, "ReservationUI", true, {
       serviceDetails: serviceDetails,
     });
+    this.props.storeSingleService(serviceDetails)
   };
-  handleActiveService = (id: number) => {
-    let toggleUpdateService = this.state.serviceTypes.map((items) => {
-      return {
-        ...items,
-        isSelected: items.id === id ? true : false,
-      };
-    });
-    this.setState({ serviceTypes: toggleUpdateService });
-  };
+  navigateToService =() => {
+    navigateToScreen(this.props, "ServiceUI", true, {})
+}
 }

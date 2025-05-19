@@ -14,3 +14,10 @@ export interface MemberListType {
     "ProfilePic": string
     "RequestedBy": string
   }
+
+  export interface ServiceType { 
+    "ServiceClassDiscription": string, 
+    "ServiceClassID": string, 
+    "ServiceClassImage": string, 
+    "ServiceClassName": string 
+  }
