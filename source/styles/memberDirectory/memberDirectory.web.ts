@@ -314,4 +314,38 @@ export const styles = StyleSheet.create({
   calendarIcon: {
     paddingLeft: 10,
   },
+
+  //circles
+  circleRow: {
+  flexDirection: "row",
+  marginBottom: 16,
+  paddingLeft:30
+},
+circleContainer: {
+  marginRight: 10,
+  position: "relative",
+},
+circleImage: {
+  width: 60,
+  height: 60,
+  borderRadius: 30,
+  borderWidth: 2,
+  borderColor: "#ccc",
+},
+cancelButton: {
+  position: "absolute",
+  top: -5,
+  right: -5,
+  backgroundColor: "#ccc",
+  width: 20,
+  height: 20,
+  borderRadius: 10,
+  justifyContent: "center",
+  alignItems: "center",
+},
+cancelText: {
+  color: "#fff",
+  fontSize: 12,
+  fontWeight: "bold",
+},
 });

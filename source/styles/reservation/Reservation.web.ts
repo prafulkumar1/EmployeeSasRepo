@@ -289,6 +289,18 @@ export const styles = StyleSheet.create({
   SubmitContainer: {
     width: "100%", alignItems: "center"
   },
+  SubmitBtn: {
+    borderWidth: 2,
+    borderColor: "#5773A2",
+    paddingHorizontal: 30,
+    paddingVertical: 5,
+    borderRadius: 20,
+  },
+  submitTxt: {
+    fontSize: 18,
+    fontFamily: "SourceSansPro_SemiBold",
+    color: "#5773A2",
+  },
   //MODEL ONE END
   Thankyou: {
     color: "#5773A2",

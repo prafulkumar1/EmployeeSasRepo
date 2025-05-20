@@ -32,7 +32,7 @@ class MemberDirectoryUI extends useMemberDirectoryLogic {
           styles.memberItem,
           { backgroundColor: item.isMemberSelected ? "#e0e0e0" : "#fff" },
         ]}
-        onPress={() => this.selectedMember(item)}
+        onPress={() => this.webselectedMember(item)}
       >
         <UI.View>
           <Image
@@ -168,6 +168,34 @@ class MemberDirectoryUI extends useMemberDirectoryLogic {
       </UI.ConnectedCbView>
     );
   };
+
+  renderSelectedCircles = () => {
+  return (
+    <UI.ConnectedCbView style={styles.circleRow}>
+      {this.state.selectedMembers.map((item, index) => (
+        <UI.ConnectedCbView key={index} style={styles.circleContainer}>
+          <Image
+            source={
+              item
+                ? require("@/assets/images/login.jpg") // or item.image if dynamic
+                : require("@/assets/images/login.jpg") // placeholder image
+            }
+            style={styles.circleImage}
+          />
+          {item && (
+            <UI.TouchableOpacity
+              style={styles.cancelButton}
+              onPress={() => this.removeSelectedMember(index)}
+            >
+              <UI.ConnectedCbText style={styles.cancelText}>×</UI.ConnectedCbText>
+            </UI.TouchableOpacity>
+          )}
+        </UI.ConnectedCbView>
+      ))}
+    </UI.ConnectedCbView>
+  );
+};
+
   render() {
     let pageConfigJson = global.appConfigJsonArray.find(
       (item) => item?.PageId === pageId
@@ -203,6 +231,7 @@ class MemberDirectoryUI extends useMemberDirectoryLogic {
               <UI.ConnectedCbText
                 style={styles.modalTitle}
                 pageId={pageId}
+                e
                 id="modalTitle"
               >
                 {this.props.ChangeToGuest === "Guest"
@@ -367,6 +396,8 @@ class MemberDirectoryUI extends useMemberDirectoryLogic {
                       </UI.ConnectedCbView>
                     )}
                   </UI.ConnectedCbView>
+                  {/* 1. Selected Circles */}
+                  {this.renderSelectedCircles()}
 
                   <UI.FlatList
                     contentContainerStyle={styles.memberList}
@@ -407,7 +438,7 @@ class MemberDirectoryUI extends useMemberDirectoryLogic {
                         color: "#6D6D6D",
                         width: this.state.screenWidth <= 780 ? "100%" : "30%",
                       }}
-                      dropdownCustom={{ zIndex: 1, padding:10 }}
+                      dropdownCustom={{ zIndex: 1, padding: 10 }}
                     />
                   </UI.ConnectedCbView>
 
@@ -454,7 +485,7 @@ class MemberDirectoryUI extends useMemberDirectoryLogic {
                           width: this.state.screenWidth <= 780 ? "100%" : "45%",
                         }}
                       >
-                        <UI.ConnectedCbText  style={styles.formTxt}>
+                        <UI.ConnectedCbText style={styles.formTxt}>
                           Primary Email
                         </UI.ConnectedCbText>
                         <UI.ConnectedCbInput

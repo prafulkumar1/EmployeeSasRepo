@@ -66,7 +66,7 @@ interface IProps {
     errorMessage,
   }) => void;
   pageId?: string;
-  props?:any
+  props?: any;
 }
 //webinterface
 interface Member {
@@ -116,8 +116,9 @@ interface IState {
   addMemberIndex: null | number;
   selectedValue: null | string;
   screenWidth: number;
-  Opencalender:boolean | null ,
-  selectedDate:string |  null
+  Opencalender: boolean | null;
+  selectedDate: string | null;
+  selectedMembers: (Member | null)[];
 }
 interface SS {}
 interface GuestDetails {
@@ -171,7 +172,7 @@ const membersMock = [
   { id: "Y" },
   { id: "Z" },
 ];
-
+const maxSelectableItems = 2;
 export default class useMemberDirectoryLogic extends Component<
   IProps,
   IState,
@@ -207,27 +208,10 @@ export default class useMemberDirectoryLogic extends Component<
       hover: null,
       isChecked: false,
       members: [
-        { id: "#0089", name: "’s, MR O’Fla" },
-        { id: "#65432", name: "456, MR Vin123" },
-        { id: "#0277", name: "a, Mr. appu" },
-        { id: "#1438", name: "Abraham, Mr. James" },
-        { id: "#1005", name: "Abraham, John" },
-        { id: "#1752-A", name: "Abraham, Mrs. Sam" },
-        { id: "#1202", name: "Abramson, mr Shelley" },
-        { id: "#1224", name: "Adam, Dr Jose" },
-        { id: "#6699", name: "Adelsheimer, Carol" },
-        { id: "#1117-W", name: "Adelson, Mr. Seymour" },
-        { id: "#4061", name: "Aery, Mr. Wayne" },
-        { id: "#9851", name: "Agran, Alex" },
         { id: "#9851", name: "Alexa, Mathew" },
-        { id: "#9851", name: "alexa, Roman" },
-        { id: "#9851", name: "alexa, siddu" },
-        { id: "#9851", name: "Alexander, MR Jake" },
-        { id: "#9851", name: "Alexa, Mathew" },
-        { id: "#9851", name: "alexa, Roman" },
-        { id: "#9851", name: "alexa, siddu" },
-        { id: "#9851", name: "alexa, siddu" },
-
+        { id: "#9851-1", name: "alexa, Roman" },
+        { id: "#9851-2", name: "alexa, siddu" },
+        { id: "#9851-3", name: "Alexander, MR Jake" },
         { id: "#0089", name: "’s, MR O’Fla" },
         { id: "#65432", name: "456, MR Vin123" },
         { id: "#0277", name: "a, Mr. appu" },
@@ -239,164 +223,20 @@ export default class useMemberDirectoryLogic extends Component<
         { id: "#6699", name: "Adelsheimer, Carol" },
         { id: "#1117-W", name: "Adelson, Mr. Seymour" },
         { id: "#4061", name: "Aery, Mr. Wayne" },
-        { id: "#9851", name: "Agran, Alex" },
-        { id: "#9851", name: "Alexa, Mathew" },
-        { id: "#9851", name: "alexa, Roman" },
-        { id: "#9851", name: "alexa, siddu" },
-        { id: "#9851", name: "Alexander, MR Jake" },
-        { id: "#9851", name: "Alexa, Mathew" },
-        { id: "#9851", name: "alexa, Roman" },
-        { id: "#9851", name: "alexa, siddu" },
-        { id: "#9851", name: "alexa, siddu" },
-
-        { id: "#0089", name: "’s, MR O’Fla" },
-        { id: "#65432", name: "456, MR Vin123" },
-        { id: "#0277", name: "a, Mr. appu" },
-        { id: "#1438", name: "Abraham, Mr. James" },
-        { id: "#1005", name: "Abraham, John" },
-        { id: "#1752-A", name: "Abraham, Mrs. Sam" },
-        { id: "#1202", name: "Abramson, mr Shelley" },
-        { id: "#1224", name: "Adam, Dr Jose" },
-        { id: "#6699", name: "Adelsheimer, Carol" },
-        { id: "#1117-W", name: "Adelson, Mr. Seymour" },
-        { id: "#4061", name: "Aery, Mr. Wayne" },
-        { id: "#9851", name: "Agran, Alex" },
-        { id: "#9851", name: "Alexa, Mathew" },
-        { id: "#9851", name: "alexa, Roman" },
-        { id: "#9851", name: "alexa, siddu" },
-        { id: "#9851", name: "Alexander, MR Jake" },
-        { id: "#9851", name: "Alexa, Mathew" },
-        { id: "#9851", name: "alexa, Roman" },
-        { id: "#9851", name: "alexa, siddu" },
-        { id: "#9851", name: "alexa, siddu" },
-
-        { id: "#0089", name: "’s, MR O’Fla" },
-        { id: "#65432", name: "456, MR Vin123" },
-        { id: "#0277", name: "a, Mr. appu" },
-        { id: "#1438", name: "Abraham, Mr. James" },
-        { id: "#1005", name: "Abraham, John" },
-        { id: "#1752-A", name: "Abraham, Mrs. Sam" },
-        { id: "#1202", name: "Abramson, mr Shelley" },
-        { id: "#1224", name: "Adam, Dr Jose" },
-        { id: "#6699", name: "Adelsheimer, Carol" },
-        { id: "#1117-W", name: "Adelson, Mr. Seymour" },
-        { id: "#4061", name: "Aery, Mr. Wayne" },
-        { id: "#9851", name: "Agran, Alex" },
-        { id: "#0089", name: "’s, MR O’Fla" },
-        { id: "#65432", name: "456, MR Vin123" },
-        { id: "#0277", name: "a, Mr. appu" },
-        { id: "#1438", name: "Abraham, Mr. James" },
-        { id: "#1005", name: "Abraham, John" },
-        { id: "#1752-A", name: "Abraham, Mrs. Sam" },
-        { id: "#1202", name: "Abramson, mr Shelley" },
-        { id: "#1224", name: "Adam, Dr Jose" },
-        { id: "#6699", name: "Adelsheimer, Carol" },
-        { id: "#1117-W", name: "Adelson, Mr. Seymour" },
-        { id: "#4061", name: "Aery, Mr. Wayne" },
-        { id: "#9851", name: "Agran, Alex" },
-        { id: "#0089", name: "’s, MR O’Fla" },
-        { id: "#65432", name: "456, MR Vin123" },
-        { id: "#0277", name: "a, Mr. appu" },
-        { id: "#1438", name: "Abraham, Mr. James" },
-        { id: "#1005", name: "Abraham, John" },
-        { id: "#1752-A", name: "Abraham, Mrs. Sam" },
-        { id: "#1202", name: "Abramson, mr Shelley" },
-        { id: "#1224", name: "Adam, Dr Jose" },
-        { id: "#6699", name: "Adelsheimer, Carol" },
-        { id: "#1117-W", name: "Adelson, Mr. Seymour" },
-        { id: "#4061", name: "Aery, Mr. Wayne" },
-        { id: "#9851", name: "Agran, Alex" },
-        { id: "#0089", name: "’s, MR O’Fla" },
-        { id: "#65432", name: "456, MR Vin123" },
-        { id: "#0277", name: "a, Mr. appu" },
-        { id: "#1438", name: "Abraham, Mr. James" },
-        { id: "#1005", name: "Abraham, John" },
-        { id: "#1752-A", name: "Abraham, Mrs. Sam" },
-        { id: "#1202", name: "Abramson, mr Shelley" },
-        { id: "#1224", name: "Adam, Dr Jose" },
-        { id: "#6699", name: "Adelsheimer, Carol" },
-        { id: "#1117-W", name: "Adelson, Mr. Seymour" },
-        { id: "#4061", name: "Aery, Mr. Wayne" },
-        { id: "#9851", name: "Agran, Alex" },
-        { id: "#0089", name: "’s, MR O’Fla" },
-        { id: "#65432", name: "456, MR Vin123" },
-        { id: "#0277", name: "a, Mr. appu" },
-        { id: "#1438", name: "Abraham, Mr. James" },
-        { id: "#1005", name: "Abraham, John" },
-        { id: "#1752-A", name: "Abraham, Mrs. Sam" },
-        { id: "#1202", name: "Abramson, mr Shelley" },
-        { id: "#1224", name: "Adam, Dr Jose" },
-        { id: "#6699", name: "Adelsheimer, Carol" },
-        { id: "#1117-W", name: "Adelson, Mr. Seymour" },
-        { id: "#4061", name: "Aery, Mr. Wayne" },
-        { id: "#9851", name: "Agran, Alex" },
-        { id: "#0089", name: "’s, MR O’Fla" },
-        { id: "#65432", name: "456, MR Vin123" },
-        { id: "#0277", name: "a, Mr. appu" },
-        { id: "#1438", name: "Abraham, Mr. James" },
-        { id: "#1005", name: "Abraham, John" },
-        { id: "#1752-A", name: "Abraham, Mrs. Sam" },
-        { id: "#1202", name: "Abramson, mr Shelley" },
-        { id: "#1224", name: "Adam, Dr Jose" },
-        { id: "#6699", name: "Adelsheimer, Carol" },
-        { id: "#1117-W", name: "Adelson, Mr. Seymour" },
-        { id: "#4061", name: "Aery, Mr. Wayne" },
-        { id: "#9851", name: "Agran, Alex" },
-        { id: "#0089", name: "’s, MR O’Fla" },
-        { id: "#65432", name: "456, MR Vin123" },
-        { id: "#0277", name: "a, Mr. appu" },
-        { id: "#1438", name: "Abraham, Mr. James" },
-        { id: "#1005", name: "Abraham, John" },
-        { id: "#1752-A", name: "Abraham, Mrs. Sam" },
-        { id: "#1202", name: "Abramson, mr Shelley" },
-        { id: "#1224", name: "Adam, Dr Jose" },
-        { id: "#6699", name: "Adelsheimer, Carol" },
-        { id: "#1117-W", name: "Adelson, Mr. Seymour" },
-        { id: "#4061", name: "Aery, Mr. Wayne" },
-        { id: "#9851", name: "Agran, Alex" },
-        { id: "#0089", name: "’s, MR O’Fla" },
-        { id: "#65432", name: "456, MR Vin123" },
-        { id: "#0277", name: "a, Mr. appu" },
-        { id: "#1438", name: "Abraham, Mr. James" },
-        { id: "#1005", name: "Abraham, John" },
-        { id: "#1752-A", name: "Abraham, Mrs. Sam" },
-        { id: "#1202", name: "Abramson, mr Shelley" },
-        { id: "#1224", name: "Adam, Dr Jose" },
-        { id: "#6699", name: "Adelsheimer, Carol" },
-        { id: "#1117-W", name: "Adelson, Mr. Seymour" },
-        { id: "#4061", name: "Aery, Mr. Wayne" },
-        { id: "#9851", name: "Agran, Alex" },
-        { id: "#0089", name: "’s, MR O’Fla" },
-        { id: "#65432", name: "456, MR Vin123" },
-        { id: "#0277", name: "a, Mr. appu" },
-        { id: "#1438", name: "Abraham, Mr. James" },
-        { id: "#1005", name: "Abraham, John" },
-        { id: "#1752-A", name: "Abraham, Mrs. Sam" },
-        { id: "#1202", name: "Abramson, mr Shelley" },
-        { id: "#1224", name: "Adam, Dr Jose" },
-        { id: "#6699", name: "Adelsheimer, Carol" },
-        { id: "#1117-W", name: "Adelson, Mr. Seymour" },
-        { id: "#4061", name: "Aery, Mr. Wayne" },
-        { id: "#9851", name: "Agran, Alex" },
-        { id: "#0089", name: "’s, MR O’Fla" },
-        { id: "#65432", name: "456, MR Vin123" },
-        { id: "#0277", name: "a, Mr. appu" },
-        { id: "#1438", name: "Abraham, Mr. James" },
-        { id: "#1005", name: "Abraham, John" },
-        { id: "#1752-A", name: "Abraham, Mrs. Sam" },
-        { id: "#1202", name: "Abramson, mr Shelley" },
-        { id: "#1224", name: "Adam, Dr Jose" },
-        { id: "#6699", name: "Adelsheimer, Carol" },
-        { id: "#1117-W", name: "Adelson, Mr. Seymour" },
-        { id: "#4061", name: "Aery, Mr. Wayne" },
-        { id: "#9851", name: "Agran, Alex" },
+        { id: "#9851-4", name: "Agran, Alex" },
+        { id: "#9851-5", name: "Alexa, Mathew" },
+        { id: "#9851-6", name: "alexa, Roman" },
+        { id: "#9851-7", name: "alexa, siddu" },
+        { id: "#9851-8", name: "Alexa, Mathew" },
       ],
+
+      selectedMembers: Array(maxSelectableItems).fill(null),
       currentPage: 1,
       startPage: 1,
       membersPerPage: 16,
       visiblePageLimit: 10,
       selectedDate: null,
-      Opencalender: false
+      Opencalender: false,
       //webcode
     };
     this.genderOptions = genderOptions;
@@ -554,7 +394,7 @@ export default class useMemberDirectoryLogic extends Component<
       service: this.state.selectedService,
       dateOfBirth: this.state.date,
     };
- 
+
     const payload = {
       GuestFirstName: combinedDetails?.firstName,
       GuestLastName: combinedDetails?.lastName,
@@ -598,7 +438,8 @@ export default class useMemberDirectoryLogic extends Component<
     const apiResponse = response as ApiResponse;
     if (apiResponse.response?.ResponseCode === "Fail") {
       const errorMessage =
-        apiResponse.response?.BrokenRules?.Fields?.join(", ") || "An error occurred.";
+        apiResponse.response?.BrokenRules?.Fields?.join(", ") ||
+        "An error occurred.";
       // console.log("Success:", "Successfully added guest.");
       this.setState(
         {
@@ -617,7 +458,7 @@ export default class useMemberDirectoryLogic extends Component<
         "ADD_NEW_GUEST",
         GuestPayload
       );
-      console.log(Guestresponse , "secondapicall");
+      console.log(Guestresponse, "secondapicall");
       if (Guestresponse?.response?.ResponseCode === "Fail") {
         const errorMessage =
           Guestresponse.response?.ResponseMessage || "An error occurred.";
@@ -774,19 +615,63 @@ export default class useMemberDirectoryLogic extends Component<
   selectGender = (value) => {
     this.setState({ selectedGender: value });
   };
-    toggleCalendar = () => {
+  toggleCalendar = () => {
     this.setState((prevState) => ({
       Opencalender: !prevState.Opencalender,
     }));
   };
 
-    onWebDateChange = (date: any) => {
-      const formattedDate = moment(new Date(date)).format("DD-MMM-YYYY");
-       this.setState({selectedDate :formattedDate})
-      this.toggleCalendar();
-    };
-  
-  navigateToService =() => {
-    this.props?.props?.navigation?.navigate("ServiceUI")
-}
+  onWebDateChange = (date: any) => {
+    const formattedDate = moment(new Date(date)).format("DD-MMM-YYYY");
+    this.setState({ selectedDate: formattedDate });
+    this.toggleCalendar();
+  };
+
+  navigateToService = () => {
+    this.props?.props?.navigation?.navigate("ServiceUI");
+  };
+
+  //webaAddMutiple
+
+  webselectedMember = (member) => {
+    console.log(member, "member-----");
+
+    const { selectedMembers } = this.state;
+
+    // Check if already selected
+    if (selectedMembers.find((m) => m?.id === member.id)) return;
+
+    const firstEmptyIndex = selectedMembers.findIndex((m) => m === null);
+    if (firstEmptyIndex !== -1) {
+      const updated = [...selectedMembers];
+      updated[firstEmptyIndex] = member;
+
+      this.setState(
+        { selectedMembers: updated },
+        this.updateMemberSelectionState
+      );
+    }
+  };
+
+  removeSelectedMember = (index) => {
+    const updated = [...this.state.selectedMembers];
+    updated[index] = null;
+    this.setState(
+      { selectedMembers: updated },
+      this.updateMemberSelectionState
+    );
+  };
+
+  updateMemberSelectionState = () => {
+    const selectedIds = this.state.selectedMembers
+      .filter(Boolean)
+      .map((m) => m.id);
+
+    const updatedMembers = this.state.members.map((member) => ({
+      ...member,
+      isMemberSelected: selectedIds.includes(member.id),
+    }));
+
+    this.setState({ members: updatedMembers });
+  };
 }

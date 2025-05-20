@@ -1,7 +1,7 @@
 import { navigateToScreen } from "@/components/constants/Navigations";
 import { Component, createRef } from "react";
 import moment from "moment";
-import { Dimensions, FlatList } from "react-native";
+import { Dimensions, FlatList, Platform } from "react-native";
 import { ServiceType } from "@/components/constants/Types";
 
 //webinterface
@@ -308,11 +308,12 @@ class ReservationLogic extends Component<Props, ControllerState> {
   //web handlers functions
 
   componentDidMount(): void {
-    this.props.setLoader()
-    
-    setTimeout(() => {
-      this.props.setLoader()
-    }, 2500);
+    // if(Platform.OS === "web"){
+    //   this.props.setLoader()
+    //   setTimeout(() => {
+    //     this.props.setLoader()
+    //   }, 2500);
+    // }
     // let name = this.props?.route?.params?.serviceDetails?.title
     // console.log(this.props?.route?.params?.serviceDetails,"---1111111")
     this.setState({
@@ -589,8 +590,10 @@ class ReservationLogic extends Component<Props, ControllerState> {
   };
 
   handleCloseAllModels = () =>{
-      this.props.setClosememberModel(),
-      this.props.setOpenAddmemberModel();
+      this.props.setClosememberModel();
+      if(this.props.OpenAddmemberModel){
+        this.props.setOpenAddmemberModel();
+      }
       if(this.props.OpenMemberModel){
         this.props.setOpenMembersModel();
       }

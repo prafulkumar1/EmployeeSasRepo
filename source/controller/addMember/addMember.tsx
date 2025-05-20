@@ -3,6 +3,7 @@ import { MemberListType } from '@/components/constants/Types';
 import * as BackgroundFetch from 'expo-background-fetch';
 import * as TaskManager from 'expo-task-manager';
 import { Component } from 'react';
+import { Platform } from 'react-native';
 
 const pageId = 'AddMember';
 
@@ -74,7 +75,7 @@ export default class useAddMemberLogic extends Component<IProps, IState> {
       isModalVisible: false,
       timeLeft: 3000,
       timerRunning: false,
-      membersCount:4,
+      membersCount:2,
       membersCountList:[],
       isTimeOutModal:false,
       selectedId:"",
@@ -108,7 +109,9 @@ export default class useAddMemberLogic extends Component<IProps, IState> {
         }
       }
     );
-    this.props.setMembersList(1)
+     if(Platform.OS !== 'web'){
+       this.props.setMembersList(1)
+     }
     this.setState({ membersCountList: updateCountList });
     this.startTimer();
     this.registerBackgroundTask();
@@ -124,7 +127,7 @@ export default class useAddMemberLogic extends Component<IProps, IState> {
     if(prevState.timeLeft !==this.state.timeLeft){
       if(this.state.timeLeft === 0){
         this.setState({isTimeOutModal:true})
-        // this?.props?.setClosememberModel()
+        this?.props?.setClosememberModel()
       }
     } 
   }
@@ -223,8 +226,7 @@ export default class useAddMemberLogic extends Component<IProps, IState> {
         isCountActive: item.id === id ? true : false
       }))
     }));
-    
-    this.props.setMembersList(memberCount)
+          this.props.setMembersList(memberCount)
   }
   resetTimeOutModal = () => {
     this.setState({isTimeOutModal:!this.state.isTimeOutModal},() => {
