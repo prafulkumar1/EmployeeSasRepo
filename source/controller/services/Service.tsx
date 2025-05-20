@@ -123,7 +123,7 @@ export default class ServiceLogic extends Component<IProps, IState> {
   }
   componentDidMount() {
     this.setState({activeTab :ServiceData.BookingTypes[0].BookingTypeName})
-    // this.props.getServiceClasses()
+    this.props.getServiceClasses()
   }
   navigateToReservation = (serviceDetails:ServiceType) => {
     navigateToScreen(this.props, "ReservationUI", true, {

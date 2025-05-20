@@ -4,9 +4,9 @@ import useMemberDirectoryLogic from "@/source/controller/memberDirectory/memberD
 import { connect } from "react-redux";
 import { RootState } from "@/components/redux/store";
 import { styles } from "@/source/styles/memberDirectory/memberDirectoryStyle";
-import { getMemberList } from "@/components/redux/reducers/memberDirectoryReducer";
+import { getMemberList, setFormFieldData } from "@/components/redux/reducers/memberDirectoryReducer";
 import CbLoader from "@/components/cobalt/cobaltLoader";
-import {ChevronLeftIcon,ChevronRightIcon} from "@/components/ui/icon";
+import {ChevronLeftIcon,ChevronRightIcon, Icon} from "@/components/ui/icon";
 
 import {
   addMembersForReservation,
@@ -406,6 +406,7 @@ const mapDispatchToProps = {
   singleMemberDetails,
   addMembersForReservation,
   resetSingleMemberDetails,
+  setFormFieldData
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(MemberDirectoryUI);

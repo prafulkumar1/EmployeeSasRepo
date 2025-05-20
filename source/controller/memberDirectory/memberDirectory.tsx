@@ -621,57 +621,14 @@ export default class useMemberDirectoryLogic extends Component<
     }));
   };
 
-  onWebDateChange = (date: any) => {
-    const formattedDate = moment(new Date(date)).format("DD-MMM-YYYY");
-    this.setState({ selectedDate: formattedDate });
-    this.toggleCalendar();
-  };
-
-  navigateToService = () => {
-    this.props?.props?.navigation?.navigate("ServiceUI");
-  };
-
-  //webaAddMutiple
-
-  webselectedMember = (member) => {
-    console.log(member, "member-----");
-
-    const { selectedMembers } = this.state;
-
-    // Check if already selected
-    if (selectedMembers.find((m) => m?.id === member.id)) return;
-
-    const firstEmptyIndex = selectedMembers.findIndex((m) => m === null);
-    if (firstEmptyIndex !== -1) {
-      const updated = [...selectedMembers];
-      updated[firstEmptyIndex] = member;
-
-      this.setState(
-        { selectedMembers: updated },
-        this.updateMemberSelectionState
-      );
-    }
-  };
-
-  removeSelectedMember = (index) => {
-    const updated = [...this.state.selectedMembers];
-    updated[index] = null;
-    this.setState(
-      { selectedMembers: updated },
-      this.updateMemberSelectionState
-    );
-  };
-
-  updateMemberSelectionState = () => {
-    const selectedIds = this.state.selectedMembers
-      .filter(Boolean)
-      .map((m) => m.id);
-
-    const updatedMembers = this.state.members.map((member) => ({
-      ...member,
-      isMemberSelected: selectedIds.includes(member.id),
-    }));
-
-    this.setState({ members: updatedMembers });
-  };
+    onWebDateChange = (date: any) => {
+      const formattedDate = moment(new Date(date)).format("DD-MMM-YYYY");
+       this.setState({selectedDate :formattedDate})
+      this.toggleCalendar();
+    };
+  
+  navigateToService =() => {
+    this.props?.props?.navigation?.navigate("ServiceUI")
+    this.props.resetLoadedScreen()
+}
 }
