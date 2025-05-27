@@ -3,6 +3,9 @@ import * as UI from "@/components/cobalt/importUI";
 import ServiceLogic from "@/source/controller/services/Service";
 import { FlatList,  } from "react-native";
 import { styles } from "@/source/styles/services/ServiceStyles.web";
+import { connect } from "react-redux";
+import { getServiceClasses, storeSingleService } from "@/components/redux/reducers/serviceReducer";
+import { RootState } from "@/components/redux/store";
 class ServiceUI extends ServiceLogic {
   renderItem = ({ item }) => (
     <UI.ConnectedCbView style={[styles.card]}>
@@ -77,4 +80,16 @@ class ServiceUI extends ServiceLogic {
   }
 }
 
-export default ServiceUI;
+
+const mapStateToProps = (state: RootState) => {
+    return {
+        loading: state.services.loading,
+        serviceClassList:state.services.serviceClassList
+    }
+}
+const mapDispatchToProps = {
+    getServiceClasses,
+    storeSingleService
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(ServiceUI)

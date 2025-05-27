@@ -4,9 +4,14 @@ import useMemberDirectoryLogic from "@/source/controller/memberDirectory/memberD
 import { connect } from "react-redux";
 import { RootState } from "@/components/redux/store";
 import { styles } from "@/source/styles/memberDirectory/memberDirectoryStyle";
-import { getMemberList, setFormFieldData } from "@/components/redux/reducers/memberDirectoryReducer";
+import {
+  getMemberList,
+  setFormFieldData,
+  resetMemberListPerBatch,
+  getExistingGuestList,
+} from "@/components/redux/reducers/memberDirectoryReducer";
 import CbLoader from "@/components/cobalt/cobaltLoader";
-import {ChevronLeftIcon,ChevronRightIcon, Icon} from "@/components/ui/icon";
+import { ChevronLeftIcon, ChevronRightIcon, Icon } from "@/components/ui/icon";
 
 import {
   addMembersForReservation,
@@ -121,19 +126,19 @@ class MemberDirectoryUI extends useMemberDirectoryLogic {
                   placeholder="First Name"
                   style={styles.input}
                   formId={pageId}
-                  setFormFieldData={setFormFieldData}
+                   onChange={(value) => this.handleInputChange("firstName", value)}
                 />
                 <UI.ConnectedCbInput
                   id="lastName"
                   placeholder="Last Name"
                   style={styles.input}
                   formId={pageId}
-                  setFormFieldData={setFormFieldData}
+                  onChange={(value) => this.handleInputChange("lastName", value)}
                 />
                 <UI.ConnectedCbSelectDropDown
                   options={this.servicesOptions}
                   onSelect={this.selectService}
-                  openDropDown={() => { }}
+                  openDropDown={() => {}}
                   customstyle={[styles.serviceBtn]}
                   dropdownCustom={{ zIndex: 1 }}
                   placeholder={"Select the Service"}
@@ -152,7 +157,7 @@ class MemberDirectoryUI extends useMemberDirectoryLogic {
                 <UI.ConnectedCbSelectDropDown
                   options={this.genderOptions}
                   onSelect={this.selectGender}
-                  openDropDown={() => { }}
+                  openDropDown={() => {}}
                   customstyle={[{ width: "100%" }]}
                   dropdownCustom={{ zIndex: 1 }}
                   placeholder={"Gender"}
@@ -198,8 +203,9 @@ class MemberDirectoryUI extends useMemberDirectoryLogic {
                   id="Phone"
                   style={styles.input}
                   keyboardType="phone-pad"
-                  setFormFieldData={setFormFieldData}
+                  onChange={(value) => this.handleInputChange("Phone", value)}
                   formId={pageId}
+                  maxLength={10}
                 />
 
                 <UI.Text style={styles.Guestlabel}>Primary Email</UI.Text>
@@ -208,18 +214,18 @@ class MemberDirectoryUI extends useMemberDirectoryLogic {
                   id="email"
                   style={styles.input}
                   keyboardType="email-address"
-                  setFormFieldData={setFormFieldData}
+               onChange={(value) => this.handleInputChange("email", value)}
                   formId={pageId}
                 />
               </UI.ConnectedCbBox>
             </UI.ScrollView>
           </KeyboardAvoidingView>
         </UI.ConnectedCbBox>
-      )
+      );
     } else if (this.state.updatedMembersListData?.length > 0) {
       return (
         <UI.FlatList
-          data={this.state?.updatedMembersListData}
+          data={this.getCurrentPageData()}
           ListFooterComponent={this.renderLoadMoreBtn}
           style={{ opacity: this.props.loading ? 0.5 : 1 }}
           renderItem={this.renderMemberList}
@@ -232,15 +238,15 @@ class MemberDirectoryUI extends useMemberDirectoryLogic {
             index,
           })}
         />
-      )
+      );
     } else {
       return (
         <UI.Box style={styles.emptyListContainer}>
           <UI.Text style={styles.emptyMealTxt}>No Record Found</UI.Text>
         </UI.Box>
-      )
+      );
     }
-  }
+  };
 
   render() {
     const { setFormFieldData } = this.props;
@@ -295,8 +301,8 @@ class MemberDirectoryUI extends useMemberDirectoryLogic {
             />
           </UI.ConnectedCbBox>
         )}
-        
-         {/* Disable search bar for new guest */}
+
+        {/* Disable search bar for new guest */}
         {this.state.selectedGuest !== "New Guest" && (
           <UI.ConnectedCbBox style={styles.subContainer}>
             <UI.TouchableOpacity style={styles.bellIcon}>
@@ -318,8 +324,7 @@ class MemberDirectoryUI extends useMemberDirectoryLogic {
         )}
 
         {/* Disable Alfabet filter for new guest */}
-        {
-          this.state.selectedGuest !== "New Guest" &&
+        {this.state.selectedGuest !== "New Guest" && (
           <UI.Box style={styles.topBar}>
             <UI.TouchableOpacity style={styles.arrow} onPress={this.scrollLeft}>
               <Icon as={ChevronLeftIcon} size="xl" color="#1dc6ff" />
@@ -333,12 +338,15 @@ class MemberDirectoryUI extends useMemberDirectoryLogic {
               showsHorizontalScrollIndicator={false}
               extraData={this.state.activeTab}
             />
-            <UI.TouchableOpacity style={styles.arrow} onPress={this.scrollRight}>
+            <UI.TouchableOpacity
+              style={styles.arrow}
+              onPress={this.scrollRight}
+            >
               <Icon as={ChevronRightIcon} size="xl" color="#1dc6ff" />
             </UI.TouchableOpacity>
           </UI.Box>
-        }
-      
+        )}
+
         {this.showMemberList()}
 
         <UI.ConnectedCbBox style={styles.addMemberBtn}>
@@ -398,6 +406,7 @@ const mapStateToProps = (state: RootState) => {
     selectedMembersList: state.addMember.selectedMembersList,
     singleItemDetails: state.addMember.singleMemberDetails,
     userType: state.addMember.userType,
+    getExistingGuestList: state.memberDirectory.memberList,
   };
 };
 const mapDispatchToProps = {
@@ -406,7 +415,9 @@ const mapDispatchToProps = {
   singleMemberDetails,
   addMembersForReservation,
   resetSingleMemberDetails,
-  setFormFieldData
+  setFormFieldData,
+  resetMemberListPerBatch,
+  getExistingGuestList,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(MemberDirectoryUI);

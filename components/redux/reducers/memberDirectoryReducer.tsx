@@ -6,9 +6,11 @@ const initialState = {
   memberList: null,
   errorMessage: "",
   memberListPerBatch: [],
+  GuestListPerBatch: [],
   guestValidationResponse: null,
   newGuestResponse: null,
   formData: {},
+  totalCount: null,
 };
 
 export const getMemberList = createAsyncThunk(
@@ -49,65 +51,46 @@ export const getMemberList = createAsyncThunk(
     }
   }
 );
-// Step 2: API call for Guest Validation (VALIDATE_ADD_NEW_GUEST)
-// export const validateNewGuest = createAsyncThunk(
-//   'validateNewGuest',
-//   async (
-//     { guestDetails }: { guestDetails: any }, // Define your guest details structure
-//     { getState, rejectWithValue, fulfillWithValue }
-//   ) => {
-//     const params = { ...guestDetails };
-//     console.log("Validating guest with params: ", params);
+export const getExistingGuestList = createAsyncThunk(
+  "getExistingGuestList",
+  async (
+    {
+      pageCount,
+      searchChar,
+      searchBy,
+    }: { pageCount: number; searchChar: string; searchBy: string },
+    { getState, rejectWithValue, fulfillWithValue }
+  ) => {
+    const params = {
+      SearchBy: searchBy ? searchBy : "",
+      SearchChar: searchChar?.toLowerCase(),
+      RecordsPerPage: 25,
+      PageCount: pageCount,
+    };
+    // console.log(JSON.stringify(params), "--->>>member params");
+    const ExistingGuestResponse = await postApiCall(
+      "EXISTING_GUEST_DIRECTORY",
+      "GET_EXISTING_GUEST_DIRECTORY",
+      params
+    );
+    if (ExistingGuestResponse) {
+      if (ExistingGuestResponse.statusCode === 200) {
+        if (ExistingGuestResponse.response) {
+          console.log(ExistingGuestResponse.response, "ExistingGuestResponse");
 
-//     const validationResponse = await postApiCall(
-//       "MEMBER_DIRECTORY",
-//       "VALIDATE_ADD_NEW_GUEST",
-//       params
-//     );
-
-//     if (validationResponse) {
-//       if (validationResponse.statusCode === 200) {
-//         if (validationResponse.response) {
-//           return fulfillWithValue(validationResponse.response);
-//         } else {
-//           return rejectWithValue(validationResponse.response);
-//         }
-//       } else {
-//         return rejectWithValue(validationResponse.response);
-//       }
-//     }
-//   }
-// );
-
-// Step 3: API call for Adding New Guest (ADD_NEW_GUEST)
-// export const addNewGuest = createAsyncThunk(
-//   'addNewGuest',
-//   async (
-//     { guestDetails }: { guestDetails: any },
-//     { getState, rejectWithValue, fulfillWithValue }
-//   ) => {
-//     const params = { ...guestDetails };
-//     console.log("Adding new guest with params: ", params);
-
-//     const newGuestResponse = await postApiCall(
-//       "MEMBER_DIRECTORY",
-//       "NEW_GUEST/ADD_NEW_GUEST",
-//       params
-//     );
-
-//     if (newGuestResponse) {
-//       if (newGuestResponse.statusCode === 200) {
-//         if (newGuestResponse.response) {
-//           return fulfillWithValue(newGuestResponse.response);
-//         } else {
-//           return rejectWithValue(newGuestResponse.response);
-//         }
-//       } else {
-//         return rejectWithValue(newGuestResponse.response);
-//       }
-//     }
-//   }
-// );
+          return fulfillWithValue({
+            response: ExistingGuestResponse.response,
+            searchChar,
+          });
+        } else {
+          return rejectWithValue(ExistingGuestResponse.response);
+        }
+      } else {
+        return rejectWithValue(ExistingGuestResponse.response);
+      }
+    }
+  }
+);
 
 const memberDirectorySlice = createSlice({
   name: "memberDirectory",
@@ -151,6 +134,9 @@ const memberDirectorySlice = createSlice({
         },
       };
     },
+    resetMemberListPerBatch(state) {
+      state.memberListPerBatch = [];
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -158,8 +144,9 @@ const memberDirectorySlice = createSlice({
         state.loading = true;
       })
       .addCase(getMemberList.fulfilled, (state, action) => {
-        state.loading = false;
-        state.memberList = action.payload;
+        state.memberListPerBatch = [];
+        // state.memberList = action.payload;
+        state.totalCount = action.payload.response.TotalRecords;
         state.memberListPerBatch =
           action.payload?.searchChar === "All"
             ? [
@@ -167,42 +154,39 @@ const memberDirectorySlice = createSlice({
                 ...action.payload?.response?.Members,
               ]
             : action.payload?.response?.Members;
+        state.loading = false;
       })
       .addCase(getMemberList.rejected, (state, action: any) => {
         state.loading = false;
         state.errorMessage = action?.payload?.ResponseMessage;
-      });
-    // Step 5: Handle the second API call (validate new guest)
-    // .addCase(validateNewGuest.pending, (state) => {
-    //   state.loading = true;
-    // })
-    // .addCase(validateNewGuest.fulfilled, (state, action) => {
-    //   state.loading = false;
-    //   state.guestValidationResponse = action.payload;
-    //   const guestDetails = action.payload;
-    //   // dispatch(addNewGuest({ guestDetails }));
-    // })
-    // .addCase(validateNewGuest.rejected, (state, action: any) => {
-    //   state.loading = false;
-    //   state.errorMessage = action?.payload?.ResponseMessage;
-    // })
+      })
+      .addCase(getExistingGuestList.fulfilled, (state, action) => {
+        state.totalCount = action.payload.response.TotalRecords;
 
-    // Step 6: Handle the third API call (add new guest)
-    // .addCase(addNewGuest.pending, (state) => {
-    //   state.loading = true;
-    // })
-    // .addCase(addNewGuest.fulfilled, (state, action) => {
-    //   state.loading = false;
-    //   state.newGuestResponse = action.payload;
-    // })
-    // .addCase(addNewGuest.rejected, (state, action: any) => {
-    //   state.loading = false;
-    //   state.errorMessage = action?.payload?.ResponseMessage;
-    // });
+        // If searchChar is "All", we append the data to the existing list
+        if (action.payload?.searchChar === "All") {
+          state.GuestListPerBatch = [
+            ...state.GuestListPerBatch,
+            ...action.payload?.response?.Members, 
+          ];
+        } else {
+          state.GuestListPerBatch = action.payload?.response?.Members;
+        }
+
+        state.loading = false;
+      })
+      .addCase(getExistingGuestList.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(getExistingGuestList.rejected, (state, action: any) => {
+        state.loading = false;
+        state.errorMessage = action?.payload?.ResponseMessage;
+      });
   },
 });
 
-export const { loadScreen, setFormFieldData } = memberDirectorySlice.actions;
+export const { loadScreen, setFormFieldData, resetMemberListPerBatch } =
+  memberDirectorySlice.actions;
 export default memberDirectorySlice.reducer;
 
 export const getFormFieldDataSelector = (

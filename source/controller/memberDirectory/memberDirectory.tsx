@@ -1,4 +1,3 @@
-import { isPlatformWeb } from "@/components/constants/Matrices";
 import { MemberListType } from "@/components/constants/Types";
 import { getFormFieldDataSelector } from "@/components/redux/reducers/memberDirectoryReducer";
 import { postApiCall } from "@/components/utlis/api";
@@ -26,8 +25,26 @@ const genderOptions = [
   { label: "N/A" },
   { label: "Unknown" },
 ];
+type MemberOrGuest = {
+  isMemberSelected: boolean;
+  DefaultTransportaionType: string;
+  DietaryRestrictions: string;
+  DisplayName: string;
+  FirstName: string;
+  ID: string;
+  IsMemberNotAllowed: number;
+  IsSpouse: number;
+  LastName: string;
+  MemberID: string;
+  MemberName: string;
+  ModifyDietary: number;
+  ParentID: string;
+  ProfilePic: string;
+  RequestedBy: string;
+};
 interface IProps {
   getMemberList?: ({ pageCount, searchChar, searchBy }) => void;
+  getExistingGuestList?: ({ pageCount, searchChar, searchBy }) => void;
   memberList?: {
     IsLoadMore: number;
     Members: MemberListType[];
@@ -38,12 +55,16 @@ interface IProps {
     TotalRecords: number;
   };
   memberListPerBatch?: MemberListType[];
+  GuestListPerBatch?: MemberListType[];
   loading?: boolean;
   formData?: Object;
   resetLoadedScreen?: () => void;
   singleMemberDetails?: any;
+  setselectedMembersList?: any;
   addMembersForReservation?: () => void;
   resetSingleMemberDetails?: () => void;
+  resetMemberListPerBatch?: () => void;
+  setAddMultiple?: (AddMultiple: boolean) => void;
   addMemberList?: any;
   selectedMembersList?: {
     id: string;
@@ -55,7 +76,9 @@ interface IProps {
   singleItemDetails?: MemberListType | null;
   userType?: string;
   OpenMemberModel?: boolean;
+  memberDirectoryloading?: boolean;
   ChangeToGuest?: string;
+  AddMultiple?: boolean;
   setOpenMembersModel?: () => void;
   setFormFieldData?: ({
     formId,
@@ -66,37 +89,19 @@ interface IProps {
     errorMessage,
   }) => void;
   pageId?: string;
+  totalCount?: number;
+  membersCount?: number;
   props?: any;
+  setMembersList?: (memberCount: number) => void;
 }
-//webinterface
-interface Member {
-  id: string;
-  name: string;
-}
-//webinterface
-
 interface IState {
   activeTab: number;
   pageCount: number;
   checked: boolean;
-  updatedMembersListData: {
-    isMemberSelected: boolean;
-    DefaultTransportaionType: string;
-    DietaryRestrictions: string;
-    DisplayName: string;
-    FirstName: string;
-    ID: string;
-    IsMemberNotAllowed: number;
-    IsSpouse: number;
-    LastName: string;
-    MemberID: string;
-    MemberName: string;
-    ModifyDietary: number;
-    ParentID: string;
-    ProfilePic: string;
-    RequestedBy: string;
-  }[];
+  updatedMembersListData: MemberOrGuest[];
+  updatedGuestListData: MemberOrGuest[];
   singleMemberDetails: null | any;
+  selectMutiMemberDetails: null | any;
   errorMessagePopup: boolean;
   errorMessageTxt: string;
   selectedGuest: string;
@@ -104,33 +109,27 @@ interface IState {
   showGuestModal: boolean;
   hover: null | string;
   isChecked: Boolean;
-  members: Member[];
   currentPage: number;
   startPage: number;
   membersPerPage: number;
   visiblePageLimit: number;
-  date: null;
+  date: null | string;
   showDatePicker: boolean;
   selectedService: "";
   selectedGender: "";
   addMemberIndex: null | number;
-  selectedValue: null | string;
   screenWidth: number;
   Opencalender: boolean | null;
   selectedDate: string | null;
-  selectedMembers: (Member | null)[];
-}
-interface SS {}
-interface GuestDetails {
+  selectedMembers: any;
   firstName: string;
   lastName: string;
   Phone: string;
   email: string;
-  gender: string;
-  service: string;
-  dateOfBirth: string | null; // depending on your actual data type
 }
+interface SS {}
 
+type FormField = "firstName" | "lastName" | "Phone" | "email";
 interface ApiResponse {
   response: {
     ResponseCode: string;
@@ -172,7 +171,6 @@ const membersMock = [
   { id: "Y" },
   { id: "Z" },
 ];
-const maxSelectableItems = 2;
 export default class useMemberDirectoryLogic extends Component<
   IProps,
   IState,
@@ -191,7 +189,9 @@ export default class useMemberDirectoryLogic extends Component<
       pageCount: 1,
       checked: false,
       updatedMembersListData: [],
+      updatedGuestListData: [],
       singleMemberDetails: null,
+      selectMutiMemberDetails: null,
       errorMessagePopup: false,
       errorMessageTxt: "",
       selectedGuest: "Existing Guest",
@@ -200,63 +200,51 @@ export default class useMemberDirectoryLogic extends Component<
       selectedService: "",
       selectedGender: "",
       addMemberIndex: null,
-      selectedValue: "Existing Guest",
       screenWidth: Dimensions.get("window").width,
       //webcode
       showMemberModal: false,
       showGuestModal: false,
       hover: null,
       isChecked: false,
-      members: [
-        { id: "#9851", name: "Alexa, Mathew" },
-        { id: "#9851-1", name: "alexa, Roman" },
-        { id: "#9851-2", name: "alexa, siddu" },
-        { id: "#9851-3", name: "Alexander, MR Jake" },
-        { id: "#0089", name: "’s, MR O’Fla" },
-        { id: "#65432", name: "456, MR Vin123" },
-        { id: "#0277", name: "a, Mr. appu" },
-        { id: "#1438", name: "Abraham, Mr. James" },
-        { id: "#1005", name: "Abraham, John" },
-        { id: "#1752-A", name: "Abraham, Mrs. Sam" },
-        { id: "#1202", name: "Abramson, mr Shelley" },
-        { id: "#1224", name: "Adam, Dr Jose" },
-        { id: "#6699", name: "Adelsheimer, Carol" },
-        { id: "#1117-W", name: "Adelson, Mr. Seymour" },
-        { id: "#4061", name: "Aery, Mr. Wayne" },
-        { id: "#9851-4", name: "Agran, Alex" },
-        { id: "#9851-5", name: "Alexa, Mathew" },
-        { id: "#9851-6", name: "alexa, Roman" },
-        { id: "#9851-7", name: "alexa, siddu" },
-        { id: "#9851-8", name: "Alexa, Mathew" },
-      ],
-
-      selectedMembers: Array(maxSelectableItems).fill(null),
+     selectedMembers: Array(this?.props?.addMemberList?.length).fill(null),
       currentPage: 1,
       startPage: 1,
-      membersPerPage: 16,
+      membersPerPage: 25,
       visiblePageLimit: 10,
       selectedDate: null,
       Opencalender: false,
       //webcode
+      firstName: "",
+      lastName: "",
+      Phone: "",
+      email: "",
     };
     this.genderOptions = genderOptions;
     this.servicesOptions = servicesOptions;
   }
 
   componentDidMount(): void {
-    if (!isPlatformWeb()) {
-      this.props.getMemberList({
-        pageCount: 1,
-        searchChar: "All",
-        searchBy: "",
-      });
-    }
+    this.fetchApiCall();
     this.dimensionListener = Dimensions.addEventListener(
       "change",
       this.handleDimensionChange
     );
   }
-
+  fetchApiCall = () => {
+    if (this.props.userType === "Member") {
+      this.props.getMemberList({
+        pageCount: 1,
+        searchChar: "All",
+        searchBy: "",
+      });
+    } else {
+      this.props.getExistingGuestList({
+        pageCount: 1,
+        searchChar: "All",
+        searchBy: "",
+      });
+    }
+  };
   componentDidUpdate(
     prevProps: Readonly<IProps>,
     prevState: Readonly<IState>,
@@ -271,23 +259,37 @@ export default class useMemberDirectoryLogic extends Component<
       });
       this.setState({ updatedMembersListData: updatedData });
     }
-
-    if (prevProps.formData !== this.props.formData) {
-      const searchValue = getFormFieldDataSelector(
-        this.props?.formData,
-        pageId,
-        "Search"
-      );
-      if (searchValue.value !== undefined) {
-        setTimeout(() => {
-          this.props.getMemberList({
-            pageCount: this.state.pageCount,
-            searchChar: "",
-            searchBy: searchValue?.value,
-          });
-        }, 1000);
-      }
+    if (prevProps.GuestListPerBatch !== this.props.GuestListPerBatch) {
+      const GuestupdatedData = this.props.GuestListPerBatch?.map((items) => {
+        return {
+          ...items,
+          isMemberSelected: false,
+        };
+      });
+      this.setState({ updatedGuestListData: GuestupdatedData });
     }
+
+    //Need to check this code How to handle search in mobile due this facing issue in new Guest create
+    // if (Platform.OS !== "web") {
+    //   if (prevProps.formData !== this.props.formData) {
+    //     const searchValue = getFormFieldDataSelector(
+    //       this.props?.formData,
+    //       pageId,
+    //       "Search"
+    //     );
+    //     console.log(searchValue, "searchValue");
+
+    //     if (searchValue.value !== undefined) {
+    //       setTimeout(() => {
+    //         this.props.getMemberList({
+    //           pageCount: this.state.pageCount,
+    //           searchChar: "",
+    //           searchBy: searchValue?.value,
+    //         });
+    //       }, 1000);
+    //     }
+    //   }
+    // }
   }
 
   componentWillUnmount() {
@@ -296,6 +298,7 @@ export default class useMemberDirectoryLogic extends Component<
     } else if (this.dimensionListener?.remove) {
       this.dimensionListener.remove();
     }
+    this.setState({ updatedMembersListData: [] });
   }
 
   handleDimensionChange = ({ window }) => {
@@ -352,13 +355,31 @@ export default class useMemberDirectoryLogic extends Component<
       checked: !prevState.checked,
     }));
   };
-
+  handleInputChange = (id: FormField, value: string) => {
+    this.setState({ [id]: value } as Pick<IState, FormField>);
+  };
   addMemberForReservation = () => {
-    if (this.props.singleItemDetails === null) {
+    const { AddMultiple, selectedMembersList, singleItemDetails } = this.props;
+    console.log(this.props.selectedMembersList, "TEsting----------->>>>45");
+  
+    // Condition for AddMultiple = true and at least one member selected
+    if (AddMultiple && selectedMembersList && selectedMembersList.length > 0) {
+      this.props.resetLoadedScreen();
+      this.props.addMembersForReservation();
+      this.props.resetSingleMemberDetails();
+      if (Platform.OS === "web") {
+        this.props.setOpenMembersModel();
+        this.props.setAddMultiple(false);
+      }
+      return;
+    }
+
+    // Fallback to single member if AddMultiple is false
+    if (!singleItemDetails) {
       this.setState(
         {
           errorMessagePopup: true,
-          errorMessageTxt: "Please enter at least one player details.",
+          errorMessageTxt: "Please enter at least one player detail.",
         },
         () => {
           setTimeout(() => {
@@ -370,77 +391,62 @@ export default class useMemberDirectoryLogic extends Component<
       this.props.resetLoadedScreen();
       this.props.addMembersForReservation();
       this.props.resetSingleMemberDetails();
+      if (Platform.OS === "web") {
+        this.props.setOpenMembersModel();
+        this.props.setAddMultiple(false);
+      }
     }
   };
 
-  addNewGuest = async () => {
-    const { formData, pageId } = this.props;
-    const fields: Array<keyof GuestDetails> = [
-      "firstName",
-      "lastName",
-      "Phone",
-      "email",
-    ];
+  formatPhoneNumber = (phoneNumber) => {
+    return phoneNumber.replace(/(\d{3})(\d{3})(\d{4})/, "$1-$2-$3");
+  };
 
-    const guestDetails = fields.reduce((acc, fieldId) => {
-      const field = getFormFieldDataSelector(formData, pageId, fieldId);
-      acc[fieldId] = field.value || "";
-      return acc;
-    }, {} as GuestDetails);
+  addNewGuest = async () => {
+    const {
+      firstName,
+      lastName,
+      Phone,
+      email,
+      selectedGender,
+      selectedService,
+      date,
+    } = this.state;
 
     const combinedDetails = {
-      ...guestDetails,
-      gender: this.state.selectedGender,
-      service: this.state.selectedService,
-      dateOfBirth: this.state.date,
-    };
-
-    const payload = {
-      GuestFirstName: combinedDetails?.firstName,
-      GuestLastName: combinedDetails?.lastName,
-      GuestTypeID: "FA6ABC0D-393E-4933-936D-0991A7BBC785",
-      GuestDOB: combinedDetails?.dateOfBirth,
-      GuestGender: combinedDetails?.gender,
-      // MemberID: "1438",
-      // ID: "57987FB5-35B6-4025-8D94-31076D833A56",
-      GuestEmail: combinedDetails?.email,
-      Category: "Reservations",
-      GuestType: combinedDetails?.service,
-      // ParentID: "7A890369-C6B1-4E64-B128-EED9FCC96048",
-      GuestContact: combinedDetails?.Phone,
-      Type: "BookingType",
+      firstName,
+      lastName,
+      Phone,
+      email,
     };
 
     const GuestPayload = {
-      Type: "BookingType",
-      // ParentID: "7A890369-C6B1-4E64-B128-EED9FCC96048",
-      // ID: "57987FB5-35B6-4025-8D94-31076D833A56",
+      // Type: "BookingType",
+      GuestFirstName: combinedDetails?.firstName,
       GuestLastName: combinedDetails?.lastName,
-      GuestGender: combinedDetails?.gender,
+      GuestType: selectedService,
+      GuestGender: selectedGender,
       GuestEmail: combinedDetails?.email,
-      // MemberID: "1438",
-      GuestDOB: combinedDetails?.dateOfBirth,
-      GuestType: combinedDetails?.service,
+      GuestDOB: date,
+      GuestContact: this.formatPhoneNumber(combinedDetails?.Phone),
+      GuestTypeID: "3114F65F-9115-4BB0-BDC9-11B51AD2CB41",
       Category: "Reservations",
       EntityMode: "4",
       MemberGuestID: "",
-      GuestFirstName: combinedDetails?.firstName,
-      GuestContact: combinedDetails?.firstName,
-      PageCount: 1,
+      UserId: "10041",
+      CompanyCode: "00",
     };
 
+    // Directly call the second API for adding the new guest
     const response = await postApiCall(
-      "VALIDATE_NEW_GUEST",
-      "VALIDATE_ADD_NEW_GUEST",
-      payload
+      "NEW_GUEST",
+      "ADD_NEW_GUEST",
+      GuestPayload
     );
-
     const apiResponse = response as ApiResponse;
     if (apiResponse.response?.ResponseCode === "Fail") {
       const errorMessage =
-        apiResponse.response?.BrokenRules?.Fields?.join(", ") ||
-        "An error occurred.";
-      // console.log("Success:", "Successfully added guest.");
+        apiResponse.response?.ResponseMessage || "An error occurred.";
       this.setState(
         {
           errorMessagePopup: true,
@@ -453,29 +459,7 @@ export default class useMemberDirectoryLogic extends Component<
         }
       );
     } else if (apiResponse.response?.ResponseCode === "Success") {
-      const Guestresponse = await postApiCall(
-        "NEW_GUEST",
-        "ADD_NEW_GUEST",
-        GuestPayload
-      );
-      console.log(Guestresponse, "secondapicall");
-      if (Guestresponse?.response?.ResponseCode === "Fail") {
-        const errorMessage =
-          Guestresponse.response?.ResponseMessage || "An error occurred.";
-        this.setState(
-          {
-            errorMessagePopup: true,
-            errorMessageTxt: errorMessage,
-          },
-          () => {
-            setTimeout(() => {
-              this.setState({ errorMessagePopup: false, errorMessageTxt: "" });
-            }, 2000);
-          }
-        );
-      }
-    } else {
-      // Handle unexpected response codes
+      } else {
       this.setState(
         {
           errorMessagePopup: true,
@@ -490,38 +474,127 @@ export default class useMemberDirectoryLogic extends Component<
     }
   };
 
-  selectedMember = (memberData) => {
+  selectedMember = (memberData: any) => {
+  const { updatedMembersListData, selectedMembers } = this.state;
+ 
+  if (!this.props.AddMultiple) {
     this.props.singleMemberDetails(memberData);
-
-    const updatedData = this.state.updatedMembersListData.map((items) => {
-      return {
-        ...items,
-        isMemberSelected: items.ID === memberData?.ID ? true : false,
-      };
-      return items;
-    });
-
+    const updatedData = updatedMembersListData.map((item) => ({
+      ...item,
+      isMemberSelected: item.ID === memberData?.ID,
+    }));
     this.setState({
       updatedMembersListData: updatedData,
       singleMemberDetails: memberData,
     });
+    return;
+  }
+ 
+  const isMemberAlreadySelected = memberData.isMemberSelected;
+  const selectedCount = updatedMembersListData.filter(item => item.isMemberSelected).length;
+ 
+  // Show error if max reached and user is trying to select a new member
+  if (selectedCount >= this.props.membersCount && !isMemberAlreadySelected) {
+    this.setState(
+      {
+        errorMessagePopup: true,
+        errorMessageTxt: `You can only select up to ${this.props.membersCount} members.`,
+      },
+      () => {
+        setTimeout(() => {
+          this.setState({ errorMessagePopup: false, errorMessageTxt: "" });
+        }, 2000);
+      }
+    );
+    return;
+  }
+ 
+  // Toggle member selection
+  const updatedData = updatedMembersListData.map((item) => {
+    if (item.ID === memberData.ID) {
+      return {
+        ...item,
+        isMemberSelected: !item.isMemberSelected,
+      };
+    }
+    return item;
+  });
+ 
+  // Update selectedMembers array from the toggled list
+  const updatedSelectedMembers = updatedData.filter(
+    (item) => item.isMemberSelected
+  );
+ 
+  // Fill nulls where needed
+  const updatedSelectedMembersArray = Array(this.props.membersCount).fill(null);
+  updatedSelectedMembers.forEach((member, index) => {
+    updatedSelectedMembersArray[index] = member;
+  });
+ 
+  this.setState(
+    {
+      updatedMembersListData: updatedData,
+      selectMutiMemberDetails: memberData,
+      selectedMembers: updatedSelectedMembersArray,
+    },
+    () => {
+      this.props.setselectedMembersList(updatedSelectedMembers);
+    }
+  );
+};
+
+
+
+  removeSelectedMember = async (item: any, index: number) => {
+    const { selectedMembers, updatedMembersListData } = this.state;
+
+    // 2. Update `updatedMembersListData` to deselect the member (set `isMemberSelected` to false)
+    const updatedUpdatedMembersListData = await updatedMembersListData.map(
+      (member) => {
+        if (member.ID === item.ID) {
+          console.log(member.ID === item.ID, "member.ID === item.ID");
+          return {
+            ...member,
+            isMemberSelected: false,
+          };
+        }
+        return member;
+      }
+    );
+    // 1. Remove the selected member from `selectedMembers` array (set index back to null)
+    const updatedSelectedMembersArray = [...selectedMembers];
+    updatedSelectedMembersArray[index] = null;
+    // 3. Update the state with the updated arrays
+    this.setState(
+      {
+        selectedMembers: updatedSelectedMembersArray,
+        updatedMembersListData: updatedUpdatedMembersListData,
+      },
+      () => {
+        // Optionally, update the parent component's selected members list, if needed
+        const nonNullSelectedMembers = updatedSelectedMembersArray.filter(
+          (item) => item !== null
+        );
+        this.props.setselectedMembersList(nonNullSelectedMembers);
+      }
+    );
   };
 
-  //webcode
   handleCheckBox = () => {
     const { isChecked } = this.state;
     this.setState({ isChecked: !isChecked });
   };
   getTotalPages() {
-    return Math.ceil(this.state.members.length / this.state.membersPerPage);
+    const { membersPerPage } = this.state;
+    const totalMembers = this.props.totalCount || 0;
+    return Math.ceil(totalMembers / membersPerPage);
   }
 
   getCurrentPageData = () => {
-    const { currentPage, membersPerPage, members } = this.state;
-    const startIndex = (currentPage - 1) * membersPerPage;
-    return members.slice(startIndex, startIndex + membersPerPage);
+    const {updatedMembersListData , updatedGuestListData} = this.state;
+     let UpdateGuestOrMemberList = this.props.userType !== "Member" ? updatedGuestListData : updatedMembersListData  
+    return UpdateGuestOrMemberList;
   };
-
   handlePageChange = (page) => {
     const { visiblePageLimit } = this.state;
     const totalPages = this.getTotalPages();
@@ -540,14 +613,26 @@ export default class useMemberDirectoryLogic extends Component<
       );
     }
 
+    // Set pagination state
     this.setState({
       currentPage: page,
       startPage: newStartPage,
     });
+
+    this.fetchMemberListApi(page);
   };
 
+  fetchMemberListApi = (page) => {
+    // Fetch data for that page
+    this.props.getMemberList({
+      pageCount: page,
+      searchChar: "All",
+      searchBy: "",
+    });
+  };
   handleFirstPage = () => {
     this.setState({ currentPage: 1, startPage: 1 });
+    this.fetchMemberListApi(1);
   };
 
   handleLastPage = () => {
@@ -557,6 +642,8 @@ export default class useMemberDirectoryLogic extends Component<
       currentPage: totalPages,
       startPage: Math.max(totalPages - visiblePageLimit + 1, 1),
     });
+    this.fetchMemberListApi(totalPages);
+    this.getCurrentPageData();
   };
 
   handleLeftPress = () => {
@@ -568,8 +655,6 @@ export default class useMemberDirectoryLogic extends Component<
 
   handleRightPress = () => {
     const { currentPage } = this.state;
-    console.log(currentPage, "currentPage");
-
     const totalPages = this.getTotalPages();
     if (currentPage < totalPages) {
       this.handlePageChange(currentPage + 1);
@@ -579,8 +664,6 @@ export default class useMemberDirectoryLogic extends Component<
 
   //guest code
   setAddMemberIndex = (index: number) => {
-    console.log("njnjnj", index);
-
     this.setState({ addMemberIndex: index });
   };
 
@@ -589,8 +672,6 @@ export default class useMemberDirectoryLogic extends Component<
   };
 
   onDateChange = (event, selectedDate) => {
-    console.log(selectedDate, "selectedDate");
-
     if (Platform.OS === "android") {
       this.setState({ showDatePicker: false });
     }
@@ -621,14 +702,55 @@ export default class useMemberDirectoryLogic extends Component<
     }));
   };
 
-    onWebDateChange = (date: any) => {
-      const formattedDate = moment(new Date(date)).format("DD-MMM-YYYY");
-       this.setState({selectedDate :formattedDate})
-      this.toggleCalendar();
-    };
-  
-  navigateToService =() => {
-    this.props?.props?.navigation?.navigate("ServiceUI")
-    this.props.resetLoadedScreen()
-}
+  onWebDateChange = (date: any) => {
+    const formattedDate = moment(new Date(date)).format("DD-MMM-YYYY");
+    this.setState({ selectedDate: formattedDate });
+    this.setState({ date: formattedDate });
+    this.toggleCalendar();
+  };
+
+  navigateToService = () => {
+    this.props?.props?.navigation?.navigate("ServiceUI");
+    this.props.resetLoadedScreen();
+  };
+
+  //WebSearchbyCharHandler
+  handleSearchMemberByChar = () => {
+    const searchValue = getFormFieldDataSelector(
+      this.props?.formData,
+      pageId,
+      "Search"
+    );
+    if (searchValue.value !== undefined) {
+      setTimeout(() => {
+        if (this.props.userType === "Member") {
+          this.props.getMemberList({
+            pageCount: this.state.pageCount,
+            searchChar: "All", 
+            searchBy: searchValue?.value,
+          });
+        } else {
+          this.props.getExistingGuestList({
+            pageCount: this.state.pageCount,
+            searchChar: "All",
+            searchBy: searchValue?.value,
+          });
+        }
+      }, 1000);
+    }
+  };
+  handleClear = () => {
+    this.props.setFormFieldData({
+      formId: pageId,
+      controlType: "input",
+      controlId: "Search",
+      controlValue: "",
+      isInvalid: false,
+      errorMessage: "",
+    });
+  };
+  handleMemberDirtory = () => {
+    this.props.setOpenMembersModel();
+    this.props.setAddMultiple(false);
+  };
 }

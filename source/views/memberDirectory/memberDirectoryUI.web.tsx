@@ -19,11 +19,24 @@ import {
   ChevronsRightIcon,
 } from "@/components/ui/icon";
 import useMemberDirectoryLogic from "@/source/controller/memberDirectory/memberDirectory";
-import { setOpenMembersModel } from "@/components/redux/reducers/addMemberReducer";
+import {
+  addMembersForReservation,
+  resetLoadedScreen,
+  resetSingleMemberDetails,
+  setAddMultiple,
+  setMembersList,
+  setOpenMembersModel,
+  setselectedMembersList,
+  singleMemberDetails,
+} from "@/components/redux/reducers/addMemberReducer";
 import CalendarPicker from "react-native-calendar-picker";
 import { Ionicons } from "@expo/vector-icons";
+import {getExistingGuestList, getMemberList, resetMemberListPerBatch,} from "@/components/redux/reducers/memberDirectoryReducer";
+import CbLoader from "@/components/cobalt/webCobaltLoader";
+import { setFormFieldData } from "@/components/redux/reducers/loginReducer";
+import { guestData } from "@/components/constants/CustomJson";
 
-const pageId = "MemberDiretory";
+const pageId = "MemberDirectory";
 class MemberDirectoryUI extends useMemberDirectoryLogic {
   renderMemberItem = ({ item }: { item: any }) => {
     return (
@@ -32,7 +45,7 @@ class MemberDirectoryUI extends useMemberDirectoryLogic {
           styles.memberItem,
           { backgroundColor: item.isMemberSelected ? "#e0e0e0" : "#fff" },
         ]}
-        onPress={() => this.webselectedMember(item)}
+        onPress={() => this.selectedMember(item)}
       >
         <UI.View>
           <Image
@@ -41,10 +54,10 @@ class MemberDirectoryUI extends useMemberDirectoryLogic {
           />
         </UI.View>
         <UI.View>
-          <Text style={styles.memberName} numberOfLines={1}>
-            {item.name}
+          <Text style={styles.memberName} numberOfLines={2}>
+            {item?.DisplayName}
           </Text>
-          <Text style={styles.memberId}>{item.id}</Text>
+          <Text style={styles.memberId}>{item?.MemberID}</Text>
         </UI.View>
       </UI.TouchableOpacity>
     );
@@ -57,8 +70,9 @@ class MemberDirectoryUI extends useMemberDirectoryLogic {
     if (totalPages <= 1) return null;
 
     const visiblePages = Math.min(visiblePageLimit, totalPages - startPage + 1);
-    const totalMembers = this.state.members.length;
+    const totalMembers = this.props.totalCount;
     const start = (currentPage - 1) * membersPerPage + 1;
+    // const end = Math.min(start + membersPerPage - 1, totalMembers);
     const end = Math.min(start + membersPerPage - 1, totalMembers);
 
     const pages = [];
@@ -93,6 +107,7 @@ class MemberDirectoryUI extends useMemberDirectoryLogic {
           style={{ flexDirection: "row", alignItems: "center", flex: 1 }}
         >
           <UI.TouchableOpacity
+            //  disabled={currentPage === 1}
             style={{ width: 30, height: 30 }}
             onPress={this.handleFirstPage}
           >
@@ -100,6 +115,7 @@ class MemberDirectoryUI extends useMemberDirectoryLogic {
           </UI.TouchableOpacity>
 
           <UI.TouchableOpacity
+            // disabled={currentPage === 1}
             style={{ width: 30, height: 30 }}
             onPress={this.handleLeftPress}
           >
@@ -109,6 +125,7 @@ class MemberDirectoryUI extends useMemberDirectoryLogic {
           {pages}
 
           <UI.TouchableOpacity
+            // disabled={currentPage === totalPages}
             style={{ width: 30, height: 30 }}
             onPress={this.handleRightPress}
           >
@@ -116,6 +133,7 @@ class MemberDirectoryUI extends useMemberDirectoryLogic {
           </UI.TouchableOpacity>
 
           <UI.TouchableOpacity
+            // disabled={currentPage === totalPages}
             style={{ width: 30, height: 30 }}
             onPress={this.handleLastPage}
           >
@@ -126,33 +144,34 @@ class MemberDirectoryUI extends useMemberDirectoryLogic {
         <UI.View
           style={{ justifyContent: "center", alignItems: "flex-end", flex: 1 }}
         >
-          <Text
-            style={{ color: "#888", fontSize: 18 }}
-          >{`Displaying ${start} to ${totalMembers}`}</Text>
+          <Text style={{ color: "#888", fontSize: 18 }}>
+            {`Displaying ${start} to ${totalMembers}`}
+            {/* {`Displaying ${start} to ${end} of ${totalMembers}`} */}
+          </Text>
         </UI.View>
       </UI.View>
     );
   };
   renderGuestSelector = () => {
-    const { selectedValue } = this.state;
+    const { selectedGuest } = this.state;
     return (
       <UI.ConnectedCbView
         style={styles.RadioContainer}
         pageId={pageId}
         id="RadioContainer"
       >
-        {["Existing Guest", "New Guest"].map((value, i) => (
+        {guestData.map((value, i) => (
           <UI.TouchableOpacity
             key={i}
             style={styles.optionContainer}
-            onPress={() => this.setState({ selectedValue: value })}
+            onPress={() => this.setState({ selectedGuest: value?.label })}
           >
             <UI.ConnectedCbView
               style={styles.radioOuter}
               pageId={pageId}
               id="radioOuter"
             >
-              {selectedValue === value && (
+              {selectedGuest === value?.label && (
                 <UI.ConnectedCbView
                   style={styles.radioInner}
                   pageId={pageId}
@@ -161,40 +180,41 @@ class MemberDirectoryUI extends useMemberDirectoryLogic {
               )}
             </UI.ConnectedCbView>
             <UI.ConnectedCbText style={styles.label} pageId={pageId} id="label">
-              {value}
+              {value?.label}
             </UI.ConnectedCbText>
           </UI.TouchableOpacity>
         ))}
       </UI.ConnectedCbView>
     );
   };
-
   renderSelectedCircles = () => {
-  return (
-    <UI.ConnectedCbView style={styles.circleRow}>
-      {this.state.selectedMembers.map((item, index) => (
-        <UI.ConnectedCbView key={index} style={styles.circleContainer}>
-          <Image
-            source={
-              item
-                ? require("@/assets/images/login.jpg") // or item.image if dynamic
-                : require("@/assets/images/login.jpg") // placeholder image
-            }
-            style={styles.circleImage}
-          />
-          {item && (
-            <UI.TouchableOpacity
-              style={styles.cancelButton}
-              onPress={() => this.removeSelectedMember(index)}
-            >
-              <UI.ConnectedCbText style={styles.cancelText}>×</UI.ConnectedCbText>
-            </UI.TouchableOpacity>
-          )}
-        </UI.ConnectedCbView>
-      ))}
-    </UI.ConnectedCbView>
-  );
-};
+    return (
+      <UI.ConnectedCbView style={styles.circleRow}>
+        {this.state.selectedMembers.map((item, index) => (
+          <UI.ConnectedCbView key={index} style={styles.circleContainer}>
+            <Image
+              source={
+                item && item?.ProfilePic
+                  ? { uri: item?.ProfilePic } // This assumes ProfilePic is a valid URL string
+                  : require("@/assets/images/login.jpg")
+              }
+              style={styles.circleImage}
+            />
+            {item && (
+              <UI.TouchableOpacity
+                style={styles.cancelButton}
+                onPress={() => this.removeSelectedMember(item, index)}
+              >
+                <UI.ConnectedCbText style={styles.cancelText}>
+                  ×
+                </UI.ConnectedCbText>
+              </UI.TouchableOpacity>
+            )}
+          </UI.ConnectedCbView>
+        ))}
+      </UI.ConnectedCbView>
+    );
+  };
 
   render() {
     let pageConfigJson = global.appConfigJsonArray.find(
@@ -205,6 +225,7 @@ class MemberDirectoryUI extends useMemberDirectoryLogic {
         ? pageConfigJson.Controlls
         : [];
     const { setFormFieldData } = this.props;
+    const UpdatedMemberAndGuestData = this.getCurrentPageData(); 
 
     return (
       <Modal
@@ -241,7 +262,7 @@ class MemberDirectoryUI extends useMemberDirectoryLogic {
             </UI.ConnectedCbView>
 
             <UI.TouchableOpacity
-              onPress={() => this.props.setOpenMembersModel()}
+              onPress={this.handleMemberDirtory}
               style={styles.closeIcon}
               onMouseEnter={() => this.setState({ hover: "close" })}
               onMouseLeave={() => this.setState({ hover: null })}
@@ -263,7 +284,7 @@ class MemberDirectoryUI extends useMemberDirectoryLogic {
                   {this.renderGuestSelector()}
                 </UI.ConnectedCbView>
               )}
-              {this.state.selectedValue === "Existing Guest" ? (
+              {this.state.selectedGuest === "Existing Guest" ? (
                 <>
                   <UI.ConnectedCbView
                     style={{ padding: 30, flexDirection: "row" }}
@@ -274,13 +295,13 @@ class MemberDirectoryUI extends useMemberDirectoryLogic {
                       id="searchRow"
                     >
                       <UI.ConnectedCbInput
-                        id="Search"
+                        id="Search2"
                         labelRequired={false}
                         style={styles.input}
-                        // multiline={true}
                         formId={pageId}
                         placeholder="Search by Member Last Name"
                         placeholderTextColor="#565c5f"
+                        
                       />
 
                       <UI.TouchableOpacity
@@ -293,6 +314,7 @@ class MemberDirectoryUI extends useMemberDirectoryLogic {
                         ]}
                         onMouseEnter={() => this.setState({ hover: "search" })}
                         onMouseLeave={() => this.setState({ hover: null })}
+                        onPress={this.handleSearchMemberByChar}
                       >
                         <Text
                           style={[
@@ -303,6 +325,7 @@ class MemberDirectoryUI extends useMemberDirectoryLogic {
                           Search
                         </Text>
                       </UI.TouchableOpacity>
+                      
                       <UI.TouchableOpacity
                         style={[
                           styles.clearButton,
@@ -313,7 +336,7 @@ class MemberDirectoryUI extends useMemberDirectoryLogic {
                         ]}
                         onMouseEnter={() => this.setState({ hover: "clear" })}
                         onMouseLeave={() => this.setState({ hover: null })}
-                        // onPress={this.clear}
+                        onPress={this.handleClear}
                       >
                         <Text
                           style={[
@@ -397,16 +420,24 @@ class MemberDirectoryUI extends useMemberDirectoryLogic {
                     )}
                   </UI.ConnectedCbView>
                   {/* 1. Selected Circles */}
-                  {this.renderSelectedCircles()}
+                  {this.props.AddMultiple && this.renderSelectedCircles()}
 
-                  <UI.FlatList
-                    contentContainerStyle={styles.memberList}
-                    data={this.getCurrentPageData()}
-                    renderItem={this.renderMemberItem}
-                    keyExtractor={(item, index) => index.toString()}
-                    numColumns={4}
-                    scrollEnabled={false}
-                  />
+                  {UpdatedMemberAndGuestData && UpdatedMemberAndGuestData.length > 0 ? (
+                    <UI.FlatList
+                      contentContainerStyle={styles.memberList}
+                      data={UpdatedMemberAndGuestData}
+                      renderItem={this.renderMemberItem}
+                      keyExtractor={(item, index) => index.toString()}
+                      numColumns={4}
+                      scrollEnabled={false}
+                    />
+                  ) : (
+                    <UI.Box style={styles.emptyListContainer}>
+                      <UI.Text style={styles.emptyMealTxt}>
+                        No Record Found
+                      </UI.Text>
+                    </UI.Box>
+                  )}
                   {this.renderPagination()}
                 </>
               ) : (
@@ -415,22 +446,23 @@ class MemberDirectoryUI extends useMemberDirectoryLogic {
                 >
                   <UI.ConnectedCbView style={[styles.newGuestRow1]}>
                     <UI.ConnectedCbInput
-                      // formId="guestForm"
                       id="firstName"
                       placeholder="First Name"
                       style={styles.input}
                       pageId={pageId}
-                      // formId={pageId}
-                      setFormFieldData={setFormFieldData}
+                      onChange={(value) =>
+                        this.handleInputChange("firstName", value)
+                      }
                     />
                     <UI.ConnectedCbInput
-                      // formId="guestForm"
                       id="lastName"
                       placeholder="Last Name"
                       style={styles.input}
                       pageId={pageId}
                       // formId={pageId}
-                      setFormFieldData={setFormFieldData}
+                      onChange={(value) =>
+                        this.handleInputChange("lastName", value)
+                      }
                     />
                     <UI.ConnectedCbSelectDropDown
                       options={this.servicesOptions}
@@ -439,6 +471,7 @@ class MemberDirectoryUI extends useMemberDirectoryLogic {
                         width: this.state.screenWidth <= 780 ? "100%" : "30%",
                       }}
                       dropdownCustom={{ zIndex: 1, padding: 10 }}
+                      onSelect={this.selectService}
                     />
                   </UI.ConnectedCbView>
 
@@ -474,7 +507,9 @@ class MemberDirectoryUI extends useMemberDirectoryLogic {
                           id="Phone"
                           style={styles.input}
                           keyboardType="phone-pad"
-                          setFormFieldData={setFormFieldData}
+                          onChange={(value) =>
+                            this.handleInputChange("Phone", value)
+                          }
                           pageId={pageId}
                         />
                       </UI.ConnectedCbView>
@@ -493,7 +528,9 @@ class MemberDirectoryUI extends useMemberDirectoryLogic {
                           id="email"
                           style={styles.input}
                           keyboardType="email-address"
-                          setFormFieldData={setFormFieldData}
+                          onChange={(value) =>
+                            this.handleInputChange("email", value)
+                          }
                           pageId={pageId}
                         />
                       </UI.ConnectedCbView>
@@ -511,6 +548,8 @@ class MemberDirectoryUI extends useMemberDirectoryLogic {
                           options={this.genderOptions}
                           customstyle={styles.genderoptionsStyles}
                           dropdownCustom={{ zIndex: 1 }}
+                          onSelect={this.selectGender}
+                          placeholder={"Gender"}
                         />
                       </UI.ConnectedCbView>
 
@@ -580,7 +619,11 @@ class MemberDirectoryUI extends useMemberDirectoryLogic {
               >
                 <UI.TouchableOpacity
                   style={styles.addMemberBtn}
-                  // onPress={() => this.props.setOpenAddmemberModel()}
+                  onPress={
+                    this.state.selectedGuest === "New Guest"
+                      ? this.addNewGuest
+                      : this.addMemberForReservation
+                  }
                 >
                   <UI.ConnectedCbText style={[styles.addMemberBtnTxt]}>
                     {" "}
@@ -591,20 +634,65 @@ class MemberDirectoryUI extends useMemberDirectoryLogic {
             </UI.ScrollView>
           </UI.ConnectedCbView>
         </UI.ConnectedCbView>
+        <CbLoader visible={this.props.memberDirectoryloading} />
+
+        <Modal
+          transparent={true}
+          visible={this.state.errorMessagePopup}
+          animationType="fade"
+          onRequestClose={() => this.setState({ errorMessagePopup: false })}
+        >
+          <UI.Pressable
+            style={styles.modalOverlay}
+            onPress={() => this.setState({ errorMessagePopup: false })}
+          />
+          <UI.Box style={styles.errorMessageContainer}>
+            <UI.Text style={styles.errorMessageTxt}>
+              {this.state.errorMessageTxt}
+            </UI.Text>
+          </UI.Box>
+        </Modal>
       </Modal>
     );
   }
 }
 
 const mapStateToProps = (state: RootState) => {
+  
+  
   return {
+    memberDirectoryloading: state.memberDirectory.loading,
     loading: state.dashboard.loading,
     OpenMemberModel: state?.addMember?.OpenMemberModel,
     ChangeToGuest: state?.addMember?.ChangeToGuest,
+    memberList: state.memberDirectory.memberList,
+    getExistingGuestList: state.memberDirectory.memberList,
+    errorMessage: state.dashboard.errorMessage,
+    memberListPerBatch: state.memberDirectory.memberListPerBatch,
+    GuestListPerBatch: state.memberDirectory.GuestListPerBatch,
+    totalCount: state.memberDirectory.totalCount,
+    addMemberList: state.addMember.membersList,
+    selectedMembersList: state.addMember.selectedMembersList,
+    singleItemDetails: state.addMember.singleMemberDetails,
+    userType: state.addMember.userType,
+    AddMultiple: state.addMember.AddMultiple,
+    membersCount: state.addMember.membersCount,
+    formData: state.login?.formData,
   };
 };
 const mapDispatchToProps = {
   setOpenMembersModel,
+  getMemberList,
+  resetLoadedScreen,
+  singleMemberDetails,
+  addMembersForReservation,
+  resetSingleMemberDetails,
+  setFormFieldData,
+  resetMemberListPerBatch,
+  getExistingGuestList,
+  setAddMultiple,
+  setselectedMembersList,
+  setMembersList,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(MemberDirectoryUI);

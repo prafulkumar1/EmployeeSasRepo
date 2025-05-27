@@ -1,5 +1,5 @@
 import React from 'react';
-import { FlatList, ImageBackground, Image, TouchableOpacity, View, Alert, Animated, Modal, Pressable, SafeAreaView, } from 'react-native';
+import { FlatList, ImageBackground, Image, TouchableOpacity, View, Alert, Animated, Modal, Pressable, SafeAreaView, Platform, } from 'react-native';
 import {
   FormControl,
   FormControlError,
@@ -248,9 +248,26 @@ class cbInput extends React.Component {
       typeof props.onFocus === "function"
         ? props.onFocus
         : () => {};
-  }
+         this.onChange =
+      typeof props.onChange === "function" ? props.onChange : null;
+      this.maxLength = props.maxLength || null;
 
+  }
+   handleChange = (value) => {
+    if (this.onChange) {
+      this.onChange(value); // Local state or prop-based handling
+    } else if (this.setFormFieldData && this.props.formId) {
+      this.setFormFieldData({
+        formId: this.props.formId,
+        type: "input",
+        id: this.id,
+        controlValue: value,
+        controlId: this.id,
+      });
+    }
+  };
   render() {
+
     const inputArray = global.controlsConfigJson.find(
       (item) => item.id === this.id
     );
@@ -288,15 +305,7 @@ class cbInput extends React.Component {
             numberOfLines={this.numberOfLines}
             style={[{ textAlignVertical: "top" }, this.style]}
             value={value?.value ? value?.value : this.value}
-            onChangeText={(value) => {
-              this.props?.setFormFieldData({
-                formId: this.props?.formId,
-                type: "input",
-                id: this.id,
-                controlValue: value,
-                controlId: this.id,
-              });
-            }}
+            onChangeText={this.handleChange}
             // onFocus={() =>
             //   this.props?.setFormFieldData({
             //     formId: this.props?.formId,
@@ -307,6 +316,7 @@ class cbInput extends React.Component {
             //   })
             // }
             onFocus={() => this.onFocus()}
+            maxLength={this.maxLength}
             
           />
         </Input>
@@ -600,7 +610,7 @@ class CbText extends React.Component {
       <Text
         strikeThrough={StrikeThrough}
         style={combinedStyle}
-        numberOfLines={this.numberOfLines}
+       {...(Platform.OS !== 'web' && this.numberOfLines ? { numberOfLines: this.numberOfLines } : {})}
       >
         {LabelText}
       </Text>
@@ -847,9 +857,7 @@ class CbView extends React.Component {
   componentDidMount() {
     setTimeout(() => {
       this.loadPageConfig();
-    }, 500);
-   console.log('combinedStyleindsideee', this.styles);
-        
+    }, 500);    
   }
   loadPageConfig = () => {
     try {

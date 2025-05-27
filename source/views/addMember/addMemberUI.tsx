@@ -7,7 +7,7 @@ import { Image,Modal} from "react-native"
 import useAddMemberLogic from '@/source/controller/addMember/addMember';
 import { styles } from '@/source/styles/addMember/addMember';
 import MemberDirectoryUI from '../memberDirectory/memberDirectoryUI';
-import { addTbdToMemberList, handleSelectedMember, removeMembersFromList, resetLoadedScreen, resetSingleMemberDetails, setMembersList, setUserType } from '@/components/redux/reducers/addMemberReducer';
+import { addTbdToMemberList, handleSelectedMember, removeMembersFromList, resetLoadedScreen, resetSingleMemberDetails, setmembersCount, setMembersList, setUserType } from '@/components/redux/reducers/addMemberReducer';
 import { LinearGradient } from 'expo-linear-gradient';
 import moment from 'moment';
 
@@ -15,6 +15,7 @@ const pageId = 'AddMember';
 const addMemberList = [{id:1,memberType:"Member"},{id:2,memberType:"Guest"},{id:3,memberType:"TBD"}]
 class AddMemberUI extends useAddMemberLogic {
   renderAddedMemberList = ({ item, index }) => {
+
     return (
       <UI.Box style={styles.addedMemberList}>
         <UI.Text style={[styles.memberName,{color:item.isMemberSelected ? "#1dc6ff" : "#565c5f"}]}>{`${item.memberName}`}</UI.Text>
@@ -31,8 +32,8 @@ class AddMemberUI extends useAddMemberLogic {
   }
   renderUserTypeList = ({ item }) => {
     return (
-        <UI.TouchableOpacity onPress={() => this.navigateToMember(item.memberType)} style={styles.modalBtn}>
-          <UI.Text style={styles.modalBtnTxt}>{item.memberType}</UI.Text>
+        <UI.TouchableOpacity onPress={() => this.navigateToMember(item.memberType,)} style={styles.modalBtn}>
+          <UI.Text style={styles.modalBtnTxt}>{item?.memberType}</UI.Text>
         </UI.TouchableOpacity>
     )
   }
@@ -75,7 +76,7 @@ class AddMemberUI extends useAddMemberLogic {
   }
   renderAddMember = ({ item, index }) => {
     return (
-      <UI.TouchableOpacity onPress={() => this.handleMembersCount(item.id,item.number)} style={[styles.memberCountBtn,{backgroundColor:item.isCountActive?"#1dc6ff":"#fff"}]}>
+      <UI.TouchableOpacity onPress={() => this.handleMembersCount(item.id,item.number)} style={[styles.memberCountBtn,{backgroundColor:item.isCountActive?"#1dc6ff":"#fff"}]} key={item.id} >
         <UI.Text style={[styles.memberCountTxt,{color:item.isCountActive?"#fff":"#2a4e7d"}]}>{item.number}</UI.Text>
       </UI.TouchableOpacity>
     )
@@ -161,7 +162,7 @@ class AddMemberUI extends useAddMemberLogic {
               scrollEnabled={false}
               style={{width:"100%"}}
               data={addMemberList}
-              renderItem={this.renderUserTypeList}
+             renderItem={this.renderUserTypeList}
               showsVerticalScrollIndicator={false}
             />
             </UI.Pressable>
@@ -224,9 +225,9 @@ class AddMemberUI extends useAddMemberLogic {
 const mapStateToProps = (state:RootState) => {
   return {
     isScreenLoaded:state.addMember.isScreenLoaded,
-    selectedId:state.addMember.selectedId,
     membersList:state.addMember.membersList,
     selectedMembersList:state.addMember.selectedMembersList,
+    membersCount:state.addMember.membersCount,
   }
 }
 const mapDispatchToProps = {
@@ -236,7 +237,8 @@ const mapDispatchToProps = {
   removeMembersFromList,
   addTbdToMemberList,
   resetSingleMemberDetails,
-  setUserType
+  setUserType,
+  setmembersCount
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(AddMemberUI)

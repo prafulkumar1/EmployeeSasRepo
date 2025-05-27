@@ -1,4 +1,4 @@
-import { Dimensions,StyleSheet } from 'react-native';
+import { Dimensions, StyleSheet } from 'react-native';
 const { width, height } = Dimensions.get('window');
 
 export const styles = StyleSheet.create({
@@ -103,10 +103,10 @@ export const styles = StyleSheet.create({
 
   },
   Pluscontainer: {
-    flexDirection: 'row',     
-    justifyContent: 'center', 
-    alignItems: 'center', 
-    marginVertical:10,   
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginVertical: 10,
   },
   sectionNote: {
     color: '#000',
@@ -118,7 +118,7 @@ export const styles = StyleSheet.create({
     height: 24,
     borderRadius: 12,
     borderColor: '#08c3f8',
-    borderWidth:1,
+    borderWidth: 1,
     justifyContent: 'center',
     alignItems: 'center',
     marginHorizontal: 4,
@@ -126,18 +126,25 @@ export const styles = StyleSheet.create({
   plusText: {
     color: '#08c3f8',
     fontSize: 18,
-    justifyContent :'center',
-    alignItems :'center',
+    justifyContent: 'center',
+    alignItems: 'center',
     fontWeight: 'bold',
     // marginBottom :5
 
   },
-  memberFieldWrapper: {
-    width: '48%',
-  // paddingHorizontal: 8,
+membersWrapper: { 
+  flexDirection: "row",
+  flexWrap: "wrap",
+  justifyContent: "space-between",
+  overflow: 'visible',
+},
+
+memberFieldWrapper: {
+  width: '48%',
   paddingVertical: 5,
   alignItems: 'center',
-  },
+   zIndex:1,
+},
   memberLabel: {
     color: '#000',
     fontFamily: 'SourceSansPro_SemiBold',
@@ -145,14 +152,13 @@ export const styles = StyleSheet.create({
     width: "60%",
 
   },
-  memberCardsContainer:{
-    
-      width: "100%",
-      flexDirection: "row",
-      flexWrap: "wrap",
-      justifyContent: "flex-start",
-      paddingHorizontal: 20,
-    
+  memberCardsContainer: {
+    width: "100%",
+    flexDirection: "row",
+    flexWrap: "wrap",
+    justifyContent: "flex-start",
+    paddingHorizontal: 20,
+
   },
   memberInputRow: {
     flexDirection: 'row',
@@ -162,7 +168,8 @@ export const styles = StyleSheet.create({
     borderRadius: 5,
     alignItems: 'center',
     height: 40,
-    paddingHorizontal :5,
+    paddingHorizontal: 5,
+    borderColor:"#cbcbcb",backgroundColor:"#fff"
   },
   iconcontainer: {
     width: '25%',
@@ -184,10 +191,10 @@ export const styles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingVertical: 25,
   },
-  commentsBox: { height: 110, borderColor: "#cbcbcb", borderRadius: 5, padding: 10, borderWidth: 1, zIndex : -1 },
+  commentsBox: { height: 110, borderColor: "#cbcbcb", borderRadius: 5, padding: 10, borderWidth: 1, zIndex: -1 },
   commentTxt: { fontFamily: "SourceSansPro_SemiBoldItalic", fontSize: 20, color: "#515659", padding: 5 },
-  SubmitContainer:{
-     width: "100%", alignItems: "center" 
+  SubmitContainer: {
+    width: "100%", alignItems: "center"
   },
   SubmitBtn: {
     borderWidth: 2,
@@ -215,21 +222,23 @@ export const styles = StyleSheet.create({
     fontSize: 18,
     textAlign: "center",
   },
-  MemberTxt:{
-    width: "70%" , paddingHorizontal :8
+  MemberTxt: {
+    width: "70%", paddingHorizontal: 8,fontSize:16,fontFamily:"SourceSansPro_Regular"
   },
   popupContainer: {
-    position: 'absolute',
+ position: 'absolute',
     backgroundColor: '#fff',
     elevation: 3,
     padding: 5,
     width: 100,
-    marginHorizontal :30,
-    right :-50,
+    marginHorizontal: 30,
+    right: -50,
+    top:-8,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 3 },
     shadowOpacity: 0.25,
     shadowRadius: 5,
+    zIndex: 100,  
   },
   MutiplepopupContainer: {
     position: 'absolute',
@@ -237,9 +246,9 @@ export const styles = StyleSheet.create({
     elevation: 3,
     padding: 5,
     width: 100,
-    marginHorizontal :30,
-    top:0,
-    right :80,
+    marginHorizontal: 30,
+    top: 0,
+    right: 80,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 3 },
     shadowOpacity: 0.25,
@@ -249,8 +258,8 @@ export const styles = StyleSheet.create({
     paddingVertical: 5,
   },
   popupButtonText: {
-    fontFamily:'SourceSansPro_SemiBold',
-    fontSize :16,
+    fontFamily: 'SourceSansPro_SemiBold',
+    fontSize: 16,
     color: '#08c3f8',
     textAlign: 'center',
   },
@@ -301,7 +310,7 @@ export const styles = StyleSheet.create({
     marginLeft: 5,
   },
   searchClearButtonText: {
-    fontSize:18,
+    fontSize: 18,
     color: "#5773A2",
     fontWeight: '600',
   },
@@ -320,4 +329,15 @@ export const styles = StyleSheet.create({
     alignItems: "center",
     marginRight: 5,
   },
-  });
+  labelMember: { fontFamily: "SourceSansPro_SemiBold", fontSize: 20, color: "#000" },
+  addedMemberList: { flexDirection: "row", justifyContent: "space-between", alignItems: "center", borderWidth: 1, paddingVertical: 15, borderRadius: 8, paddingLeft: 25, paddingRight: 20, marginTop: 20, borderColor: "#cbcbcb", backgroundColor: "#fff" },
+  memberName: { fontSize: 20, fontFamily: "SourceSansPro_Regular" },
+  addOrRemoveBtn: { flexDirection: "row", alignItems: "center", width: 70, justifyContent: "space-between" },
+  // commentTxt:{ fontFamily: "SourceSansPro_SemiBoldItalic", fontSize: 20, color: "#515659",marginBottom:12 },
+  memberActionIcons: { width: 28, height: 28 },
+  addIcon: { width: 28, height: 28 },
+
+
+      memberCountBtn:{ marginHorizontal:5,borderWidth: 1, width: 50, height: 50, borderRadius: 25, padding: 6, justifyContent: "center", alignItems: "center", borderColor: "#2a4e7d", marginTop: 10 },
+    memberCountTxt:{ fontFamily: "SourceSansPro_Regular", fontSize: 26 },
+});

@@ -1,86 +1,136 @@
-import { postApiCall } from '@/components/utlis/api';
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
+import { postApiCall } from "@/components/utlis/api";
+import { createAsyncThunk, createSlice, current } from "@reduxjs/toolkit";
+import { Platform } from "react-native";
 
 const initialState = {
-    loading:false,
-    memberResponse:null,
-    errorMessage:"",
-    isScreenLoaded:false,
-    selectedId:"",
-    membersList:[],
-    singleMemberDetails:null,
-    selectedMembersList:[],
-    userType:"",
-    OpenMemberModel: false ,
-    ChangeToGuest:''
-}
+  loading: false,
+  memberResponse: null,
+  errorMessage: "",
+  isScreenLoaded: false,
+  selectedId: "",
+  membersList: [],
+  singleMemberDetails: null,
+  selectedMembersList: [],
+  userType: "",
+  OpenMemberModel: false,
+  ChangeToGuest: "",
+  membersCount: 3,
+  AddMultiple: false,
+};
 
 export const getMemberDetails = createAsyncThunk(
-  'getMemberDetails',
-  async (
-    _,
-    { getState, rejectWithValue, fulfillWithValue },
-  ) => {
+  "getMemberDetails",
+  async (_, { getState, rejectWithValue, fulfillWithValue }) => {
     const params = {};
-    const memberDetailsResponse = await postApiCall("","",params)
+    const memberDetailsResponse = await postApiCall("", "", params);
     if (memberDetailsResponse) {
-      if(memberDetailsResponse.statusCode === 200){
+      if (memberDetailsResponse.statusCode === 200) {
         if (memberDetailsResponse.response) {
           return fulfillWithValue(memberDetailsResponse.response);
         } else {
           return rejectWithValue(memberDetailsResponse.response);
         }
-      }else{
+      } else {
         return rejectWithValue(memberDetailsResponse.response);
       }
     }
-  },
+  }
 );
 const AddMemberSlice = createSlice({
-  name: 'addMember',
+  name: "addMember",
   initialState: initialState,
   reducers: {
     loadScreen(state, action) {
-      state.loading = !state.loading
+      state.loading = !state.loading;
     },
     resetLoadedScreen(state, action) {
-      state.isScreenLoaded = !state.isScreenLoaded
+      state.isScreenLoaded = !state.isScreenLoaded;
     },
-    handleSelectedMember(state, action){
-      state.selectedId = action.payload
+    handleSelectedMember(state, action) {
+      state.selectedId = action.payload;
     },
     setMembersList(state, action) {
       const updateCountList = Array.from(
         { length: action.payload },
-        (_, index) => ({ number: index + 1,memberName:`Reservation ${index+1}`,id:`${Date.now()}_${Math.random().toString(36).substring(2, 9)}`,isMemberSelected:false})
+        (_, index) => ({
+          number: index + 1,
+          memberName: `Reservation ${index + 1}`,
+          id: `${Date.now()}_${Math.random().toString(36).substring(2, 9)}`,
+          isMemberSelected: false,
+        })
       );
-      state.membersList = updateCountList
+      state.membersList = updateCountList;
     },
     singleMemberDetails(state, action) {
-      state.singleMemberDetails = action.payload      
+      state.singleMemberDetails = action.payload;
+    },
+    setselectedMembersList(state, action) {
+      state.selectedMembersList = action.payload;
+    },
+    setmembersCount(state, action) {
+      state.membersCount = action.payload;
     },
     resetSingleMemberDetails(state, action) {
-      state.singleMemberDetails = null
+      state.singleMemberDetails = null;
     },
     addMembersForReservation(state, action) {
-      state.membersList = state.membersList.map((item) => {
-        if (item.id === state.selectedId) {
+      let values = state;
+
+      if (Platform.OS === "web") {
+        values = current(state);
+      }
+
+      const { selectedId, selectedMembersList } = values;
+
+      // Case 1: AddMultiple mode — match members by index
+      if (!selectedId && selectedMembersList?.length > 0) {
+        const updatedMembersList = values.membersList.map((item, index) => {
+          const match = selectedMembersList[index];
+          if (match) {
+            return {
+              ...item,
+              memberName: match.MemberName,
+              isMemberSelected: true,
+              singleMemberDetails: match,
+            };
+          }
+          return item;
+        });
+
+        return {
+          ...state,
+          membersList: updatedMembersList,
+          selectedMembersList: updatedMembersList.filter(
+            (item) => item.isMemberSelected
+          ),
+        };
+      }
+
+      // Case 2: Single member selected using selectedId
+      const updatedMembersList = values.membersList.map((item, index) => {
+        if (item?.id === values?.selectedId) {
           const updatedMember = {
             ...item,
-            memberName: state.singleMemberDetails?.MemberName,
+            memberName: values.singleMemberDetails?.MemberName,
             isMemberSelected: true,
-            singleMemberDetails: state.singleMemberDetails,
+            singleMemberDetails: values.singleMemberDetails,
           };
-          
-          if (!state.selectedMembersList.some(member => member.id === state.selectedId)) {
-            state.selectedMembersList = [...state.selectedMembersList, updatedMember];
-          }
           return updatedMember;
         }
         return item;
       });
+
+      return {
+        ...state,
+        membersList: updatedMembersList,
+        selectedMembersList: updatedMembersList.filter(
+          (item) => item.isMemberSelected
+        ),
+      };
     },
-    addTbdToMemberList(state,action){
+
+    addTbdToMemberList(state, action) {
+      // console.log("Before update:", JSON.stringify(state.membersList, null, 2));  // Logs before update
       state.membersList = state.membersList.map((item) => {
         if (item.id === state.selectedId) {
           const updatedMember = {
@@ -89,13 +139,21 @@ const AddMemberSlice = createSlice({
             isMemberSelected: true,
             singleMemberDetails: null,
           };
-          if (!state.selectedMembersList.some(member => member.id === state.selectedId)) {
-            state.selectedMembersList = [...state.selectedMembersList, updatedMember];
+          if (
+            !state.selectedMembersList.some(
+              (member) => member.id === state.selectedId
+            )
+          ) {
+            state.selectedMembersList = [
+              ...state.selectedMembersList,
+              updatedMember,
+            ];
           }
           return updatedMember;
         }
         return item;
       });
+      //  console.log("After update:", JSON.stringify(state.membersList, null, 2));  // Logs after update
     },
     removeMembersFromList(state, action) {
       state.membersList = state.membersList.map((item, index) => {
@@ -110,36 +168,41 @@ const AddMemberSlice = createSlice({
         }
         return item;
       });
-      state.selectedMembersList = state.selectedMembersList.filter((items) => items?.id === action.payload)
+      state.selectedMembersList = state.selectedMembersList.filter(
+        (items) => items?.id === action.payload
+      );
     },
-    setUserType(state, action){
-      state.userType = action.payload
+    setUserType(state, action) {
+      state.userType = action.payload;
     },
     setOpenMembersModel(state, action) {
       state.OpenMemberModel = !state.OpenMemberModel;
     },
+    setAddMultiple(state, action) {
+      state.AddMultiple = action.payload;
+    },
     setChangeToGuest(state, action) {
-      const {userType} = action.payload
+      const { userType } = action.payload;
       state.ChangeToGuest = userType;
     },
   },
-    extraReducers: builder => {
-      builder
+  extraReducers: (builder) => {
+    builder
       .addCase(getMemberDetails.pending, (state, action) => {
         state.loading = true;
-       })
+      })
       .addCase(getMemberDetails.fulfilled, (state, action) => {
         state.loading = false;
-        state.memberResponse = action.payload
+        state.memberResponse = action.payload;
       })
-      .addCase(getMemberDetails.rejected, (state, action:any) => {
+      .addCase(getMemberDetails.rejected, (state, action: any) => {
         state.loading = false;
-        state.errorMessage = action?.payload?.ResponseMessage
+        state.errorMessage = action?.payload?.ResponseMessage;
       });
-    },
-})
+  },
+});
 
-export const { 
+export const {
   loadScreen,
   resetLoadedScreen,
   handleSelectedMember,
@@ -149,8 +212,11 @@ export const {
   removeMembersFromList,
   addTbdToMemberList,
   resetSingleMemberDetails,
-  setUserType ,
+  setUserType,
   setOpenMembersModel,
-  setChangeToGuest
-}:any = AddMemberSlice.actions
-export default AddMemberSlice.reducer
+  setChangeToGuest,
+  setmembersCount,
+  setAddMultiple,
+  setselectedMembersList,
+}: any = AddMemberSlice.actions;
+export default AddMemberSlice.reducer;

@@ -5,7 +5,7 @@ const { width, height } = Dimensions.get('window');
 
 export const styles = StyleSheet.create({
   memberItem: {
-    width: "23%",
+    width: "25%",
     alignItems: 'center',
     margin: '1%',
     marginBottom: 15,
@@ -36,7 +36,7 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
   },
   modalContainer: {
-    width: '70%',
+    width: '80%',
     height: '98%',
     backgroundColor: '#fff',
     // alignItems: 'center',
@@ -131,6 +131,19 @@ export const styles = StyleSheet.create({
   memberList: {
     paddingHorizontal: 30,
     paddingTop: 10,
+  },
+  emptyListContainer: {
+    justifyContent: "center",
+    alignItems: "center",
+    alignSelf: "center",
+    height: responsiveHeight(60),
+  },
+  emptyMealTxt: {
+    fontFamily: "SourceSansPro_Regular",
+    alignSelf: "center",
+    marginTop: responsiveHeight(3),
+    fontSize: 18,
+    color: "#565c5f"
   },
   paginationContainer: {
     flexDirection: 'row',
@@ -252,7 +265,7 @@ export const styles = StyleSheet.create({
     paddingHorizontal: 50,
 
   },
-    GenderTxt: {
+  GenderTxt: {
     color: "#6D6D6D",
     fontSize: 16,
     paddingTop: 10,
@@ -260,7 +273,7 @@ export const styles = StyleSheet.create({
   genderoptionsStyles: {
     width: "100%",
     color: "#6D6D6D",
-   padding:10
+    padding: 10
   },
   //Addbutton
   addMemberBtncontainer: {
@@ -317,35 +330,59 @@ export const styles = StyleSheet.create({
 
   //circles
   circleRow: {
-  flexDirection: "row",
-  marginBottom: 16,
-  paddingLeft:30
-},
-circleContainer: {
-  marginRight: 10,
-  position: "relative",
-},
-circleImage: {
-  width: 60,
-  height: 60,
-  borderRadius: 30,
-  borderWidth: 2,
-  borderColor: "#ccc",
-},
-cancelButton: {
-  position: "absolute",
-  top: -5,
-  right: -5,
-  backgroundColor: "#ccc",
-  width: 20,
-  height: 20,
-  borderRadius: 10,
-  justifyContent: "center",
-  alignItems: "center",
-},
-cancelText: {
-  color: "#fff",
-  fontSize: 12,
-  fontWeight: "bold",
-},
+    flexDirection: "row",
+    marginBottom: 16,
+    paddingLeft: 30
+  },
+  circleContainer: {
+    marginRight: 10,
+    position: "relative",
+  },
+  circleImage: {
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    borderWidth: 2,
+    borderColor: "#ccc",
+  },
+  cancelButton: {
+    position: "absolute",
+    top: -5,
+    right: -5,
+    backgroundColor: "#ccc",
+    width: 20,
+    height: 20,
+    borderRadius: 10,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  cancelText: {
+    color: "#fff",
+    fontSize: 12,
+    fontWeight: "bold",
+  },
+
+  //errormodel
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.2)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  errorMessageTxt: {
+    color: "#0047AB",
+    fontSize: 16,
+    fontFamily: "SourceSansPro_Regular"
+  },
+  errorMessageContainer: {
+    position: "absolute",
+    top: "50%",
+    backgroundColor: '#eafaff',
+    borderRadius: 10,
+    padding: 14,
+    alignItems: 'center',
+    alignSelf: "center",
+    borderWidth: 1,
+    borderColor: "#0047AB",
+  },
 });

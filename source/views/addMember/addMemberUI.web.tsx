@@ -11,115 +11,80 @@ import {
   setOpenAddmemberModel,
 } from "@/components/redux/reducers/reservationReducer";
 import {
+  addTbdToMemberList,
+  handleSelectedMember,
+  removeMembersFromList,
+  resetLoadedScreen,
+  resetSingleMemberDetails,
+  setAddMultiple,
   setChangeToGuest,
+  setmembersCount,
+  setMembersList,
   setOpenMembersModel,
+  setUserType,
 } from "@/components/redux/reducers/addMemberReducer";
 import { setLoader } from "@/components/redux/reducers/uiSlice";
 import CbLoader from "@/components/cobalt/webCobaltLoader";
 
 const pageId = "AddMember";
+const addMemberList = [{id:1,memberType:"Member"},{id:2,memberType:"Guest"},{id:3,memberType:"TBD"}]
 class AddMemberUI extends useAddMemberLogic {
-  renderMemberInputRows = () => {
-    const { popupVisibleIndex, selectedCount } = this.state;
-    let rows = [];
-    for (let i = 0; i < selectedCount; i++) {
-      rows.push(
+  renderAddedMemberList = ({ item, index }) => {
+    return (
+      <>
         <UI.ConnectedCbView
-          key={i}
-          style={[styles.memberFieldWrapper, { position: "relative" }]}
+          key={index}
+          style={[styles.memberFieldWrapper]}
           pageId={pageId}
           id="memberFieldWrapper"
         >
           <UI.ConnectedCbView style={styles.memberInputRow}>
-            <UI.Text style={styles.MemberTxt}> Reservation {i + 1}</UI.Text>
+            <UI.Text style={styles.MemberTxt}>{item?.memberName}</UI.Text>
             <UI.ConnectedCbView style={styles.iconcontainer}>
               <UI.TouchableOpacity
                 style={[{ width: 30, height: 30 }]}
-                onPress={(e) => this.handleRemoveMember(i)}
+                onPress={() => this.props.removeMembersFromList(item.id)}
               >
                 <UI.Icon as={CloseIcon} size="sm" color="#ccc" />
               </UI.TouchableOpacity>
-
               <UI.TouchableOpacity
+                ref={(ref) => {
+                  if (ref) this.addIconRefs[item.id] = ref;
+                }}
                 style={[{ width: 30, height: 30 }]}
-                onPress={(e) => this.handleAddIconPress(i, e)}
+                onPress={(e) => this.handleAddIconPress(item?.id, e)}
               >
                 <UI.Icon as={AddIcon} size="sm" color="#08c3f8" />
               </UI.TouchableOpacity>
             </UI.ConnectedCbView>
           </UI.ConnectedCbView>
-
-          {popupVisibleIndex === Number(i) && (
-            <UI.ConnectedCbView
-              style={[styles.popupContainer]}
-              pageId={pageId}
-              id="popupContainer"
-            >
-              <UI.Pressable
-                style={[
-                  styles.popupButton,
-                  {
-                    backgroundColor:
-                      this?.state?.hover === "member" ? "#000" : "#fff",
-                  },
-                ]}
-                onPress={() => this.handleSetGuest("member")}
-                onMouseEnter={() => this.setState({ hover: "member" })}
-                onMouseLeave={() => this.setState({ hover: null })}
-              >
-                <UI.ConnectedCbText
-                  style={styles.popupButtonText}
-                  pageId={pageId}
-                  id="popupButtonText"
-                >
-                  Members
-                </UI.ConnectedCbText>
-              </UI.Pressable>
-              <UI.Pressable
-                style={[
-                  styles.popupButton,
-                  {
-                    backgroundColor:
-                      this?.state?.hover === "guest" ? "#000" : "#fff",
-                  },
-                ]}
-                onMouseEnter={() => this.setState({ hover: "guest" })}
-                onMouseLeave={() => this.setState({ hover: null })}
-                onPress={() => this.handleSetGuest("Guest")}
-              >
-                <UI.ConnectedCbText
-                  style={styles.popupButtonText}
-                  pageId={pageId}
-                  id="popupButtonText"
-                >
-                  Guest
-                </UI.ConnectedCbText>
-              </UI.Pressable>
-              <UI.Pressable
-                style={[
-                  styles.popupButton,
-                  {
-                    backgroundColor:
-                      this?.state?.hover === "TBD" ? "#000" : "#fff",
-                  },
-                ]}
-                onMouseEnter={() => this.setState({ hover: "TBD" })}
-                onMouseLeave={() => this.setState({ hover: null })}
-              >
-                <UI.ConnectedCbText
-                  style={styles.popupButtonText}
-                  pageId={pageId}
-                  id="popupButtonText"
-                >
-                  TBD
-                </UI.ConnectedCbText>
-              </UI.Pressable>
-            </UI.ConnectedCbView>
-          )}
         </UI.ConnectedCbView>
-      );
-    }
-    return rows;
+      </>
+    );
+  };
+
+  renderAddMember = ({ item, index }) => {
+    return (
+      <UI.TouchableOpacity
+        onPress={() => this.handleMembersCount(item.id, item.number)}
+        key={item.id}
+      >
+        <UI.View
+          style={[
+            styles.circleItem,
+            { backgroundColor: item.isCountActive ? "#1dc6ff" : "#fff" },
+          ]}
+        >
+          <UI.ConnectedCbText
+            style={styles.circleText}
+            pageId={pageId}
+            id="circleText"
+          >
+            {item.number}
+          </UI.ConnectedCbText>
+        </UI.View>
+      </UI.TouchableOpacity>
+    );
   };
 
   render() {
@@ -130,8 +95,6 @@ class AddMemberUI extends useAddMemberLogic {
       pageConfigJson && pageConfigJson.Controlls
         ? pageConfigJson.Controlls
         : [];
-    const membersCount = this.state.membersCount;
-    const membersCountdata = Array.from({ length: membersCount }, (_, i) => i + 1);
 
     return (
       <Modal
@@ -140,6 +103,7 @@ class AddMemberUI extends useAddMemberLogic {
         visible={this.props.OpenAddmemberModel}
         // onRequestClose={this.toggleModal}
       >
+        
         <UI.ConnectedCbView
           style={styles.modalBackground}
           pageId={pageId}
@@ -187,35 +151,11 @@ class AddMemberUI extends useAddMemberLogic {
                 pageId={pageId}
                 id="playerListRow"
               >
+                {/* CIRCLE BUTTONS*/ }
                 <UI.FlatList
-                  data={membersCountdata}
+                  data={this.state.membersCountList}
                   horizontal
-                  renderItem={({ item }) => (
-                    <UI.TouchableOpacity
-                      onPress={() => this.handleCirclePress(item)}
-                    >
-                      <UI.View
-                        style={[
-                          styles.circleItem,
-                          {
-                            backgroundColor:
-                              this.state.selectedCount === item
-                                ? "#08c3f8"
-                                : "#fff",
-                          },
-                        ]}
-                      >
-                        <UI.ConnectedCbText
-                          style={styles.circleText}
-                          pageId={pageId}
-                          id="circleText"
-                        >
-                          {item}
-                        </UI.ConnectedCbText>
-                      </UI.View>
-                    </UI.TouchableOpacity>
-                  )}
-                  keyExtractor={(item) => item.toString()}
+                  renderItem={this.renderAddMember}
                   style={{ flex: 1 }}
                 />
                 <UI.TouchableOpacity
@@ -245,7 +185,7 @@ class AddMemberUI extends useAddMemberLogic {
                           this?.state?.hover === "Addmember" ? "#000" : "#fff",
                       },
                     ]}
-                    onPress={() => this.handleSetGuest("member")}
+                    onPress={() => {this.handleSetGuest("member")  ; this.props.setUserType("Member");}}
                     onMouseEnter={() => this.setState({ hover: "Addmember" })}
                     onMouseLeave={() => this.setState({ hover: null })}
                   >
@@ -261,7 +201,7 @@ class AddMemberUI extends useAddMemberLogic {
                     ]}
                     onMouseEnter={() => this.setState({ hover: "addguest" })}
                     onMouseLeave={() => this.setState({ hover: null })}
-                    onPress={() => this.handleSetGuest("Guest")}
+                    onPress={() => {this.handleSetGuest("Guest");   this.props.setUserType("Guest");}}
                   >
                     <UI.ConnectedCbText style={styles.popupButtonText}>
                       Guest
@@ -310,9 +250,18 @@ class AddMemberUI extends useAddMemberLogic {
                   </UI.ConnectedCbText>
                 </UI.ConnectedCbView>
               </UI.ConnectedCbView>
-              <UI.ConnectedCbView style={styles.memberCardsContainer}>
-                {this.renderMemberInputRows()}
-              </UI.ConnectedCbView>
+
+              {this.props.membersList.length > 0 && (
+                <UI.View style={styles.membersWrapper}>
+                  <UI.FlatList
+                    scrollEnabled={false}
+                    data={this.props.membersList}
+                    renderItem={this.renderAddedMemberList}
+                    numColumns={2}
+                    extraData={this.state}
+                  />
+                </UI.View>
+              )}
 
               <UI.ConnectedCbBox
                 style={{ marginTop: 10, padding: 12, zIndex: -1 }}
@@ -359,6 +308,50 @@ class AddMemberUI extends useAddMemberLogic {
           </UI.ConnectedCbView>
         </UI.ConnectedCbView>
         <CbLoader visible={this.state.addmemberloading} />
+
+        {this.state.popupVisibleIndex !== null && (
+          <UI.ConnectedCbView
+            style={[
+              styles.popupContainer,
+              {
+                position: "absolute",
+                top: this.state.popupPosition?.top || 0,
+                left: this.state.popupPosition?.left || 0,
+                zIndex: 999,
+              },
+            ]}
+            pageId={pageId}
+            id="popupContainer"
+          >
+            {addMemberList?.map((memberItem) => (
+              <UI.Pressable
+                key={memberItem.id}
+                style={[
+                  styles.popupButton,
+                  {
+                    backgroundColor:
+                      this.state.hover === memberItem.memberType
+                        ? "#000"
+                        : "#fff",
+                  },
+                ]}
+                onPress={() => this.handleSetGuest(memberItem.memberType)}
+                onMouseEnter={() =>
+                  this.setState({ hover: memberItem.memberType })
+                }
+                onMouseLeave={() => this.setState({ hover: null })}
+              >
+                <UI.ConnectedCbText
+                  style={styles.popupButtonText}
+                  pageId={pageId}
+                  id="popupButtonText"
+                >
+                  {memberItem.memberType}
+                </UI.ConnectedCbText>
+              </UI.Pressable>
+            ))}
+          </UI.ConnectedCbView>
+        )}
       </Modal>
     );
   }
@@ -369,6 +362,9 @@ const mapStateToProps = (state: RootState) => {
     loading: state.dashboard.loading,
     OpenAddmemberModel: state?.reservation?.OpenAddmemberModel,
     OpenMemberModel: state?.addMember?.OpenMemberModel,
+    membersList: state.addMember.membersList,
+    selectedMembersList:state.addMember.selectedMembersList,
+    membersCount:state.addMember.membersCount,
   };
 };
 const mapDispatchToProps = {
@@ -377,6 +373,15 @@ const mapDispatchToProps = {
   setClosememberModel,
   setChangeToGuest,
   setLoader,
+  setMembersList,
+  resetLoadedScreen,
+  handleSelectedMember,
+  removeMembersFromList,
+  addTbdToMemberList,
+  resetSingleMemberDetails,
+  setUserType,
+  setAddMultiple,
+  setmembersCount
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(AddMemberUI);
