@@ -1,5 +1,5 @@
 import * as UI from "@/components/cobalt/importUI";
-import React  from "react";
+import React from "react";
 import CalendarPicker from "react-native-calendar-picker";
 import { styles } from "@/source/styles/reservation/ReservationStyles";
 import ReservationLogic from "@/source/controller/reservation/Reservation";
@@ -7,50 +7,54 @@ import { ActivityIndicator } from "react-native";
 import moment from "moment";
 import { connect } from "react-redux";
 import { RootState } from "@/components/redux/store";
-import { getAppConfiguration } from "@/components/redux/reducers/reservationReducer";
+import {
+  getAppConfiguration,
+  getReservationsData,
+} from "@/components/redux/reducers/reservationReducer";
 import { StatusBar } from "expo-status-bar";
+import CbLoader from "@/components/cobalt/cobaltLoader";
 
 const pageId = "Reservation";
 
 class ReservationUI extends ReservationLogic {
-  renderHorizontalCalender = ({ item }) => {
-    const isSelected = this.state.selectedDateId === item.id;
-    const isToday = item?.fullDate === moment()?.format("YYYY-MM-DD");
-    const showHighlight = isSelected || (!this.state.selectedDateId && isToday);
+  renderHorizontalCalender = ({ item, index }) => {
+    const isSelected = this.state.selectedDateId === item?.Date;
+    const [day, month, Date] = item?.Dateslot?.split(" ");
+
     return (
-      <UI.TouchableOpacity activeOpacity={1} onPress={() => this.handleSelectDate(item.id)}>
+      <UI.TouchableOpacity
+        activeOpacity={1}
+        onPress={() => this.handleItemPress(item, index)}
+      >
         <UI.Box
           style={[
             styles.dateBox,
             {
-              backgroundColor: isSelected
-                ? "#00c6ff"
-                : !this.state.selectedDateId && isToday
-                ? "#00c6ff"
-                : "#fff",
+              backgroundColor:
+                this.state.selectedItem === item?.Date ? "#00C2FF" : "#fff",
             },
           ]}
         >
-          <UI.Text 
-            style={[styles.day, { color: showHighlight ? "#fff" : "#4B5154" }]}
+          <UI.Text
+            style={[styles.day, { color: isSelected ? "#fff" : "#4B5154" }]}
           >
-            {item?.day}
+            {day}
           </UI.Text>
           <UI.Text
             style={[
               styles.mnthAndDate,
-              { color: showHighlight ? "#fff" : "#000" },
+              { color: isSelected ? "#fff" : "#000" },
             ]}
           >
-            {item?.month}
+            {month}
           </UI.Text>
           <UI.Text
             style={[
               styles.mnthAndDate,
-              { color: showHighlight ? "#fff" : "#000" },
+              { color: isSelected ? "#fff" : "#000" },
             ]}
           >
-            {item?.date}
+            {Date}
           </UI.Text>
         </UI.Box>
       </UI.TouchableOpacity>
@@ -65,13 +69,31 @@ class ReservationUI extends ReservationLogic {
         activeOpacity={0}
         onPress={() => this.setState({ selectedGender: item?.gender })}
       >
-        <UI.ConnectedCbBox id="optionContainer" pageId={pageId} style={styles.optionContainer}>
-          <UI.ConnectedCbBox id="radioOuter" pageId={pageId} style={styles.radioOuter}>
+        <UI.ConnectedCbBox
+          id="optionContainer"
+          pageId={pageId}
+          style={styles.optionContainer}
+        >
+          <UI.ConnectedCbBox
+            id="radioOuter"
+            pageId={pageId}
+            style={styles.radioOuter}
+          >
             {selectedGender === item?.gender && (
-              <UI.ConnectedCbBox id="radioInner" pageId={pageId} style={styles.radioInner} />
+              <UI.ConnectedCbBox
+                id="radioInner"
+                pageId={pageId}
+                style={styles.radioInner}
+              />
             )}
           </UI.ConnectedCbBox>
-          <UI.ConnectedCbText id="gendarLabel" pageId={pageId} style={styles.gendarLabel}>{item?.gender}</UI.ConnectedCbText>
+          <UI.ConnectedCbText
+            id="gendarLabel"
+            pageId={pageId}
+            style={styles.gendarLabel}
+          >
+            {item?.gender}
+          </UI.ConnectedCbText>
         </UI.ConnectedCbBox>
       </UI.TouchableOpacity>
     );
@@ -79,26 +101,33 @@ class ReservationUI extends ReservationLogic {
 
   renderTimePeriods = ({ item, index }) => {
     const isLesson = item.type !== "image";
-    const isLastCard = index === this.timeData.length - 1;
-    const shouldAlignLeft = this.timeData.length % 2 !== 0 && isLastCard;
-    const isSelected = this.state.selectedTimePeriod === item.id;
+    const isLastCard = index === this.state?.AvailableTimeCat.length - 1;
+    const shouldAlignLeft =
+      this.state?.AvailableTimeCat.length % 2 !== 0 && isLastCard;
+      const isSelected = this.state.selectedTimePeriod === item.TimeCat;
 
     return (
       <UI.ConnectedCbBox
-        id="timePeriodContainer" 
+        id="timePeriodContainer"
         pageId={pageId}
         style={[
           styles.timePeriodContainer,
           shouldAlignLeft && { alignItems: "center" },
         ]}
       >
-        <UI.ConnectedCbText id="timePeriodTxt" pageId={pageId} style={styles.timePeriodTxt}>{item.label}</UI.ConnectedCbText>
+        <UI.ConnectedCbText
+          id="timePeriodTxt"
+          pageId={pageId}
+          style={styles.timePeriodTxt}
+        >
+          {item.TimeName}
+        </UI.ConnectedCbText>
         <UI.TouchableOpacity
           style={[
             styles.timeSlotsBtn,
             { backgroundColor: isSelected ? "#00c6ff" : "#fff" },
           ]}
-          onPress={() => this.handleSelectTimePeriod(item.id)}
+          onPress={() => this.handleSelectTimePeriod(item.TimeCat)}
         >
           <UI.Text
             style={[
@@ -106,7 +135,7 @@ class ReservationUI extends ReservationLogic {
               { color: isSelected ? "#fff" : "#000" },
             ]}
           >
-            {item.time}
+            {item.TimeCat} ({item?.AvailableTimeSlots?.length})
           </UI.Text>
         </UI.TouchableOpacity>
       </UI.ConnectedCbBox>
@@ -115,14 +144,14 @@ class ReservationUI extends ReservationLogic {
 
   renderSlot = (item: any, index: number) => {
     const isDisabled = item.disabled;
-    const isSelectedTime = this.state.selectedTime === item.label;
+    const isSelectedTime = this.state.selectedTime === item.TimeSlot;
 
     return (
       <UI.TouchableOpacity
         key={index}
         style={[styles.slotBox, isSelectedTime && styles.selectedSlot]}
         disabled={isDisabled}
-        onPress={() => this.handleSelectTime(item.label, item.disabled)}
+        onPress={() => this.handleSelectTime(item.TimeSlot, item.disabled)}
       >
         <UI.Text
           style={[
@@ -131,7 +160,7 @@ class ReservationUI extends ReservationLogic {
             isDisabled && styles.disabledText,
           ]}
         >
-          {item.label}
+          {item.TimeSlot}
         </UI.Text>
       </UI.TouchableOpacity>
     );
@@ -139,17 +168,26 @@ class ReservationUI extends ReservationLogic {
 
   renderCalenderLoader = () => {
     return (
-      <UI.ConnectedCbBox id="CbLoader" pageId={pageId} style={styles.calenderLoader}>
+      <UI.ConnectedCbBox
+        id="CbLoader"
+        pageId={pageId}
+        style={styles.calenderLoader}
+      >
         <ActivityIndicator color={"#00c6ff"} size={"small"} />
       </UI.ConnectedCbBox>
     );
   };
   render() {
-    const displayDate = this.state.selectedDate || moment();
-    const displayMonthYear = displayDate.format("MMMM, YYYY");
     return (
       <UI.Box style={styles.mainContainer}>
-        <UI.ConnectedCbHeader headerTitle={this.props.singleServiceItem?.ServiceClassName} goHome={() => this.navigateToService()} goBack={() => this.props.navigation?.goBack()}/>
+        <UI.ConnectedCbHeader
+          headerTitle={
+            this?.props?.singleServiceItem?.[0]?.ServiceClass?.[0]
+              ?.ServiceClassName
+          }
+          goHome={() => this.navigateToService()}
+          goBack={() => this.props.navigation?.goBack()}
+        />
         <StatusBar hidden={true} />
         <UI.ScrollView bounces={false} style={{ padding: 10 }}>
           <UI.ConnectedCbBox
@@ -170,22 +208,24 @@ class ReservationUI extends ReservationLogic {
                 pageId={pageId}
                 style={styles.dateTxt}
               >
-                {this.state.selectedDate
-                  ? this.state.selectedDate.format("MMMM, YYYY")
-                  : moment().format("MMMM, YYYY")}
+                {this.state.selectedItem
+                  ? moment(this?.state?.selectedItem, "MM-DD-YYYY").format(
+                      "MMM-DD"
+                    )
+                  : null}
               </UI.ConnectedCbText>
             </UI.TouchableOpacity>
           </UI.ConnectedCbBox>
 
           <UI.FlatList
             ref={this.flatListRef}
-            data={this.state.requiredDates}
+            data={this.state.dateRange}
             horizontal
             keyExtractor={(item) => item.id}
             renderItem={this.renderHorizontalCalender}
             showsHorizontalScrollIndicator={false}
-            onEndReached={this.loadMoreDates}
-            ListFooterComponent={this.renderCalenderLoader}
+            // onEndReached={this.loadMoreDates}
+            // ListFooterComponent={this.renderCalenderLoader}
             onEndReachedThreshold={0.5}
             style={{
               paddingVertical: 10,
@@ -205,7 +245,7 @@ class ReservationUI extends ReservationLogic {
                 style={{ transform: [{ scale: 0.85 }], marginTop: -15 }}
               >
                 <CalendarPicker
-                  onDateChange={(date:string) => this.handleChangeDate(date)}
+                  onDateChange={(date: string) => this.onDateChange(date)}
                   selectedDayColor="#002c5f"
                   selectedDayTextColor="#fff"
                   textStyle={{ color: "#fff" }}
@@ -217,6 +257,8 @@ class ReservationUI extends ReservationLogic {
                   width={300}
                   height={350}
                   selectedStartDate={this.state.selectedDate}
+                  minDate={this.state.currentDate}
+                  maxDate={this.state.sixtyDaysLater}
                 />
                 <UI.ConnectedCbText
                   id="currentDateLabel"
@@ -229,10 +271,8 @@ class ReservationUI extends ReservationLogic {
             </UI.ConnectedCbBox>
           )}
           <UI.ConnectedCbSelectDropDown
-            options={this.servicesOptions}
-            customstyle={[
-              styles.serviceBtn,
-            ]}
+            options={this?.state?.serviceNames}
+            customstyle={[styles.serviceBtn]}
             onSelect={(value: string) => this.selectService(value)}
             placeholder={"Select the Service"}
             setAddMemberIndex={this.setAddMemberIndex}
@@ -260,10 +300,8 @@ class ReservationUI extends ReservationLogic {
           </UI.ConnectedCbBox>
 
           <UI.ConnectedCbSelectDropDown
-            options={this.providersdummyData}
-            customstyle={[
-              styles.dropDownBtn,
-            ]}
+            options={this.state.ProvidersData}
+            customstyle={[styles.dropDownBtn]}
             onSelect={(value: string) => this.selectProvider(value)}
             placeholder={"Select the Provider"}
             setAddMemberIndex={this.setAddMemberIndex}
@@ -272,9 +310,10 @@ class ReservationUI extends ReservationLogic {
           />
 
           <UI.FlatList
-            data={this.timeData}
+            data={this.state?.AvailableTimeCat}
             renderItem={this.renderTimePeriods}
             numColumns={2}
+            keyExtractor={(_, index) => index.toString()}
             columnWrapperStyle={{ justifyContent: "flex-start" }}
             scrollEnabled={false}
           />
@@ -309,21 +348,29 @@ class ReservationUI extends ReservationLogic {
             </UI.ConnectedCbBox>
           </UI.TouchableOpacity>
         </UI.ConnectedCbBox>
+
+        {!this.state.AvailableTimeCat && !this.state.dateRange && (
+          <UI.Box style={styles.loaderTrans}>
+            <CbLoader />
+          </UI.Box>
+        )}
       </UI.Box>
     );
   }
 }
 
-const mapStateToProps = (state:RootState) => {
+const mapStateToProps = (state: RootState) => {
   return {
-    loading:state.dashboard.loading,
-    dashboardResponse:state.dashboard.dashboardResponse,
-    errorMessage:state.dashboard.errorMessage,
-    singleServiceItem :state.services.singleServiceItem
-  }
-}
+    loading: state.dashboard.loading,
+    dashboardResponse: state.dashboard.dashboardResponse,
+    errorMessage: state.dashboard.errorMessage,
+    singleServiceItem: state.services.singleServiceItem,
+    reservationData: state?.reservation?.reservationData,
+  };
+};
 const mapDispatchToProps = {
   getAppConfiguration,
-}
+  getReservationsData,
+};
 
-export default connect(mapStateToProps, mapDispatchToProps)(ReservationUI)
+export default connect(mapStateToProps, mapDispatchToProps)(ReservationUI);

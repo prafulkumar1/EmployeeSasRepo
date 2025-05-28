@@ -181,6 +181,7 @@ export default class useMemberDirectoryLogic extends Component<
   genderOptions: any;
   flatListRef: any = React.createRef();
   dimensionListener: any;
+  private searchTimeout: NodeJS.Timeout | null = null;
   membersMock = membersMock;
   constructor(props: IProps) {
     super(props);
@@ -270,26 +271,26 @@ export default class useMemberDirectoryLogic extends Component<
     }
 
     //Need to check this code How to handle search in mobile due this facing issue in new Guest create
-    // if (Platform.OS !== "web") {
-    //   if (prevProps.formData !== this.props.formData) {
-    //     const searchValue = getFormFieldDataSelector(
-    //       this.props?.formData,
-    //       pageId,
-    //       "Search"
-    //     );
-    //     console.log(searchValue, "searchValue");
+    if (Platform.OS !== "web") {
+      if (prevProps.formData !== this.props.formData) {
+        const searchValue = getFormFieldDataSelector(
+          this.props?.formData,
+          pageId,
+          "Search"
+        );
+        console.log(searchValue, "searchValue");
 
-    //     if (searchValue.value !== undefined) {
-    //       setTimeout(() => {
-    //         this.props.getMemberList({
-    //           pageCount: this.state.pageCount,
-    //           searchChar: "",
-    //           searchBy: searchValue?.value,
-    //         });
-    //       }, 1000);
-    //     }
-    //   }
-    // }
+        if (searchValue.value !== undefined) {
+        this.searchTimeout = setTimeout(() => {
+            this.props.getMemberList({
+              pageCount: this.state.pageCount,
+              searchChar: "",
+              searchBy: searchValue?.value,
+            });
+          }, 1000);
+        }
+      }
+    }
   }
 
   componentWillUnmount() {
@@ -299,6 +300,9 @@ export default class useMemberDirectoryLogic extends Component<
       this.dimensionListener.remove();
     }
     this.setState({ updatedMembersListData: [] });
+    if (this.searchTimeout) {
+    clearTimeout(this.searchTimeout);
+  }
   }
 
   handleDimensionChange = ({ window }) => {
@@ -444,6 +448,8 @@ export default class useMemberDirectoryLogic extends Component<
       GuestPayload
     );
     const apiResponse = response as ApiResponse;
+    console.log(apiResponse, "apiResponse");
+    
     if (apiResponse.response?.ResponseCode === "Fail") {
       const errorMessage =
         apiResponse.response?.ResponseMessage || "An error occurred.";
@@ -459,6 +465,7 @@ export default class useMemberDirectoryLogic extends Component<
         }
       );
     } else if (apiResponse.response?.ResponseCode === "Success") {
+      this.props.resetLoadedScreen()
       } else {
       this.setState(
         {

@@ -6,7 +6,8 @@ const initialState = {
     loading:false,
     errorMessage:"",
     serviceClassList:null,
-    singleServiceItem:null
+    singleServiceItem:null,
+    Isshowbookintype:null
 }
 
 export const getServiceClasses = createAsyncThunk(
@@ -16,8 +17,8 @@ export const getServiceClasses = createAsyncThunk(
     { getState, rejectWithValue, fulfillWithValue },
   ) => {
     const params = {
-      FilterDate: "",
-      FilterTime: "",
+    "Button_Value":"Booking type Provider",
+    "CategoryID":"Tennis","FilterMemberSize":0,"FilterTime":"","MemberID":"5002",
     };
     const servicesResponse = await postApiCall("SERVICES","GET_SERVICE_LIST",params)
       if(servicesResponse.statusCode === 200 && servicesResponse.response?.ResponseCode === "Success"){
@@ -48,8 +49,10 @@ const serviceSlice = createSlice({
       state.loading = true;
      })
     .addCase(getServiceClasses.fulfilled, (state, action) => {
+      let BookingTypes = action?.payload?.BookingTypes
+      state.Isshowbookintype = action?.payload?.Isshowbookintype
+      state.serviceClassList = BookingTypes
       state.loading = false;
-      state.serviceClassList = action.payload
     })
     .addCase(getServiceClasses.rejected, (state, action:any) => {
       state.loading = false;

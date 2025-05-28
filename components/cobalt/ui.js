@@ -1,5 +1,17 @@
-import React from 'react';
-import { FlatList, ImageBackground, Image, TouchableOpacity, View, Alert, Animated, Modal, Pressable, SafeAreaView, Platform, } from 'react-native';
+import React from "react";
+import {
+  FlatList,
+  ImageBackground,
+  Image,
+  TouchableOpacity,
+  View,
+  Alert,
+  Animated,
+  Modal,
+  Pressable,
+  SafeAreaView,
+  Platform,
+} from "react-native";
 import {
   FormControl,
   FormControlError,
@@ -9,17 +21,43 @@ import {
 } from "@/components/ui/form-control";
 import { Input, InputField } from "@/components/ui/input";
 import { Button, ButtonText } from "@/components/ui/button";
-import { CheckIcon, ChevronDownIcon, ChevronUpIcon, CircleIcon, AddIcon, TrashIcon, RemoveIcon, ChevronRightIcon,
+import {
+  CheckIcon,
+  ChevronDownIcon,
+  ChevronUpIcon,
+  CircleIcon,
+  AddIcon,
+  TrashIcon,
+  RemoveIcon,
+  ChevronRightIcon,
 } from "@/components/ui/icon";
-import {Checkbox,CheckboxIcon,CheckboxIndicator, CheckboxLabel,} from "@/components/ui/checkbox";
-import {Select,SelectIcon,SelectInput,SelectTrigger,SelectPortal,SelectBackdrop,SelectContent,SelectItem,
+import {
+  Checkbox,
+  CheckboxIcon,
+  CheckboxIndicator,
+  CheckboxLabel,
+} from "@/components/ui/checkbox";
+import {
+  Select,
+  SelectIcon,
+  SelectInput,
+  SelectTrigger,
+  SelectPortal,
+  SelectBackdrop,
+  SelectContent,
+  SelectItem,
 } from "../ui/select";
 import { Box } from "@/components/ui/box";
 import { VStack } from "@/components/ui/vstack";
 import { HStack } from "@/components/ui/hstack";
 import { Icon } from "@/components/ui/icon";
 import { Text } from "@/components/ui/text";
-import {Radio,RadioGroup,RadioIndicator,RadioLabel,RadioIcon,
+import {
+  Radio,
+  RadioGroup,
+  RadioIndicator,
+  RadioLabel,
+  RadioIcon,
 } from "@/components/ui/radio";
 import { postApiCall } from "@/components/utlis/api";
 import {
@@ -53,8 +91,18 @@ class cbButton extends React.Component {
     const buttonTextStyle = this.customStyles.buttontextStyle;
 
     return (
-      <Button variant={variant} onPress={() => this.onPress()} style={buttonStyle}  >
-        <ButtonText style={buttonTextStyle} numberOfLines={1} ellipsizeMode="tail">{buttonText}</ButtonText>
+      <Button
+        variant={variant}
+        onPress={() => this.onPress()}
+        style={buttonStyle}
+      >
+        <ButtonText
+          style={buttonTextStyle}
+          numberOfLines={1}
+          ellipsizeMode="tail"
+        >
+          {buttonText}
+        </ButtonText>
       </Button>
     );
   }
@@ -64,7 +112,7 @@ class cbCheckBox extends React.Component {
   constructor(props) {
     super();
     this.id = props.id;
-    this.size = props.size || 'md';
+    this.size = props.size || "md";
     this.isDisabled = props.isDisabled || false;
     this.isInvalid = props.isInvalid || false;
     this.checkBoxLabel = props.Label || "";
@@ -245,15 +293,12 @@ class cbInput extends React.Component {
     this.isPasswordVisible = props.isPasswordVisible;
     this.placeholderTextColor = props.placeholderTextColor;
     this.onFocus =
-      typeof props.onFocus === "function"
-        ? props.onFocus
-        : () => {};
-         this.onChange =
+      typeof props.onFocus === "function" ? props.onFocus : () => {};
+    this.onChange =
       typeof props.onChange === "function" ? props.onChange : null;
-      this.maxLength = props.maxLength || null;
-
+    this.maxLength = props.maxLength || null;
   }
-   handleChange = (value) => {
+  handleChange = (value) => {
     if (this.onChange) {
       this.onChange(value); // Local state or prop-based handling
     } else if (this.setFormFieldData && this.props.formId) {
@@ -267,7 +312,6 @@ class cbInput extends React.Component {
     }
   };
   render() {
-
     const inputArray = global.controlsConfigJson.find(
       (item) => item.id === this.id
     );
@@ -317,7 +361,6 @@ class cbInput extends React.Component {
             // }
             onFocus={() => this.onFocus()}
             maxLength={this.maxLength}
-            
           />
         </Input>
         {isRequiredprop && errorMessageprop && (
@@ -349,7 +392,6 @@ class cbVStack extends React.Component {
   }
 
   render() {
- 
     const { children } = this.props;
     const inputArray = global.controlsConfigJson.find(
       (item) => item.id === this.id
@@ -438,6 +480,7 @@ class CbSelectDropDown extends React.Component {
 
     this.state = {
       selectedIndex: props.selectedIndex || null,
+      selecteditem: null,
       showDropdown: false,
     };
 
@@ -450,7 +493,9 @@ class CbSelectDropDown extends React.Component {
     this.customstyle = props.customstyle || {};
     this.dropdownCustom = props.dropdownCustom || {};
     this.selectItemId = props.selectItemId;
+    console.log(props.options, "consijnsjnjdnkjsnd");
   }
+
   componentDidUpdate(prevProps) {
     if (
       prevProps.addMemberIndex !== this.props.addMemberIndex &&
@@ -474,27 +519,27 @@ class CbSelectDropDown extends React.Component {
     this?.openDropDown();
   };
 
-  selectItem = (index) => {
+  selectItem = (item) => {
     this.setState({
-      selectedIndex: index,
+      selecteditem: item,
       showDropdown: false,
     });
 
-    this.onSelect(this.options[index]?.label || this.options[index], index);
+    this.onSelect(this.state.selecteditem);
   };
 
   renderDropdown = () => {
     return (
       <FlatList
         style={[styles.dropdown, this.props.dropdownCustom]}
-        data={this.options}
+        data={this.props.options}
         keyExtractor={(_, index) => index.toString()}
         renderItem={({ item, index }) => (
           <TouchableOpacity
             style={[styles.dropdownItem, this.props.dropdownItemStyle]}
-            onPress={() => this.selectItem(index)}
+            onPress={() => this.selectItem(item)}
           >
-            <Text style={styles.dropdownText}>{item.label}</Text>
+            <Text style={styles.dropdownText}>{item}</Text>
           </TouchableOpacity>
         )}
       />
@@ -502,12 +547,9 @@ class CbSelectDropDown extends React.Component {
   };
 
   render() {
-    const { selectedIndex, showDropdown } = this.state;
+    const { selectedIndex, showDropdown, selecteditem } = this.state;
     const selectedValue =
-      selectedIndex !== null
-        ? this.options[selectedIndex]?.label
-        : this.placeholder;
-
+      selecteditem !== null ? selecteditem : this.placeholder;
     return (
       <View style={this.props.customstyle}>
         <TouchableOpacity
@@ -605,12 +647,13 @@ class CbText extends React.Component {
       ...this.flattenStyle(this.Conditionalstyle),
     };
 
-
     return (
       <Text
         strikeThrough={StrikeThrough}
         style={combinedStyle}
-       {...(Platform.OS !== 'web' && this.numberOfLines ? { numberOfLines: this.numberOfLines } : {})}
+        {...(Platform.OS !== "web" && this.numberOfLines
+          ? { numberOfLines: this.numberOfLines }
+          : {})}
       >
         {LabelText}
       </Text>
@@ -805,8 +848,7 @@ class CbBox extends React.Component {
       if (config) {
         this.setState({ controlConfig: config });
       }
-    } catch (error) {
-    }
+    } catch (error) {}
   }
 
   flattenStyle(inputStyle) {
@@ -817,31 +859,23 @@ class CbBox extends React.Component {
   }
 
   render() {
-    const {
-      style = {},
-      Conditionalstyle = {},
-      children,
-    } = this.props;
+    const { style = {}, Conditionalstyle = {}, children } = this.props;
     const { controlConfig } = this.state;
 
     const stylesFromConfig = transformStyles(controlConfig?.Styles);
-    const dynamicStyle = stylesFromConfig && Object.keys(stylesFromConfig).length > 0
-      ? Object.values(stylesFromConfig)[0]
-      : style;
+    const dynamicStyle =
+      stylesFromConfig && Object.keys(stylesFromConfig).length > 0
+        ? Object.values(stylesFromConfig)[0]
+        : style;
 
     const combinedStyle = {
       ...this.flattenStyle(dynamicStyle),
       ...this.flattenStyle(Conditionalstyle),
     };
 
-    return (
-      <Box style={combinedStyle}>
-        {children}
-      </Box>
-    );
+    return <Box style={combinedStyle}>{children}</Box>;
   }
 }
-
 
 class CbView extends React.Component {
   constructor(props) {
@@ -857,7 +891,7 @@ class CbView extends React.Component {
   componentDidMount() {
     setTimeout(() => {
       this.loadPageConfig();
-    }, 500);    
+    }, 500);
   }
   loadPageConfig = () => {
     try {
@@ -882,16 +916,12 @@ class CbView extends React.Component {
       StyleProps && Object.keys(StyleProps).length > 0
         ? Object.values(StyleProps)[0]
         : this.styles;
-        const combinedStyle = {
-          ...this.flattenStyle(dynamicStyle),
-          ...this.flattenStyle(this.Conditionalstyle),
-        };
+    const combinedStyle = {
+      ...this.flattenStyle(dynamicStyle),
+      ...this.flattenStyle(this.Conditionalstyle),
+    };
 
-    return (
-      <View style={combinedStyle}>
-        {this.props.children}
-      </View>
-    );
+    return <View style={combinedStyle}>{this.props.children}</View>;
   }
 }
 
@@ -976,51 +1006,83 @@ class CbHeader extends React.Component {
 }
 
 const mapStateToProps = (state) => {
-  return{
+  return {
     formData: state.login.formData,
-  }
+  };
 };
 
 const mapDispatchToProps = {
   setFormFieldData,
   getFormFieldData,
-  loadPageConfigurations
+  loadPageConfigurations,
 };
-cbButton.displayName = 'ConnectedCbButton';
-cbInput.displayName = 'ConnectedCbInput';
-cbCheckBox.displayName = 'ConnectedCbCheckBox';
-cbSelect.displayName = 'ConnectedCbSelect';
-cbRadioButton.displayName = 'ConnectedCbRadioButton';
-cbVStack.displayName = 'ConnectedCbVStack';
-cbForm.displayName = 'ConnectedCbForm';
-CbFlatList.displayName = "ConnectedCbFlatList"
-CbErrorMessagePopup.displayName = "ConnectedCbErrorMessagePopup"
-CbText.displayName = "ConnectedCbText"
-CbImageBackground.displayName = 'ConnectedCbImageBackground';
-CbImage.displayName = 'ConnectedCbImage';
-CbCommonButton.displayName = 'ConnectedCbCommonButton';
-CbBox.displayName = 'ConnectedCbBox';
-CbView.displayName = 'ConnectedCbView';
-CbHeader.displayName = 'ConnectedCbHeader'
- 
+cbButton.displayName = "ConnectedCbButton";
+cbInput.displayName = "ConnectedCbInput";
+cbCheckBox.displayName = "ConnectedCbCheckBox";
+cbSelect.displayName = "ConnectedCbSelect";
+cbRadioButton.displayName = "ConnectedCbRadioButton";
+cbVStack.displayName = "ConnectedCbVStack";
+cbForm.displayName = "ConnectedCbForm";
+CbFlatList.displayName = "ConnectedCbFlatList";
+CbErrorMessagePopup.displayName = "ConnectedCbErrorMessagePopup";
+CbText.displayName = "ConnectedCbText";
+CbImageBackground.displayName = "ConnectedCbImageBackground";
+CbImage.displayName = "ConnectedCbImage";
+CbCommonButton.displayName = "ConnectedCbCommonButton";
+CbBox.displayName = "ConnectedCbBox";
+CbView.displayName = "ConnectedCbView";
+CbHeader.displayName = "ConnectedCbHeader";
 
 const ConnectedCbInput = connect(mapStateToProps, mapDispatchToProps)(cbInput);
-const ConnectedCbButton = connect(mapStateToProps, mapDispatchToProps)(cbButton);
-const ConnectedCbCheckBox = connect(mapStateToProps, mapDispatchToProps)(cbCheckBox);
-const ConnectedCbSelect = connect(mapStateToProps, mapDispatchToProps)(cbSelect);
-const ConnectedCbRadioButton = connect(mapStateToProps, mapDispatchToProps)(cbRadioButton);
-const ConnectedCbVStack = connect(mapStateToProps, mapDispatchToProps)(cbVStack);
+const ConnectedCbButton = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(cbButton);
+const ConnectedCbCheckBox = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(cbCheckBox);
+const ConnectedCbSelect = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(cbSelect);
+const ConnectedCbRadioButton = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(cbRadioButton);
+const ConnectedCbVStack = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(cbVStack);
 const ConnectedCbForm = connect(mapStateToProps, mapDispatchToProps)(cbForm);
-const ConnectedCbFlatList = connect(mapStateToProps, mapDispatchToProps)(CbFlatList);
-const ConnectedCbSelectDropDown = connect(mapStateToProps, mapDispatchToProps)(CbSelectDropDown);
-const ConnectedCbErrorMessagePopup = connect(mapStateToProps, mapDispatchToProps)(CbErrorMessagePopup);
+const ConnectedCbFlatList = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(CbFlatList);
+const ConnectedCbSelectDropDown = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(CbSelectDropDown);
+const ConnectedCbErrorMessagePopup = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(CbErrorMessagePopup);
 const ConnectedCbText = connect(mapStateToProps, mapDispatchToProps)(CbText);
 const ConnectedCbImage = connect(mapStateToProps, mapDispatchToProps)(CbImage);
-const ConnectedCbImageBackground = connect(mapStateToProps, mapDispatchToProps)(CbImageBackground);
-const ConnectedCbCommonButton = connect(mapStateToProps, mapDispatchToProps)(CbCommonButton);
+const ConnectedCbImageBackground = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(CbImageBackground);
+const ConnectedCbCommonButton = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(CbCommonButton);
 const ConnectedCbBox = connect(mapStateToProps, mapDispatchToProps)(CbBox);
 const ConnectedCbView = connect(mapStateToProps, mapDispatchToProps)(CbView);
-const ConnectedCbHeader = connect(mapStateToProps, mapDispatchToProps)(CbHeader);
+const ConnectedCbHeader = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(CbHeader);
 export {
   ConnectedCbButton,
   ConnectedCbInput,
@@ -1038,7 +1100,7 @@ export {
   ConnectedCbCommonButton,
   ConnectedCbBox,
   ConnectedCbView,
-  ConnectedCbHeader
+  ConnectedCbHeader,
 };
 
 // export {  cbButton, cbInput, cbCheckBox, cbSelect, cbImageBackground, cbRadioButton, cbVStack, cbForm, CbFlatList, CbImage };

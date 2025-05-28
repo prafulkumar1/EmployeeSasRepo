@@ -4,20 +4,26 @@ import { styles } from "@/source/styles/reservation/Reservation.web";
 import { connect } from "react-redux";
 import { Image, Text, TouchableOpacity, Modal, Platform } from "react-native";
 import { Icon } from "@/components/ui/icon";
-import { CloseIcon, } from "@/components/ui/icon";
+import { CloseIcon } from "@/components/ui/icon";
 import { CalendarDaysIcon } from "@/components/ui/icon";
 import CalendarComponent from "./CalendarComponent";
 import useReservationLogic from "@/source/controller/reservation/Reservation";
-import {setAdddropDownIndex,setClosememberModel,setOpenAddmemberModel} from "@/components/redux/reducers/reservationReducer";
+import {
+  getReservationsData,
+  setAdddropDownIndex,
+  setClosememberModel,
+  setOpenAddmemberModel,
+} from "@/components/redux/reducers/reservationReducer";
 import AddMemberUIWeb from "../addMember/addMemberUI.web";
 import MemberDirectoryUI from "../memberDirectory/memberDirectoryUI.web";
 import { setOpenMembersModel } from "@/components/redux/reducers/addMemberReducer";
 import { setLoader } from "@/components/redux/reducers/uiSlice";
+import CbLoader from "@/components/cobalt/webCobaltLoader";
 
 const pageId = "Reservation";
 class ReservationUI extends useReservationLogic {
   renderItem = ({ item, index }) => {
-    const [day, month] = item.split("-");
+    const [day, month, Date] = item?.Dateslot?.split(" ");
 
     return (
       <UI.TouchableOpacity
@@ -29,14 +35,31 @@ class ReservationUI extends useReservationLogic {
             styles.dateItem,
             {
               backgroundColor:
-                this.state.selectedItem === item ? "#00C2FF" : "#fff",
+                this.state.selectedItem === item?.Date ? "#00C2FF" : "#fff",
             },
           ]}
         >
-          <UI.ConnectedCbText style={styles.dateText}   pageId={pageId}
-          id="dateText">{day}</UI.ConnectedCbText>
-          <UI.ConnectedCbText style={styles.dateText}   pageId={pageId}
-          id="dateText">{month}</UI.ConnectedCbText>
+          <UI.ConnectedCbText
+            style={styles.dateText}
+            pageId={pageId}
+            id="dateText"
+          >
+            {day}
+          </UI.ConnectedCbText>
+          <UI.ConnectedCbText
+            style={styles.dateText}
+            pageId={pageId}
+            id="dateText"
+          >
+            {month}
+          </UI.ConnectedCbText>
+          <UI.ConnectedCbText
+            style={styles.dateText}
+            pageId={pageId}
+            id="dateText"
+          >
+            {Date}
+          </UI.ConnectedCbText>
         </UI.View>
       </UI.TouchableOpacity>
     );
@@ -46,23 +69,33 @@ class ReservationUI extends useReservationLogic {
   renderGenderSelector = () => {
     const { selectedGender } = this.state;
     return (
-      <UI.ConnectedCbView style={styles.RadioContainer}   pageId={pageId}
-      id="RadioContainer">
+      <UI.ConnectedCbView
+        style={styles.RadioContainer}
+        pageId={pageId}
+        id="RadioContainer"
+      >
         {["Male", "Female", "Any"].map((gender) => (
           <TouchableOpacity
             key={gender}
             style={styles.optionContainer}
             onPress={() => this.setState({ selectedGender: gender })}
           >
-            <UI.ConnectedCbView style={styles.radioOuter}   pageId={pageId}
-          id="radioOuter">
+            <UI.ConnectedCbView
+              style={styles.radioOuter}
+              pageId={pageId}
+              id="radioOuter"
+            >
               {selectedGender === gender && (
-                <UI.ConnectedCbView style={styles.radioInner}   pageId={pageId}
-                id="radioInner" />
+                <UI.ConnectedCbView
+                  style={styles.radioInner}
+                  pageId={pageId}
+                  id="radioInner"
+                />
               )}
             </UI.ConnectedCbView>
-            <UI.ConnectedCbText style={styles.label}   pageId={pageId}
-          id="label">{gender}</UI.ConnectedCbText>
+            <UI.ConnectedCbText style={styles.label} pageId={pageId} id="label">
+              {gender}
+            </UI.ConnectedCbText>
           </TouchableOpacity>
         ))}
       </UI.ConnectedCbView>
@@ -72,14 +105,14 @@ class ReservationUI extends useReservationLogic {
   //timerender
   renderSlot = (item: any, index: number) => {
     const isDisabled = item.disabled;
-    const isSelectedTime = this.state.selectedTime === item.label;
+    const isSelectedTime = this.state.selectedTime === item.TimeSlot;
 
     return (
       <UI.TouchableOpacity
         key={index}
         style={[styles.slotBox, isSelectedTime && styles.selectedSlot]}
         disabled={isDisabled}
-        onPress={() => this.handleSelectTime(item.label, item.disabled)}
+        onPress={() => this.handleSelectTime(item.TimeSlot, item.disabled)}
       >
         <UI.ConnectedCbText
           style={[
@@ -88,7 +121,7 @@ class ReservationUI extends useReservationLogic {
             isDisabled && styles.disabledText,
           ]}
         >
-          {item.label}
+          {item.TimeSlot}
         </UI.ConnectedCbText>
       </UI.TouchableOpacity>
     );
@@ -96,9 +129,11 @@ class ReservationUI extends useReservationLogic {
 
   //timeperiods
   renderTimePeriods = ({ item, index }) => {
-    const isLastCard = index === this.timeData.length - 1;
-    const shouldAlignLeft = this.timeData.length % 2 !== 0 && isLastCard;
-    const isSelected = this.state.selectedTimePeriod === item.id;
+    const isLastCard = index === this.state?.AvailableTimeCat?.length - 1;
+    const shouldAlignLeft =
+      this.state?.AvailableTimeCat?.length % 2 !== 0 && isLastCard;
+    const isSelected = this.state.selectedTimePeriod === item.TimeCat;
+
 
     return (
       <UI.ConnectedCbView
@@ -107,13 +142,15 @@ class ReservationUI extends useReservationLogic {
           shouldAlignLeft && { alignItems: "center" },
         ]}
       >
-        <UI.ConnectedCbText style={styles.timePeriodTxt}>{item.label}</UI.ConnectedCbText>
+        <UI.ConnectedCbText style={styles.timePeriodTxt}>
+          {item.TimeName}
+        </UI.ConnectedCbText>
         <UI.TouchableOpacity
           style={[
             styles.timeSlotsBtn,
             { backgroundColor: isSelected ? "#00c6ff" : "#fff" },
           ]}
-          onPress={() => this.handleSelectTimePeriod(item.id)}
+          onPress={() => this.handleSelectTimePeriod(item.TimeCat)}
         >
           <Text
             style={[
@@ -121,7 +158,7 @@ class ReservationUI extends useReservationLogic {
               { color: isSelected ? "#fff" : "#000" },
             ]}
           >
-            {item.time}
+           {item.TimeCat} ({item?.AvailableTimeSlots?.length})
           </Text>
         </UI.TouchableOpacity>
       </UI.ConnectedCbView>
@@ -138,7 +175,17 @@ class ReservationUI extends useReservationLogic {
       pageConfigJson && pageConfigJson.Controlls
         ? pageConfigJson.Controlls
         : [];
-
+    if (
+      !this?.state?.serviceNames &&
+      !this.state.dateRange &&
+      !this?.state?.AvailableTimeCat
+    ) {
+      return (
+        <UI.Box style={{ flex: 1 }}>
+          <CbLoader visible={true} />
+        </UI.Box>
+      );
+    }
     return (
       <UI.ScrollView style={[styles.mainContainer]}>
         <UI.ConnectedCbBox
@@ -175,7 +222,7 @@ class ReservationUI extends useReservationLogic {
             <UI.TouchableOpacity
               onPress={this.handlePrevious}
               style={{ paddingHorizontal: 20 }}
-              disabled={this.state.currentIndex === 0}
+              disabled={this?.state?.currentIndex === 0}
             >
               <Image
                 source={require("@/assets/images/icons/Back-Right-arrow.png")}
@@ -194,7 +241,7 @@ class ReservationUI extends useReservationLogic {
               onPress={this.handleNext}
               style={{ paddingHorizontal: 20 }}
               disabled={
-                this.state.currentIndex === this.state.dateRange.length - 1
+                this.state.currentIndex === this?.state?.dateRange?.length - 1
               }
             >
               <Image
@@ -205,9 +252,13 @@ class ReservationUI extends useReservationLogic {
         </UI.ConnectedCbBox>
         <UI.ConnectedCbView style={[styles.selectorcontainer]}>
           <UI.ConnectedCbSelectDropDown
-            options={this.servicesOptions}
+            options={this?.state?.serviceNames}
             customstyle={styles.selectorcustomstyle}
             placeholder={"Select the service"}
+            onSelect={(value: string) => this.selectService(value)}
+            setAddMemberIndex={this.setAddMemberIndex}
+            addMemberIndex={this.state.addMemberIndex}
+            selectItemId={0}
           />
 
           {this.renderGenderSelector()}
@@ -219,32 +270,42 @@ class ReservationUI extends useReservationLogic {
         </UI.ConnectedCbView>
         <UI.ConnectedCbView style={[styles.selectorcontainer]}>
           <UI.ConnectedCbSelectDropDown
-            options={this.providersdummyData}
+            options={this.state.ProvidersData}
             customstyle={styles.selectorcustomstyle}
-            onSelect={(values: any) => console.log(values, "--->>>")} // Pass the handleSelect method to the dropdown
+            onSelect={(value: string) => this.selectProvider(value)}
             placeholder={"Select the Provider"}
+            setAddMemberIndex={this.setAddMemberIndex}
+            addMemberIndex={this.state.addMemberIndex}
+            selectItemId={1}
           />
         </UI.ConnectedCbView>
 
         <UI.ConnectedCbView style={[{ width: "100%", zIndex: -2 }]}>
-          <UI.ConnectedCbFlatList
-            flatlistData={this.timeData}
-            children={this.renderTimePeriods}
+          <UI.FlatList
+            data={this?.state?.AvailableTimeCat}
+            renderItem={this.renderTimePeriods}
+            keyExtractor={(_, index) => index.toString()}
+            showsHorizontalScrollIndicator={false}
             numColumns={3}
             columnWrapperStyle={{ justifyContent: "flex-start" }}
           />
         </UI.ConnectedCbView>
 
         <UI.ConnectedCbView style={styles.slotTimeContainer}>
-          {this.getCurrentTimeSlots().map(this.renderSlot)}
+          {this.getCurrentTimeSlots()?.map(this.renderSlot)}
         </UI.ConnectedCbView>
 
-        <UI.ConnectedCbView style={[styles.addMemberBtncontainer, {zIndex :-1}]}>
+        <UI.ConnectedCbView
+          style={[styles.addMemberBtncontainer, { zIndex: -1 }]}
+        >
           <UI.TouchableOpacity
             style={styles.addMemberBtn}
             onPress={() => this.props.setOpenAddmemberModel()}
           >
-            <UI.ConnectedCbText style={styles.addMemberBtnTxt}> Add Member</UI.ConnectedCbText>
+            <UI.ConnectedCbText style={styles.addMemberBtnTxt}>
+              {" "}
+              Add Member
+            </UI.ConnectedCbText>
           </UI.TouchableOpacity>
         </UI.ConnectedCbView>
 
@@ -285,7 +346,7 @@ class ReservationUI extends useReservationLogic {
                       },
                     ]}
                     onPress={() => this.handleCloseAllModels()}
-                    {...(Platform.OS === 'web' && {
+                    {...(Platform.OS === "web" && {
                       onMouseEnter: () => this.setState({ hover: "ok" }),
                       onMouseLeave: () => this.setState({ hover: null }),
                     })}
@@ -338,11 +399,11 @@ class ReservationUI extends useReservationLogic {
               <UI.TouchableOpacity
                 onPress={this.toggleThankModal}
                 style={styles.closeIcon}
-                {...(Platform.OS === 'web'
+                {...(Platform.OS === "web"
                   ? {
-                    onMouseEnter: () => this.setState({ hover: 'close' }),
-                    onMouseLeave: () => this.setState({ hover: null }),
-                  }
+                      onMouseEnter: () => this.setState({ hover: "close" }),
+                      onMouseLeave: () => this.setState({ hover: null }),
+                    }
                   : {})}
               >
                 <Icon
@@ -365,6 +426,8 @@ class ReservationUI extends useReservationLogic {
             </UI.View>
           </UI.View>
         </Modal>
+
+        {}
       </UI.ScrollView>
     );
   }
@@ -376,6 +439,8 @@ const mapStateToProps = (state: RootState) => {
     OpenAddmemberModel: state?.reservation?.OpenAddmemberModel,
     OpenMemberModel: state?.addMember?.OpenMemberModel,
     closeMemberModel: state?.reservation?.closeMemberModel,
+    reservationData: state?.reservation?.reservationData,
+    singleServiceItem: state?.services?.singleServiceItem,
   };
 };
 const mapDispatchToProps = {
@@ -384,6 +449,7 @@ const mapDispatchToProps = {
   setClosememberModel,
   setOpenMembersModel,
   setLoader,
+  getReservationsData,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(ReservationUI);

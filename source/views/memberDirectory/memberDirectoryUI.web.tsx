@@ -53,12 +53,12 @@ class MemberDirectoryUI extends useMemberDirectoryLogic {
             source={require("@/assets/images/profile.png")}
           />
         </UI.View>
-        <UI.View>
+        <UI.ConnectedCbView>
           <Text style={styles.memberName} numberOfLines={2}>
             {item?.DisplayName}
           </Text>
           <Text style={styles.memberId}>{item?.MemberID}</Text>
-        </UI.View>
+        </UI.ConnectedCbView>
       </UI.TouchableOpacity>
     );
   };

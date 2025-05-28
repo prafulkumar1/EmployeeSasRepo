@@ -8,31 +8,34 @@ export const baseURL = "https://cobaltportal.mycobaltsoftware.com/CobaltSandbox/
 
 
 export const endpoints = {
-    AUTHENTICATE_USER:{
-        AUTHENTICATE_USER : "Account/AuthenticateUser"
+    AUTHENTICATE_USER: {
+        AUTHENTICATE_USER: "Account/AuthenticateUser"
     },
-    SERVICES:{
-        GET_SERVICE_LIST : "Bookings/GetBMSBookingTypes"
+    SERVICES: {
+        GET_SERVICE_LIST: "Bookings/GetBMSBookingTypes"
     },
-    UI_CONFIGURATIONS:{
-        GET_UI_CONFIGURATIONS:"MobileOrdering/MO_GetControlsInfo"
+    UI_CONFIGURATIONS: {
+        GET_UI_CONFIGURATIONS: "MobileOrdering/MO_GetControlsInfo"
     },
     PROFIT_CENTER: {
         GET_PROFIT_CENTERS: "MobileOrdering/MO_GetProfitCenters"
     },
-   DASHBOARD:{
-    GET_DASHBOARD:"Member/GetDashboard"
-   },
-   MEMBER_DIRECTORY:{
-    GET_MEMBER_DIRECTORY:"Member/GetMemberSpouseList"
-   },
-   EXISTING_GUEST_DIRECTORY:{
-    GET_EXISTING_GUEST_DIRECTORY:"Member/GetMemberExistingGuestList"
-   },
-   VALIDATE_NEW_GUEST:{
-    VALIDATE_ADD_NEW_GUEST:"Member/GetGuestValidation"
-   },
-   NEW_GUEST:{
-    ADD_NEW_GUEST:"golf/AddGuestList"
-   },
+    DASHBOARD: {
+        GET_DASHBOARD: "Member/GetDashboard"
+    },
+    MEMBER_DIRECTORY: {
+        GET_MEMBER_DIRECTORY: "Member/GetMemberSpouseList"
+    },
+    EXISTING_GUEST_DIRECTORY: {
+        GET_EXISTING_GUEST_DIRECTORY: "Member/GetMemberExistingGuestList"
+    },
+    VALIDATE_NEW_GUEST: {
+        VALIDATE_ADD_NEW_GUEST: "Member/GetGuestValidation"
+    },
+    NEW_GUEST: {
+        ADD_NEW_GUEST: "golf/AddGuestList"
+    },
+    BOOKING_CONFIG_DATA: {
+        GET_BOOKING_CONFIG_DATA: "Bookings/GetBookingConfigData"
+    },
 }

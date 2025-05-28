@@ -25,82 +25,40 @@ interface Props {
   loading: boolean;
   addMemberIndex: number;
   loadPageConfigurations: ({ pageId, controlId }) => void;
+  getReservationsData: ({ BookingTypeID, ServiceClassID }) => void;
   route: any;
-  setOpenAddmemberModel?:()=>void
-  setClosememberModel?:()=>void
-  setOpenMembersModel?:()=>void
-  setLoader?:()=>void
-  OpenAddmemberModel?:boolean
-  OpenMemberModel?:boolean
-  closeMemberModel?:boolean
-  singleServiceItem?:ServiceType
+  setOpenAddmemberModel?: () => void;
+  setClosememberModel?: () => void;
+  setOpenMembersModel?: () => void;
+  setLoader?: () => void;
+  OpenAddmemberModel?: boolean;
+  OpenMemberModel?: boolean;
+  closeMemberModel?: boolean;
+  singleServiceItem?: ServiceType;
+  reservationData?: any;
 }
 
-//webdummydata
-const mappedDates = [
-  { id: "1", title: "Item 1" },
-  { id: "2", title: "Item 2" },
-  { id: "3", title: "Item 3" },
-  { id: "4", title: "Item 4" },
-  { id: "5", title: "Item 5" },
-  { id: "6", title: "Item 5" },
-  { id: "7", title: "Item 5" },
-  { id: "8", title: "Item 5" },
-  { id: "9", title: "Item 5" },
-  { id: "10", title: "Item 5" },
-  { id: "11", title: "Item 5" },
-  { id: "12", title: "Item 5" },
-  { id: "13", title: "Item 5" },
-  { id: "14", title: "Item 5" },
-  { id: "15", title: "Item 5" },
-  { id: "16", title: "Item 5" },
-  { id: "17", title: "Item 5" },
-  { id: "18", title: "Item 5" },
-];
+interface Provider {
+  ProviderID: string;
+  ProviderImage: string;
+  ProviderName: string;
+}
+[];
+interface Service {
+  ServiceID: string;
+  ServiceImage: string;
+  ServiceName: string;
+}
 
-const servicesOptions = [
-  { label: "30-Min Aerobic Instruction", value: "30-Min Aerobic Instruction" },
-  { label: "90-Min Aerobic Instruction", value: "90-Min Aerobic Instruction" },
-  // { label: "Hydra Facial Treatment", value: "hydra_facial" },
-];
+interface AvailableTimeSlot {
+  TimeSlot: string; // TimeSlot is a string, e.g., '06:00'
+}
 
-const providersdummyData = [
-  { label: "Simon Travers", value: "massage_1hr" },
-  { label: "Jessica Reed", value: "deep_cleansing" },
-  { label: "Michael Carter", value: "Personal Training" },
-  { label: "Daniel Harris", value: "hydra_facial" },
-];
-const HeaderData = {
-  Tennis: {
-    values: ["First", "Second"],
-    image: "https://via.placeholder.com/30?text=T",
-  },
-  "Tennis Booking": {
-    values: ["First Booking", "Second Booking"],
-    image: "https://via.placeholder.com/30?text=TB",
-  },
-  Salon: {
-    values: ["Hair", "Nails"],
-    image: "https://via.placeholder.com/30?text=S",
-  },
-  Spa: {
-    values: ["Body", "Head"],
-    image: "https://via.placeholder.com/30?text=S",
-  },
-  "Pickle clinic": {
-    values: ["Hair", "Nails"],
-    image: "https://via.placeholder.com/30?text=S",
-  },
-  "Pickle Ball": {
-    values: ["Hair", "Nails"],
-    image: "https://via.placeholder.com/30?text=S",
-  },
-  Sport: {
-    values: ["golf", "cricket"],
-    image: "https://via.placeholder.com/30?text=S",
-  },
-};
-
+interface AvailableTimeCategory {
+  TimeName: string; // e.g., 'Morning', 'Mid Day', 'Evening'
+  TimeCat: string; // e.g., '06:00 AM - 12:00 PM'
+  AvailableTimeSlots: AvailableTimeSlot[]; // Array of available time slots
+}
 //webdummydata
 
 export interface ControllerState {
@@ -122,10 +80,10 @@ export interface ControllerState {
   loadingMore: boolean;
   calenderSelectedDate: string;
   mainServiceName: string;
-  addMemberIndex: null|number
+  addMemberIndex: null | number;
   //webstate
   currentIndex: number;
-  selectedItem: string;
+  selectedItem: any;
   showModal: boolean;
   secondsLeft: number;
   comments: string;
@@ -171,7 +129,12 @@ export interface ControllerState {
   showplayedpopup: boolean;
   showThankModal: boolean;
   selectedKey: null | any;
-  //webstate
+  ProvidersData: Provider[];
+  servicesOptions: Service[];
+  serviceNames: string[];
+  AvailableTimeCat: AvailableTimeCategory[];
+  DefaultTimeCat:string
+  //webstateany
 }
 
 class ReservationLogic extends Component<Props, ControllerState> {
@@ -180,7 +143,6 @@ class ReservationLogic extends Component<Props, ControllerState> {
   dummydata: any;
   HeaderData: any;
   providersdummyData: any;
-  servicesOptions: any;
   dimensionListener: any;
   timer: NodeJS.Timeout | null = null;
   //webcode
@@ -205,10 +167,10 @@ class ReservationLogic extends Component<Props, ControllerState> {
       loadingMore: false,
       calenderSelectedDate: "",
       mainServiceName: "",
-      addMemberIndex:null,
+      addMemberIndex: null,
       //webstate
       currentIndex: 0,
-      selectedItem: "",
+      selectedItem: null,
       showModal: false,
       secondsLeft: 1200,
       comments: "",
@@ -237,76 +199,16 @@ class ReservationLogic extends Component<Props, ControllerState> {
       showplayedpopup: false,
       showThankModal: false,
       selectedKey: null,
+      ProvidersData: null,
+      servicesOptions: null,
+      serviceNames: null,
+      AvailableTimeCat: null,
+      DefaultTimeCat:null
       //webstate
     };
-    //wecode
-    this.dummydata = mappedDates;
-    this.servicesOptions = servicesOptions;
-    this.providersdummyData = providersdummyData;
-    this.HeaderData = HeaderData;
-    //wecode
   }
 
-  timeData = [
-    {
-      id: "morning",
-      label: "Morning",
-      time: "06:00 AM-12:00 PM (8)",
-      slots: [
-        { id: "1", label: "06:00" },
-        { id: "2", label: "07:00" },
-        { id: "3", label: "08:00", disabled: true },
-        { id: "4", label: "08:30" },
-        { id: "5", label: "09:00" },
-        { id: "6", label: "09:30" },
-        { id: "7", label: "10:00" },
-        { id: "8", label: "10:30" },
-        { id: "9", label: "11:00" },
-      ],
-    },
-    {
-      id: "midday",
-      label: "Mid Day",
-      time: "12:00 PM-6:00 PM (9)",
-      slots: [
-        { id: "1", label: "12:00" },
-        { id: "2", label: "01:00" },
-        { id: "3", label: "02:00", disabled: true },
-        { id: "4", label: "03:30" },
-        { id: "5", label: "04:00" },
-      ],
-    },
-    {
-      id: "evening",
-      label: "Evening",
-      time: "06:00 PM-11:00 PM (0)",
-      slots: [],
-    },
-  ];
-  //web handlers functions
-  formatDate = (date) => {
-    const day = date.getDate().toString().padStart(2, "0"); // Pad single digits with leading zero
-    const monthNames = [
-      "Jan",
-      "Feb",
-      "Mar",
-      "Apr",
-      "May",
-      "Jun",
-      "Jul",
-      "Aug",
-      "Sep",
-      "Oct",
-      "Nov",
-      "Dec",
-    ];
-    const month = monthNames[date.getMonth()]; // Get full month name
-    const year = date.getFullYear(); // Get full year
-
-    return `${day}-${month}-${year}`; // Format as DD-MMMM-YYYY
-  };
-  //web handlers functions
-
+  
   componentDidMount(): void {
     // if(Platform.OS === "web"){
     //   this.props.setLoader()
@@ -315,7 +217,6 @@ class ReservationLogic extends Component<Props, ControllerState> {
     //   }, 2500);
     // }
     // let name = this.props?.route?.params?.serviceDetails?.title
-    // console.log(this.props?.route?.params?.serviceDetails,"---1111111")
     this.setState({
       mainServiceName: this.props?.route?.params?.serviceDetails?.title,
     });
@@ -324,35 +225,62 @@ class ReservationLogic extends Component<Props, ControllerState> {
       "change",
       this.handleDimensionChange
     );
-    const date = new Date();
-    date?.setDate(date.getDate() + 59); // Add 59 days to current date (60-day range)
-    // Set state with formatted dates (strings)
-    const dateRange = [];
-    for (let i = 0; i <= 59; i++) {
-      const newDate = new Date();
-      newDate?.setDate(newDate?.getDate() + i);
-      dateRange?.push(this?.formatDate(newDate));
-    }
-
-    this.setState({
-      currentDate: this?.formatDate(new Date()),
-      sixtyDaysLater: this?.formatDate(date),
-      dateRange: dateRange,
-      selectedItem: this?.formatDate(new Date()),
-      selectedKey: Object?.keys(this?.HeaderData)?.[0],
+    let BookingId = this.props?.singleServiceItem[0]?.BookingTypeID;
+    let ServiceClassId =
+      this.props?.singleServiceItem[0]?.ServiceClass?.[0]?.ServiceClassID;
+    this.props.getReservationsData({
+      BookingTypeID: BookingId,
+      ServiceClassID: ServiceClassId,
     });
-    //webcode
   }
   componentDidUpdate(
     prevProps: Readonly<Props>,
     prevState: Readonly<ControllerState>,
     snapshot?: any
-  ): void {
+  ) {
+    if (prevProps.reservationData !== this.props.reservationData) {
+      const reservationData = this.props.reservationData;
+
+      if (reservationData) {
+        const availableDates = reservationData?.AvailableDates || [];
+        const lastDate = availableDates.length
+          ? availableDates[availableDates.length - 1].Date
+          : null;
+
+        // Only perform mapping if the AvailableServices array has changed
+        const serviceNames =
+          reservationData?.AvailableServices?.map(
+            (service) => service.ServiceName
+          ) || [];
+        const ProvidersDataNames =
+          reservationData?.AvailableProviders?.map(
+            (Provider) => Provider.ProviderName
+          ) || [];
+
+        if (this.state.serviceNames !== serviceNames) {
+          this.setState({
+            serviceNames:serviceNames,
+            dateRange: availableDates,
+            currentDate: reservationData?.DefaultDate,
+            selectedItem: reservationData?.DefaultDate,
+            sixtyDaysLater: lastDate,
+            servicesOptions: reservationData?.AvailableServices,
+            ProvidersData: ProvidersDataNames,
+            AvailableTimeCat:reservationData?.AvailableTimeCat?.AvailableTimeCat,
+            selectedTimePeriod:reservationData?.DefaultTimeCat
+          });
+        }
+      }
+    }
+
     if (prevProps.route !== this.props.route) {
-      let name = this.props?.route?.params?.serviceDetails?.title;
-      this.setState({ mainServiceName: name });
+      const name = this.props?.route?.params?.serviceDetails?.title;
+      if (name !== this.state.mainServiceName) {
+        this.setState({ mainServiceName: name });
+      }
     }
   }
+
   //webcode
   componentWillUnmount() {
     if (this.timer) {
@@ -413,16 +341,14 @@ class ReservationLogic extends Component<Props, ControllerState> {
   };
 
   handlePrevious = () => {
-    console.log(this.state.currentIndex, 'this.state.currentIndex');
-    
     if (this.state.currentIndex > 7) {
       this.scrollToIndex(this.state.currentIndex - 7);
-    } else  {
+    } else {
       this.scrollToIndex(0);
     }
   };
   handleItemPress = (item: any, index: number) => {
-    this.setState({ selectedItem: item });
+    this.setState({ selectedItem: item?.Date });
   };
   toggleCalendar = () => {
     this.setState((prevState) => ({
@@ -431,12 +357,16 @@ class ReservationLogic extends Component<Props, ControllerState> {
   };
 
   onDateChange = (date: any) => {
-    const formattedDate = moment(new Date(date)).format("DD-MMM-YYYY");
-    const selecteditem = this.state.dateRange.find((d) => d === formattedDate);
-    const selectedIndex = this.state.dateRange.findIndex(d => d === formattedDate);
-    if (selecteditem) {
-      this.setState({ selectedItem: selecteditem},() => {
-        this.scrollToIndex(selectedIndex); 
+    const formattedDate = moment(new Date(date)).format("MM/DD/YYYY");
+    const selectedItem = this.state.dateRange.find(
+      (d: any) => d.Date === formattedDate
+    );
+    const selectedIndex = this.state.dateRange.findIndex(
+      (d: any) => d.Date === formattedDate
+    );
+    if (selectedItem) {
+      this.setState({ selectedItem: selectedItem?.Date }, () => {
+        this.scrollToIndex(selectedIndex);
       });
     } else {
     }
@@ -444,14 +374,15 @@ class ReservationLogic extends Component<Props, ControllerState> {
   };
 
   handleSelectTimePeriod = (id: string) => {
+
     this.setState({ selectedTimePeriod: id });
   };
 
   getCurrentTimeSlots = () => {
-    const selectedPeriod = this.timeData.find(
-      (period) => period.id === this.state.selectedTimePeriod
+    const selectedPeriod = this?.state?.AvailableTimeCat?.find(
+      (period) => period?.TimeCat === this.state.selectedTimePeriod
     );
-    return selectedPeriod?.slots || [];
+    return selectedPeriod?.AvailableTimeSlots || [];
   };
 
   handleSelectTime = (label: string, disabled?: boolean) => {
@@ -461,7 +392,6 @@ class ReservationLogic extends Component<Props, ControllerState> {
 
   handleAddIconPress = (index: number, event: any) => {
     const { pageX, pageY } = event.nativeEvent;
-    console.log(typeof index, "indexx");
 
     this.setState((prev) => ({
       popupVisibleIndex: prev.popupVisibleIndex === index ? null : index,
@@ -485,9 +415,7 @@ class ReservationLogic extends Component<Props, ControllerState> {
     this.setState({
       selectedValue: selectedItem, // Save selected item to state
     });
-    console.log("Selected value:", selectedItem);
   };
-
 
   selectedMember = (memberData: any) => {
     const updatedData = this.state.updatedMembersListData.map((items) => {
@@ -514,8 +442,6 @@ class ReservationLogic extends Component<Props, ControllerState> {
     this.setState((prevState) => ({
       isSelected: !prevState.isSelected,
     }));
-
-    console.log("isSelected (before update):", this.state.isSelected);
   };
 
   handleDropdownChange = (value: string) => {
@@ -533,6 +459,8 @@ class ReservationLogic extends Component<Props, ControllerState> {
     });
   };
   selectProvider = (value: string) => {
+    console.log(value, "value");
+    
     this.setState({ providerName: value });
   };
 
@@ -589,23 +517,22 @@ class ReservationLogic extends Component<Props, ControllerState> {
     });
   };
 
-  handleCloseAllModels = () =>{
-      this.props.setClosememberModel();
-      if(this.props.OpenAddmemberModel){
-        this.props.setOpenAddmemberModel();
-      }
-      if(this.props.OpenMemberModel){
-        this.props.setOpenMembersModel();
-      }
-  }
-  setAddMemberIndex = (index:number) => {
+  handleCloseAllModels = () => {
+    this.props.setClosememberModel();
+    if (this.props.OpenAddmemberModel) {
+      this.props.setOpenAddmemberModel();
+    }
+    if (this.props.OpenMemberModel) {
+      this.props.setOpenMembersModel();
+    }
+  };
+  setAddMemberIndex = (index: number) => {
     this.setState({ addMemberIndex: index });
   };
 
-  navigateToService =() => {
-    this.props?.navigation?.navigate("ServiceUI")
-  }
- 
+  navigateToService = () => {
+    this.props?.navigation?.navigate("ServiceUI");
+  };
 }
 
 export default ReservationLogic;

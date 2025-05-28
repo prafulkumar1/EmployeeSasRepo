@@ -76,4 +76,15 @@ export const styles = StyleSheet.create({
    alignItems:"flex-start",
    textAlign:"left"
   },
+  emptyContainer: {
+  flex: 1,
+  justifyContent: "center",
+  alignItems: "center",
+  padding: 20,
+},
+emptyText: {
+  fontSize: 16,
+  color: "#000",
+  textAlign: "center",
+},
 });

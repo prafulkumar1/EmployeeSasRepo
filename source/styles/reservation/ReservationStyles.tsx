@@ -226,5 +226,6 @@ export const styles = StyleSheet.create({
   dropDownBtn: { width: "100%", marginBottom: 30,zIndex:1 },
   serviceBtn: { width: "100%",zIndex:2 },
   timePeriodContainers: { flex: 1, maxHeight: 160, minHeight: 80 },
-  calenderLoader:{justifyContent:"center",alignItems:"center",alignSelf:"center",paddingTop:25}
+  calenderLoader:{justifyContent:"center",alignItems:"center",alignSelf:"center",paddingTop:25},
+   loaderTrans:{ position: "absolute", alignSelf: "center", flex: 1, top: responsiveHeight(50) , backgroundColor :"pink"},
 });

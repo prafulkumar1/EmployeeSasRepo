@@ -1,17 +1,26 @@
 import React from "react";
 import * as UI from "@/components/cobalt/importUI";
 import ServiceLogic from "@/source/controller/services/Service";
-import { FlatList,  } from "react-native";
+import { FlatList } from "react-native";
 import { styles } from "@/source/styles/services/ServiceStyles.web";
 import { connect } from "react-redux";
-import { getServiceClasses, storeSingleService } from "@/components/redux/reducers/serviceReducer";
+import {
+  getServiceClasses,
+  storeSingleService,
+} from "@/components/redux/reducers/serviceReducer";
 import { RootState } from "@/components/redux/store";
+import CbLoader from "@/components/cobalt/webCobaltLoader";
+import { navigateToScreen } from "@/components/constants/Navigations";
 class ServiceUI extends ServiceLogic {
-  renderItem = ({ item }) => (
-    <UI.ConnectedCbView style={[styles.card]}>
-      <UI.TouchableOpacity onPress={() => this.navigateToReservation(item)}>
-        <UI.ConnectedCbText style={styles.icon}>🏋️‍♂️</UI.ConnectedCbText>
-
+  renderItem = ({ item }) => {
+    console.log(item, "item");
+    
+    return (
+      <UI.TouchableOpacity
+        style={[styles.card]}
+        onPress={() => this.navigateToReservation(item)}
+      >
+        {/* <UI.ConnectedCbText style={styles.icon}>🏋️‍♂️</UI.ConnectedCbText> */}
         <UI.ConnectedCbView style={styles.TextContainer}>
           <UI.ConnectedCbText style={styles.title}>
             {item.ServiceClassName}
@@ -21,8 +30,8 @@ class ServiceUI extends ServiceLogic {
           </UI.ConnectedCbText>
         </UI.ConnectedCbView>
       </UI.TouchableOpacity>
-    </UI.ConnectedCbView>
-  );
+    );
+  };
   renderTab = ({ item }) => (
     <UI.TouchableOpacity
       key={item}
@@ -32,7 +41,7 @@ class ServiceUI extends ServiceLogic {
       <UI.ConnectedCbText
         style={[
           styles.tabText,
-          this.state.activeTab === item && styles.activeTabText,
+          // this.state.activeTab === item && styles.activeTabText,
         ]}
       >
         {item}
@@ -41,14 +50,32 @@ class ServiceUI extends ServiceLogic {
   );
 
   render() {
-    const { activeTab } = this.state;
-    const tabs = this.ServiceData.BookingTypes.map(
-      (service) => service.BookingTypeName
-    );
+    const { activeTab, serviceTypes } = this.state;
+    // console.log(serviceTypes, "serviceTypes");
+
+    // if (this.props.Isshowbookintype === 0) {
+    //   const result = serviceTypes.filter(
+    //     (item) =>
+    //       Array.isArray(item.ServiceClass) && item.ServiceClass.length === 1
+    //   );
+    //   navigateToScreen(this.props, "ReservationUI", true, {
+    //     serviceDetails: result,
+    //   });
+    // }
+
+    // Show loading message or spinner
+    if (serviceTypes.length === 0) {
+      return (
+        <UI.Box style={{ flex: 1 }}>
+          <CbLoader visible={true} />
+        </UI.Box>
+      );
+    }
+
+    const tabs = serviceTypes.map((service) => service.BookingTypeName);
     const activeServiceClass =
-      this.ServiceData.BookingTypes.find(
-        (service) => service.BookingTypeName === activeTab
-      )?.ServiceClass || [];
+      serviceTypes.find((service) => service.BookingTypeName === activeTab)
+        ?.ServiceClass || [];
     return (
       <UI.ScrollView style={styles.container}>
         <FlatList
@@ -66,30 +93,29 @@ class ServiceUI extends ServiceLogic {
           numColumns={3}
           contentContainerStyle={styles.list}
           columnWrapperStyle={{ justifyContent: "center" }}
-        /> 
-
-
-        
-        {/* {true && (
-          <UI.Box style={{flex:1,  backgroundColor :'red'}}>
-            <CbLoader  visible={true}/>
-          </UI.Box>
-        )} */}
+          ListEmptyComponent={
+            <UI.ConnectedCbView style={styles.emptyContainer}>
+              <UI.ConnectedCbText style={styles.emptyText}>
+                No service classes available.
+              </UI.ConnectedCbText>
+            </UI.ConnectedCbView>
+          }
+        />
       </UI.ScrollView>
     );
   }
 }
 
-
 const mapStateToProps = (state: RootState) => {
-    return {
-        loading: state.services.loading,
-        serviceClassList:state.services.serviceClassList
-    }
-}
+  return {
+    loading: state.services.loading,
+    serviceClassList: state.services.serviceClassList,
+    Isshowbookintype: state.services.Isshowbookintype,
+  };
+};
 const mapDispatchToProps = {
-    getServiceClasses,
-    storeSingleService
-}
+  getServiceClasses,
+  storeSingleService,
+};
 
-export default connect(mapStateToProps, mapDispatchToProps)(ServiceUI)
+export default connect(mapStateToProps, mapDispatchToProps)(ServiceUI);
