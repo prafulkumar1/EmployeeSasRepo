@@ -1,7 +1,7 @@
 import { navigateToScreen } from "@/components/constants/Navigations";
 import { Component, createRef } from "react";
 import moment from "moment";
-import { Dimensions, FlatList, Platform } from "react-native";
+import { Dimensions, FlatList } from "react-native";
 import { SingleBookingType } from "@/components/constants/Types";
 
 //webinterface
@@ -362,9 +362,9 @@ class ReservationLogic extends Component<Props, ControllerState> {
     }));
   };
 
-  onDateChange = (date: any) => {
+  onDateChange = (date: string | number | Date) => {
     const formattedDate = moment(new Date(date)).format("MM/DD/YYYY");
-    const selectedItem = this.state.dateRange.find(
+    const selectedItem:any = this.state.dateRange.find(
       (d: any) => d.Date === formattedDate
     );
     const selectedIndex = this.state.dateRange.findIndex(
@@ -374,7 +374,6 @@ class ReservationLogic extends Component<Props, ControllerState> {
       this.setState({ selectedItem: selectedItem?.Date }, () => {
         this.scrollToIndex(selectedIndex);
       });
-    } else {
     }
     this.toggleCalendar();
   };

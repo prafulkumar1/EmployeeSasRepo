@@ -113,7 +113,7 @@ interface IState {
   startPage: number;
   membersPerPage: number;
   visiblePageLimit: number;
-  date: null | string;
+  date: Date;
   showDatePicker: boolean;
   selectedService: "";
   selectedGender: "";
@@ -722,7 +722,7 @@ export default class useMemberDirectoryLogic extends Component<
     }
   };
 
-  formatDate = (date) => {
+  formatDate = (date: string | number | Date) => {
     if (!date) return "";
     const d = new Date(date);
     const month = ("0" + (d.getMonth() + 1)).slice(-2);
@@ -744,8 +744,8 @@ export default class useMemberDirectoryLogic extends Component<
     }));
   };
 
-  onWebDateChange = (date: any) => {
-    const formattedDate = moment(new Date(date)).format("DD-MMM-YYYY");
+  onWebDateChange = (date:string) => {
+    const formattedDate:any = moment(new Date(date)).format("DD-MMM-YYYY");
     this.setState({ selectedDate: formattedDate });
     this.setState({ date: formattedDate });
     this.toggleCalendar();

@@ -18,7 +18,7 @@ const pageId = "Reservation";
 
 class ReservationUI extends ReservationLogic {
   renderHorizontalCalender = ({ item, index }) => {
-    const isSelected = this.state.selectedDateId === item?.Date;
+    const isSelected = this.state.selectedItem === item?.Date;
     const [day, month, Date] = item?.Dateslot?.split(" ");
 
     return (

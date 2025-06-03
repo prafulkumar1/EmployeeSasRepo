@@ -33,3 +33,16 @@ export interface SingleBookingType {
   BookingTypeName: string;
   ServiceClass: ServiceClassType[];
 }
+
+export interface ServiceType {
+  ServiceClassID: string;
+  ServiceClassName: string;
+  ServiceClassDiscription: string;
+  ServiceClassImage?: string;
+}
+
+export interface BookingType {
+  BookingTypeID: string;
+  BookingTypeName: string;
+  ServiceClass: ServiceType[];
+}
