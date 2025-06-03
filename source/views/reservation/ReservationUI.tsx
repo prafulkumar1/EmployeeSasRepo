@@ -104,7 +104,7 @@ class ReservationUI extends ReservationLogic {
     const isLastCard = index === this.state?.AvailableTimeCat.length - 1;
     const shouldAlignLeft =
       this.state?.AvailableTimeCat.length % 2 !== 0 && isLastCard;
-      const isSelected = this.state.selectedTimePeriod === item.TimeCat;
+    const isSelected = this.state.selectedTimePeriod === item.TimeCat;
 
     return (
       <UI.ConnectedCbBox
@@ -178,12 +178,15 @@ class ReservationUI extends ReservationLogic {
     );
   };
   render() {
+    const serviceClassName = this?.props?.singleServiceItem?.[0]?.ServiceClass?.find(
+      (ServiceClass) => ServiceClass.ServiceClassID === this?.props?.ServiceClassID
+    )?.ServiceClassName;
+    
     return (
       <UI.Box style={styles.mainContainer}>
         <UI.ConnectedCbHeader
           headerTitle={
-            this?.props?.singleServiceItem?.[0]?.ServiceClass?.[0]
-              ?.ServiceClassName
+            serviceClassName ? serviceClassName : null
           }
           goHome={() => this.navigateToService()}
           goBack={() => this.props.navigation?.goBack()}
@@ -349,7 +352,7 @@ class ReservationUI extends ReservationLogic {
           </UI.TouchableOpacity>
         </UI.ConnectedCbBox>
 
-        {!this.state.AvailableTimeCat && !this.state.dateRange && (
+        {!this.state.AvailableTimeCat || !this.state.dateRange || this.state.IsLoading  && (
           <UI.Box style={styles.loaderTrans}>
             <CbLoader />
           </UI.Box>
@@ -365,6 +368,7 @@ const mapStateToProps = (state: RootState) => {
     dashboardResponse: state.dashboard.dashboardResponse,
     errorMessage: state.dashboard.errorMessage,
     singleServiceItem: state.services.singleServiceItem,
+    ServiceClassID: state.services.ServiceClassID,
     reservationData: state?.reservation?.reservationData,
   };
 };

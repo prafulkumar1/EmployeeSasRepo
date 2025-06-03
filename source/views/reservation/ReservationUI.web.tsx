@@ -176,9 +176,9 @@ class ReservationUI extends useReservationLogic {
         ? pageConfigJson.Controlls
         : [];
     if (
-      !this?.state?.serviceNames &&
-      !this.state.dateRange &&
-      !this?.state?.AvailableTimeCat
+      !this?.state?.serviceNames ||
+      !this.state.dateRange ||
+      !this?.state?.AvailableTimeCat || this.state.IsLoading
     ) {
       return (
         <UI.Box style={{ flex: 1 }}>
@@ -186,6 +186,8 @@ class ReservationUI extends useReservationLogic {
         </UI.Box>
       );
     }
+    console.log(this.props.singleServiceItem, "singleServiceItem");
+    
     return (
       <UI.ScrollView style={[styles.mainContainer]}>
         <UI.ConnectedCbBox
@@ -203,7 +205,7 @@ class ReservationUI extends useReservationLogic {
               pageId={pageId}
               style={styles.title}
             >
-              {this.state.selectedKey}
+              {this.props.singleServiceItem?.[0]?.BookingTypeName}
             </UI.ConnectedCbText>
             <UI.TouchableOpacity
               style={[styles.calendarBox]}

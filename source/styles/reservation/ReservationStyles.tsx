@@ -206,7 +206,7 @@ export const styles = StyleSheet.create({
   gridContainer: {
     flexDirection: "row",
     flexWrap: "wrap",
-    justifyContent: "space-between",
+    // justifyContent: "space-between",
     paddingTop: 20,
     marginBottom:responsiveHeight(5)
   },

@@ -269,11 +269,12 @@ export const styles = StyleSheet.create({
     color: "#6D6D6D",
     fontSize: 16,
     paddingTop: 10,
+    paddingBottom :10
   },
   genderoptionsStyles: {
     width: "100%",
     color: "#6D6D6D",
-    padding: 10
+    // padding: 10
   },
   //Addbutton
   addMemberBtncontainer: {

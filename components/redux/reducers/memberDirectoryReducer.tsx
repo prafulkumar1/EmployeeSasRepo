@@ -161,18 +161,28 @@ const memberDirectorySlice = createSlice({
         state.errorMessage = action?.payload?.ResponseMessage;
       })
       .addCase(getExistingGuestList.fulfilled, (state, action) => {
+        
+        // state.totalCount = action.payload.response.TotalRecords;
+
+        // // If searchChar is "All", we append the data to the existing list
+        // if (action.payload?.searchChar === "All") {
+        //   state.GuestListPerBatch = [
+        //     ...state.GuestListPerBatch,
+        //     ...action.payload?.response?.Members, 
+        //   ];
+        // } else {
+        //   state.GuestListPerBatch = action.payload?.response?.Members;
+        // }
+        state.GuestListPerBatch = [];
+        // state.memberList = action.payload;
         state.totalCount = action.payload.response.TotalRecords;
-
-        // If searchChar is "All", we append the data to the existing list
-        if (action.payload?.searchChar === "All") {
-          state.GuestListPerBatch = [
-            ...state.GuestListPerBatch,
-            ...action.payload?.response?.Members, 
-          ];
-        } else {
-          state.GuestListPerBatch = action.payload?.response?.Members;
-        }
-
+        state.GuestListPerBatch =
+          action.payload?.searchChar === "All"
+            ? [
+                ...state.GuestListPerBatch,
+                ...action.payload?.response?.Members,
+              ]
+            : action.payload?.response?.Members;
         state.loading = false;
       })
       .addCase(getExistingGuestList.pending, (state) => {

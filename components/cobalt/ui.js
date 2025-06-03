@@ -529,10 +529,15 @@ class CbSelectDropDown extends React.Component {
   };
 
   renderDropdown = () => {
+     const optionsAsStrings = this?.props?.options?.map((item) =>
+    typeof item === 'string' ? item : item.label
+  );
+  console.log(optionsAsStrings, "optionsAsStrings");
+  
     return (
       <FlatList
         style={[styles.dropdown, this.props.dropdownCustom]}
-        data={this.props.options}
+        data={optionsAsStrings}
         keyExtractor={(_, index) => index.toString()}
         renderItem={({ item, index }) => (
           <TouchableOpacity

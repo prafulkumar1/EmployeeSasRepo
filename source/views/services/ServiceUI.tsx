@@ -7,6 +7,7 @@ import { RootState } from "@/components/redux/store";
 import { connect } from "react-redux";
 import {
   getServiceClasses,
+  storeServiceClassID,
   storeSingleService,
 } from "@/components/redux/reducers/serviceReducer";
 import CbLoader from "@/components/cobalt/cobaltLoader";
@@ -15,8 +16,6 @@ import { navigateToScreen } from "@/components/constants/Navigations";
 const pageId = "ServiceClass";
 class ServiceUI extends ServiceLogic {
   renderServiceList = ({ item }) => {
-    console.log(item, "33333333333333--??");
-    
     return (
       <UI.TouchableOpacity onPress={() => this.navigateToReservation(item)}>
         <UI.ConnectedCbBox
@@ -181,6 +180,7 @@ const mapStateToProps = (state: RootState) => {
 const mapDispatchToProps = {
   getServiceClasses,
   storeSingleService,
+  storeServiceClassID
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(ServiceUI);

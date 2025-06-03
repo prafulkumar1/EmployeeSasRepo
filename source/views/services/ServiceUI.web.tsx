@@ -6,6 +6,7 @@ import { styles } from "@/source/styles/services/ServiceStyles.web";
 import { connect } from "react-redux";
 import {
   getServiceClasses,
+  storeServiceClassID,
   storeSingleService,
 } from "@/components/redux/reducers/serviceReducer";
 import { RootState } from "@/components/redux/store";
@@ -116,6 +117,8 @@ const mapStateToProps = (state: RootState) => {
 const mapDispatchToProps = {
   getServiceClasses,
   storeSingleService,
+    storeServiceClassID
+
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(ServiceUI);

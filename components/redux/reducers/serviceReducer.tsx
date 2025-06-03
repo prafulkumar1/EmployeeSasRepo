@@ -7,6 +7,7 @@ const initialState = {
     errorMessage:"",
     serviceClassList:null,
     singleServiceItem:null,
+    ServiceClassID:null,
     Isshowbookintype:null
 }
 
@@ -42,6 +43,9 @@ const serviceSlice = createSlice({
     storeSingleService(state, action) {
       state.singleServiceItem = action.payload
     },
+    storeServiceClassID(state, action) {
+      state.ServiceClassID = action.payload
+    },
   },
   extraReducers: builder => {
     builder
@@ -62,5 +66,5 @@ const serviceSlice = createSlice({
   },
 })
 
-export const { storeSingleService}:any = serviceSlice.actions
+export const { storeSingleService,storeServiceClassID}:any = serviceSlice.actions
 export default serviceSlice.reducer

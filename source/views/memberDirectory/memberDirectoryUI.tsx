@@ -107,6 +107,7 @@ class MemberDirectoryUI extends useMemberDirectoryLogic {
   };
 
   showMemberList = () => {
+    const UpdatedMemberAndGuestData = this.getCurrentPageData();
     if (this.state.selectedGuest == "New Guest") {
       return (
         <UI.ConnectedCbBox style={styles.GuestmainContainer}>
@@ -126,14 +127,18 @@ class MemberDirectoryUI extends useMemberDirectoryLogic {
                   placeholder="First Name"
                   style={styles.input}
                   formId={pageId}
-                   onChange={(value) => this.handleInputChange("firstName", value)}
+                  onChange={(value) =>
+                    this.handleInputChange("firstName", value)
+                  }
                 />
                 <UI.ConnectedCbInput
                   id="lastName"
                   placeholder="Last Name"
                   style={styles.input}
                   formId={pageId}
-                  onChange={(value) => this.handleInputChange("lastName", value)}
+                  onChange={(value) =>
+                    this.handleInputChange("lastName", value)
+                  }
                 />
                 <UI.ConnectedCbSelectDropDown
                   options={this.servicesOptions}
@@ -214,7 +219,7 @@ class MemberDirectoryUI extends useMemberDirectoryLogic {
                   id="email"
                   style={styles.input}
                   keyboardType="email-address"
-               onChange={(value) => this.handleInputChange("email", value)}
+                  onChange={(value) => this.handleInputChange("email", value)}
                   formId={pageId}
                 />
               </UI.ConnectedCbBox>
@@ -222,10 +227,13 @@ class MemberDirectoryUI extends useMemberDirectoryLogic {
           </KeyboardAvoidingView>
         </UI.ConnectedCbBox>
       );
-    } else if (this.state.updatedMembersListData?.length > 0) {
+    } else if (
+      UpdatedMemberAndGuestData &&
+      UpdatedMemberAndGuestData.length > 0
+    ) {
       return (
         <UI.FlatList
-          data={this.getCurrentPageData()}
+          data={UpdatedMemberAndGuestData}
           ListFooterComponent={this.renderLoadMoreBtn}
           style={{ opacity: this.props.loading ? 0.5 : 1 }}
           renderItem={this.renderMemberList}
@@ -250,7 +258,6 @@ class MemberDirectoryUI extends useMemberDirectoryLogic {
 
   render() {
     const { setFormFieldData } = this.props;
-
     return (
       <UI.Box style={styles.mainContainer}>
         <UI.ConnectedCbHeader
@@ -311,7 +318,7 @@ class MemberDirectoryUI extends useMemberDirectoryLogic {
                 style={styles.iconStyle}
               />
             </UI.TouchableOpacity>
-            <UI.ConnectedCbInput
+            {/* <UI.ConnectedCbInput
               id="Search"
               labelRequired={false}
               style={styles.commentsBox}
@@ -319,6 +326,15 @@ class MemberDirectoryUI extends useMemberDirectoryLogic {
               formId={pageId}
               placeholder="Search by Member Last Name"
               placeholderTextColor="#565c5f"
+            /> */}
+            <TextInput
+              style={styles.commentsBox}
+              placeholder="Search by Member Last Name"
+              placeholderTextColor="#565c5f"
+              value={this.state.searchText}
+              onChangeText={(text: string) =>
+                this.setState({ searchText: text })
+              }
             />
           </UI.ConnectedCbBox>
         )}
@@ -407,6 +423,7 @@ const mapStateToProps = (state: RootState) => {
     singleItemDetails: state.addMember.singleMemberDetails,
     userType: state.addMember.userType,
     getExistingGuestList: state.memberDirectory.memberList,
+    GuestListPerBatch: state.memberDirectory.GuestListPerBatch,
   };
 };
 const mapDispatchToProps = {

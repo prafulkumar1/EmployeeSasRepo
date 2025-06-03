@@ -2,7 +2,7 @@ import { navigateToScreen } from "@/components/constants/Navigations";
 import { Component, createRef } from "react";
 import moment from "moment";
 import { Dimensions, FlatList, Platform } from "react-native";
-import { ServiceType } from "@/components/constants/Types";
+import { SingleBookingType } from "@/components/constants/Types";
 
 //webinterface
 interface Member {
@@ -17,6 +17,7 @@ export interface DateItem {
   date: number;
   month: string;
 }
+
 
 interface Props {
   navigation: any;
@@ -34,8 +35,9 @@ interface Props {
   OpenAddmemberModel?: boolean;
   OpenMemberModel?: boolean;
   closeMemberModel?: boolean;
-  singleServiceItem?: ServiceType;
+  singleServiceItem?: SingleBookingType;
   reservationData?: any;
+  ServiceClassID?: any;
 }
 
 interface Provider {
@@ -134,6 +136,7 @@ export interface ControllerState {
   serviceNames: string[];
   AvailableTimeCat: AvailableTimeCategory[];
   DefaultTimeCat:string
+  IsLoading:boolean
   //webstateany
 }
 
@@ -203,7 +206,8 @@ class ReservationLogic extends Component<Props, ControllerState> {
       servicesOptions: null,
       serviceNames: null,
       AvailableTimeCat: null,
-      DefaultTimeCat:null
+      DefaultTimeCat:null,
+      IsLoading:false
       //webstate
     };
   }
@@ -240,8 +244,9 @@ class ReservationLogic extends Component<Props, ControllerState> {
   ) {
     if (prevProps.reservationData !== this.props.reservationData) {
       const reservationData = this.props.reservationData;
-
+      
       if (reservationData) {
+        this.setState({IsLoading:true})
         const availableDates = reservationData?.AvailableDates || [];
         const lastDate = availableDates.length
           ? availableDates[availableDates.length - 1].Date
@@ -270,6 +275,7 @@ class ReservationLogic extends Component<Props, ControllerState> {
             selectedTimePeriod:reservationData?.DefaultTimeCat
           });
         }
+          this.setState({IsLoading:false})
       }
     }
 

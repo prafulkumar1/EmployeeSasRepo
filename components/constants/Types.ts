@@ -15,9 +15,21 @@ export interface MemberListType {
     "RequestedBy": string
   }
 
-  export interface ServiceType { 
-    "ServiceClassDiscription": string, 
-    "ServiceClassID": string, 
-    "ServiceClassImage": string, 
-    "ServiceClassName": string 
-  }
+  // export interface ServiceType { 
+  //   "ServiceClassDiscription": string, 
+  //   "ServiceClassID": string, 
+  //   "ServiceClassImage": string, 
+  //   "ServiceClassName": string 
+  // }
+
+  export interface ServiceClassType {
+  ServiceClassDescription: string;
+  ServiceClassID: string;
+  ServiceClassName: string;
+}
+
+export interface SingleBookingType {
+  BookingTypeID: string;
+  BookingTypeName: string;
+  ServiceClass: ServiceClassType[];
+}

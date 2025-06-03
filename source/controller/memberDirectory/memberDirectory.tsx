@@ -126,6 +126,7 @@ interface IState {
   lastName: string;
   Phone: string;
   email: string;
+  searchText: string;
 }
 interface SS {}
 
@@ -207,7 +208,7 @@ export default class useMemberDirectoryLogic extends Component<
       showGuestModal: false,
       hover: null,
       isChecked: false,
-     selectedMembers: Array(this?.props?.addMemberList?.length).fill(null),
+      selectedMembers: Array(this?.props?.addMemberList?.length).fill(null),
       currentPage: 1,
       startPage: 1,
       membersPerPage: 25,
@@ -219,6 +220,7 @@ export default class useMemberDirectoryLogic extends Component<
       lastName: "",
       Phone: "",
       email: "",
+      searchText: "",
     };
     this.genderOptions = genderOptions;
     this.servicesOptions = servicesOptions;
@@ -231,6 +233,7 @@ export default class useMemberDirectoryLogic extends Component<
       this.handleDimensionChange
     );
   }
+
   fetchApiCall = () => {
     if (this.props.userType === "Member") {
       this.props.getMemberList({
@@ -246,6 +249,7 @@ export default class useMemberDirectoryLogic extends Component<
       });
     }
   };
+
   componentDidUpdate(
     prevProps: Readonly<IProps>,
     prevState: Readonly<IState>,
@@ -261,6 +265,11 @@ export default class useMemberDirectoryLogic extends Component<
       this.setState({ updatedMembersListData: updatedData });
     }
     if (prevProps.GuestListPerBatch !== this.props.GuestListPerBatch) {
+      console.log(
+        "testinjfsnjnfjsnfn---------->>>>",
+        this.props.GuestListPerBatch
+      );
+
       const GuestupdatedData = this.props.GuestListPerBatch?.map((items) => {
         return {
           ...items,
@@ -272,23 +281,16 @@ export default class useMemberDirectoryLogic extends Component<
 
     //Need to check this code How to handle search in mobile due this facing issue in new Guest create
     if (Platform.OS !== "web") {
-      if (prevProps.formData !== this.props.formData) {
-        const searchValue = getFormFieldDataSelector(
-          this.props?.formData,
-          pageId,
-          "Search"
-        );
-        console.log(searchValue, "searchValue");
-
-        if (searchValue.value !== undefined) {
-        this.searchTimeout = setTimeout(() => {
-            this.props.getMemberList({
-              pageCount: this.state.pageCount,
-              searchChar: "",
-              searchBy: searchValue?.value,
-            });
-          }, 1000);
-        }
+      if (this.state.selectedGuest === "Existing Guest") {
+          if (this.state.searchText !== "") {
+            this.searchTimeout = setTimeout(() => {
+              this.props.getMemberList({
+                pageCount: this.state.pageCount,
+                searchChar: "",
+                searchBy: this.state.searchText,
+              });
+            }, 1000);
+          }
       }
     }
   }
@@ -299,10 +301,11 @@ export default class useMemberDirectoryLogic extends Component<
     } else if (this.dimensionListener?.remove) {
       this.dimensionListener.remove();
     }
+    this.setState({ updatedGuestListData: [] });
     this.setState({ updatedMembersListData: [] });
     if (this.searchTimeout) {
-    clearTimeout(this.searchTimeout);
-  }
+      clearTimeout(this.searchTimeout);
+    }
   }
 
   handleDimensionChange = ({ window }) => {
@@ -336,22 +339,26 @@ export default class useMemberDirectoryLogic extends Component<
       viewPosition: 0.5,
     });
     const currentValue = membersMock[index];
-    this.props.getMemberList({
-      pageCount: 1,
-      searchChar: currentValue.id,
-      searchBy: "",
-    });
+    if (this.props.userType === "Member") {
+      this.props.getMemberList({
+        pageCount: 1,
+        searchChar: currentValue.id,
+        searchBy: "",
+      });
+    } else {
+      this.props.getExistingGuestList({
+        pageCount: 1,
+        searchChar: currentValue.id,
+        searchBy: "",
+      });
+    }
   };
   navigateToReservation = () => {
     this.props.resetLoadedScreen();
   };
   loadMoreData = () => {
     this.setState({ pageCount: this.state.pageCount + 1 }, () => {
-      this.props.getMemberList({
-        pageCount: this.state.pageCount,
-        searchChar: "All",
-        searchBy: "",
-      });
+      this.fetchMemberListApi(this.state.pageCount);
     });
   };
   toggleCheckbox = () => {
@@ -364,8 +371,6 @@ export default class useMemberDirectoryLogic extends Component<
   };
   addMemberForReservation = () => {
     const { AddMultiple, selectedMembersList, singleItemDetails } = this.props;
-    console.log(this.props.selectedMembersList, "TEsting----------->>>>45");
-  
     // Condition for AddMultiple = true and at least one member selected
     if (AddMultiple && selectedMembersList && selectedMembersList.length > 0) {
       this.props.resetLoadedScreen();
@@ -441,15 +446,14 @@ export default class useMemberDirectoryLogic extends Component<
       CompanyCode: "00",
     };
 
-    // Directly call the second API for adding the new guest
+    // Directly call the first API for adding the new guest
     const response = await postApiCall(
       "NEW_GUEST",
       "ADD_NEW_GUEST",
       GuestPayload
     );
     const apiResponse = response as ApiResponse;
-    console.log(apiResponse, "apiResponse");
-    
+
     if (apiResponse.response?.ResponseCode === "Fail") {
       const errorMessage =
         apiResponse.response?.ResponseMessage || "An error occurred.";
@@ -465,8 +469,10 @@ export default class useMemberDirectoryLogic extends Component<
         }
       );
     } else if (apiResponse.response?.ResponseCode === "Success") {
-      this.props.resetLoadedScreen()
-      } else {
+      this.props.resetLoadedScreen();
+      this.props.setOpenMembersModel();
+      this.props.setAddMultiple(false);
+    } else {
       this.setState(
         {
           errorMessagePopup: true,
@@ -482,75 +488,91 @@ export default class useMemberDirectoryLogic extends Component<
   };
 
   selectedMember = (memberData: any) => {
-  const { updatedMembersListData, selectedMembers } = this.state;
- 
-  if (!this.props.AddMultiple) {
-    this.props.singleMemberDetails(memberData);
-    const updatedData = updatedMembersListData.map((item) => ({
-      ...item,
-      isMemberSelected: item.ID === memberData?.ID,
-    }));
-    this.setState({
-      updatedMembersListData: updatedData,
-      singleMemberDetails: memberData,
+    const { updatedMembersListData, selectedMembers, updatedGuestListData } =
+      this.state;
+    let UpdateGuestOrMemberList =
+      this.props.userType !== "Member"
+        ? updatedGuestListData
+        : updatedMembersListData;
+    if (!this.props.AddMultiple) {
+      this.props.singleMemberDetails(memberData);
+      const updatedData = UpdateGuestOrMemberList.map((item) => ({
+        ...item,
+        isMemberSelected: item.ID === memberData?.ID,
+      }));
+      if (this.props.userType !== "Member") {
+        this.setState({
+          updatedMembersListData: [],
+          updatedGuestListData: updatedData,
+          singleMemberDetails: memberData,
+        });
+      } else {
+        this.setState({
+          updatedMembersListData: updatedData,
+          updatedGuestListData: [],
+          singleMemberDetails: memberData,
+        });
+      }
+
+      return;
+    }
+
+    const isMemberAlreadySelected = memberData?.isMemberSelected;
+    const selectedCount = UpdateGuestOrMemberList?.filter(
+      (item) => item?.isMemberSelected
+    ).length;
+
+    // Show error if max reached and user is trying to select a new member
+    if (selectedCount >= this.props.membersCount && !isMemberAlreadySelected) {
+      this.setState(
+        {
+          errorMessagePopup: true,
+          errorMessageTxt: `You can only select up to ${this.props.membersCount} members.`,
+        },
+        () => {
+          setTimeout(() => {
+            this.setState({ errorMessagePopup: false, errorMessageTxt: "" });
+          }, 2000);
+        }
+      );
+      return;
+    }
+
+    // Toggle member selection
+    const updatedData = UpdateGuestOrMemberList.map((item) => {
+      if (item.ID === memberData.ID) {
+        return {
+          ...item,
+          isMemberSelected: !item.isMemberSelected,
+        };
+      }
+      return item;
     });
-    return;
-  }
- 
-  const isMemberAlreadySelected = memberData.isMemberSelected;
-  const selectedCount = updatedMembersListData.filter(item => item.isMemberSelected).length;
- 
-  // Show error if max reached and user is trying to select a new member
-  if (selectedCount >= this.props.membersCount && !isMemberAlreadySelected) {
+
+    // Update selectedMembers array from the toggled list
+    const updatedSelectedMembers = updatedData.filter(
+      (item) => item.isMemberSelected
+    );
+
+    // Fill nulls where needed
+    const updatedSelectedMembersArray = Array(this.props.membersCount).fill(
+      null
+    );
+    updatedSelectedMembers.forEach((member, index) => {
+      updatedSelectedMembersArray[index] = member;
+    });
+
     this.setState(
       {
-        errorMessagePopup: true,
-        errorMessageTxt: `You can only select up to ${this.props.membersCount} members.`,
+        updatedMembersListData: updatedData,
+        selectMutiMemberDetails: memberData,
+        selectedMembers: updatedSelectedMembersArray,
       },
       () => {
-        setTimeout(() => {
-          this.setState({ errorMessagePopup: false, errorMessageTxt: "" });
-        }, 2000);
+        this.props.setselectedMembersList(updatedSelectedMembers);
       }
     );
-    return;
-  }
- 
-  // Toggle member selection
-  const updatedData = updatedMembersListData.map((item) => {
-    if (item.ID === memberData.ID) {
-      return {
-        ...item,
-        isMemberSelected: !item.isMemberSelected,
-      };
-    }
-    return item;
-  });
- 
-  // Update selectedMembers array from the toggled list
-  const updatedSelectedMembers = updatedData.filter(
-    (item) => item.isMemberSelected
-  );
- 
-  // Fill nulls where needed
-  const updatedSelectedMembersArray = Array(this.props.membersCount).fill(null);
-  updatedSelectedMembers.forEach((member, index) => {
-    updatedSelectedMembersArray[index] = member;
-  });
- 
-  this.setState(
-    {
-      updatedMembersListData: updatedData,
-      selectMutiMemberDetails: memberData,
-      selectedMembers: updatedSelectedMembersArray,
-    },
-    () => {
-      this.props.setselectedMembersList(updatedSelectedMembers);
-    }
-  );
-};
-
-
+  };
 
   removeSelectedMember = async (item: any, index: number) => {
     const { selectedMembers, updatedMembersListData } = this.state;
@@ -598,8 +620,13 @@ export default class useMemberDirectoryLogic extends Component<
   }
 
   getCurrentPageData = () => {
-    const {updatedMembersListData , updatedGuestListData} = this.state;
-     let UpdateGuestOrMemberList = this.props.userType !== "Member" ? updatedGuestListData : updatedMembersListData  
+    const { updatedMembersListData, updatedGuestListData } = this.state;
+    console.log(this.props.userType, "this.props.userType");
+
+    let UpdateGuestOrMemberList =
+      this.props.userType !== "Member"
+        ? updatedGuestListData
+        : updatedMembersListData;
     return UpdateGuestOrMemberList;
   };
   handlePageChange = (page) => {
@@ -631,11 +658,19 @@ export default class useMemberDirectoryLogic extends Component<
 
   fetchMemberListApi = (page) => {
     // Fetch data for that page
-    this.props.getMemberList({
-      pageCount: page,
-      searchChar: "All",
-      searchBy: "",
-    });
+    if (this.props.userType === "Member") {
+      this.props.getMemberList({
+        pageCount: page,
+        searchChar: "All",
+        searchBy: "",
+      });
+    } else {
+      this.props.getExistingGuestList({
+        pageCount: page,
+        searchChar: "All",
+        searchBy: "",
+      });
+    }
   };
   handleFirstPage = () => {
     this.setState({ currentPage: 1, startPage: 1 });
@@ -723,38 +758,34 @@ export default class useMemberDirectoryLogic extends Component<
 
   //WebSearchbyCharHandler
   handleSearchMemberByChar = () => {
-    const searchValue = getFormFieldDataSelector(
-      this.props?.formData,
-      pageId,
-      "Search"
-    );
-    if (searchValue.value !== undefined) {
+    if (this.state.searchText !== undefined || this.state.searchText !== "") {
       setTimeout(() => {
         if (this.props.userType === "Member") {
           this.props.getMemberList({
             pageCount: this.state.pageCount,
-            searchChar: "All", 
-            searchBy: searchValue?.value,
+            searchChar: "All",
+            searchBy: this.state.searchText,
           });
         } else {
           this.props.getExistingGuestList({
             pageCount: this.state.pageCount,
             searchChar: "All",
-            searchBy: searchValue?.value,
+            searchBy: this.state.searchText,
           });
         }
       }, 1000);
     }
   };
   handleClear = () => {
-    this.props.setFormFieldData({
-      formId: pageId,
-      controlType: "input",
-      controlId: "Search",
-      controlValue: "",
-      isInvalid: false,
-      errorMessage: "",
-    });
+    // this.props.setFormFieldData({
+    //   formId: pageId,
+    //   controlType: "input",
+    //   controlId: "Search",
+    //   controlValue: "",
+    //   isInvalid: false,
+    //   errorMessage: "",
+    // });
+   this.setState({searchText:""})
   };
   handleMemberDirtory = () => {
     this.props.setOpenMembersModel();

@@ -124,6 +124,7 @@ interface BookingType {
 interface IProps {
   getServiceClasses?: () => void;
   storeSingleService?: (serviceDetails: any) => void;
+  storeServiceClassID?: (ServiceClassID: any) => void;
   serviceClassList: BookingType[];
   Isshowbookintype: number;
 }
@@ -156,19 +157,17 @@ export default class ServiceLogic extends Component<IProps, IState> {
     }
 
     if (
-      this.props.Isshowbookintype === 1 &&
+      this.props.Isshowbookintype === 0 &&
       prevProps.serviceClassList !== this.props.serviceClassList &&
       Array.isArray(this.props.serviceClassList)
     ) {
       const result = this.props.serviceClassList.filter(
         (item) =>
-          Array.isArray(item.ServiceClass) && item.ServiceClass.length === 1
+          Array.isArray(item.ServiceClass) && item.ServiceClass.length === 0
       );
-
       if (this.props.storeSingleService) {
         this.props.storeSingleService(result);
       }
-
       if (result.length > 0) {
         navigateToScreen(this.props, "ReservationUI", true, {
           serviceDetails: result,
@@ -177,21 +176,22 @@ export default class ServiceLogic extends Component<IProps, IState> {
     }
   }
   navigateToReservation = (serviceDetails: ServiceType) => {
+    this.props.storeServiceClassID(serviceDetails?.ServiceClassID);
     const result = this.props.serviceClassList.find((item) =>
       item.ServiceClass.some(
         (service) => service.ServiceClassID === serviceDetails?.ServiceClassID
       )
     );
-    navigateToScreen(this.props, "ReservationUI", true, {
-      serviceDetails: result,
-    });
+console.log(serviceDetails?.ServiceClassID, "serviceDetails");
+console.log(result, "result");
 
     if (this.props.storeSingleService) {
-      this.props.storeSingleService(result);
+      this.props.storeSingleService([result]);
     }
-  };
-
-  navigateToService = () => {
-    navigateToScreen(this.props, "ServiceUI", true, {});
+    if (result) {
+      navigateToScreen(this.props, "ReservationUI", true, {
+        serviceDetails: [result],
+      });
+    }
   };
 }

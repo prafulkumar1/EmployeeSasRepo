@@ -31,7 +31,11 @@ import {
 } from "@/components/redux/reducers/addMemberReducer";
 import CalendarPicker from "react-native-calendar-picker";
 import { Ionicons } from "@expo/vector-icons";
-import {getExistingGuestList, getMemberList, resetMemberListPerBatch,} from "@/components/redux/reducers/memberDirectoryReducer";
+import {
+  getExistingGuestList,
+  getMemberList,
+  resetMemberListPerBatch,
+} from "@/components/redux/reducers/memberDirectoryReducer";
 import CbLoader from "@/components/cobalt/webCobaltLoader";
 import { setFormFieldData } from "@/components/redux/reducers/loginReducer";
 import { guestData } from "@/components/constants/CustomJson";
@@ -50,12 +54,16 @@ class MemberDirectoryUI extends useMemberDirectoryLogic {
         <UI.View>
           <Image
             style={styles.stretch}
-            source={require("@/assets/images/profile.png")}
+            source={{
+              uri: item?.ProfilePic
+                ? item?.ProfilePic
+                : require("@/assets/images/profile.png"),
+            }}
           />
         </UI.View>
         <UI.ConnectedCbView>
           <Text style={styles.memberName} numberOfLines={2}>
-            {item?.DisplayName}
+            {item?.MemberName}
           </Text>
           <Text style={styles.memberId}>{item?.MemberID}</Text>
         </UI.ConnectedCbView>
@@ -225,7 +233,8 @@ class MemberDirectoryUI extends useMemberDirectoryLogic {
         ? pageConfigJson.Controlls
         : [];
     const { setFormFieldData } = this.props;
-    const UpdatedMemberAndGuestData = this.getCurrentPageData(); 
+    const UpdatedMemberAndGuestData = this.getCurrentPageData();
+console.log(UpdatedMemberAndGuestData, "UpdatedMemberAndGuestData");
 
     return (
       <Modal
@@ -294,16 +303,15 @@ class MemberDirectoryUI extends useMemberDirectoryLogic {
                       pageId={pageId}
                       id="searchRow"
                     >
-                      <UI.ConnectedCbInput
-                        id="Search2"
-                        labelRequired={false}
+                      <TextInput
                         style={styles.input}
-                        formId={pageId}
                         placeholder="Search by Member Last Name"
                         placeholderTextColor="#565c5f"
-                        
+                        value={this.state.searchText}
+                        onChangeText={(text: string) =>
+                          this.setState({ searchText: text })
+                        }
                       />
-
                       <UI.TouchableOpacity
                         style={[
                           styles.searchButton,
@@ -325,7 +333,7 @@ class MemberDirectoryUI extends useMemberDirectoryLogic {
                           Search
                         </Text>
                       </UI.TouchableOpacity>
-                      
+
                       <UI.TouchableOpacity
                         style={[
                           styles.clearButton,
@@ -422,7 +430,8 @@ class MemberDirectoryUI extends useMemberDirectoryLogic {
                   {/* 1. Selected Circles */}
                   {this.props.AddMultiple && this.renderSelectedCircles()}
 
-                  {UpdatedMemberAndGuestData && UpdatedMemberAndGuestData.length > 0 ? (
+                  {UpdatedMemberAndGuestData &&
+                  UpdatedMemberAndGuestData.length > 0 ? (
                     <UI.FlatList
                       contentContainerStyle={styles.memberList}
                       data={UpdatedMemberAndGuestData}
@@ -658,8 +667,6 @@ class MemberDirectoryUI extends useMemberDirectoryLogic {
 }
 
 const mapStateToProps = (state: RootState) => {
-  
-  
   return {
     memberDirectoryloading: state.memberDirectory.loading,
     loading: state.dashboard.loading,
