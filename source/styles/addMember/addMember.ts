@@ -71,7 +71,7 @@ export const styles = StyleSheet.create({
     backIon:{ width: 25, height: 25 ,zIndex:1},
     memberActionIcons:{ width: 28, height: 28 },
     addIcon:{ width: 28, height: 28},
-    commentsBox:{height: 110,borderColor:"#cbcbcb", borderRadius: 5,paddingTop:10,borderWidth:1,paddingHorizontal:10},
+    commentsBox:{height: 110,borderColor:"#cbcbcb", borderRadius: 5,paddingTop:10,borderWidth:1,paddingHorizontal:10, textAlignVertical :"top"},
     submitBtn:{
       alignSelf:"center",
       width:160,

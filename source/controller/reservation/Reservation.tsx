@@ -4,20 +4,12 @@ import moment from "moment";
 import { Dimensions, FlatList } from "react-native";
 import { SingleBookingType } from "@/components/constants/Types";
 
-//webinterface
-interface Member {
-  id: string;
-  name: string;
-}
-//webinterface
-
 export interface DateItem {
   id: string;
   day: string;
   date: number;
   month: string;
 }
-
 
 interface Props {
   navigation: any;
@@ -53,15 +45,14 @@ interface Service {
 }
 
 interface AvailableTimeSlot {
-  TimeSlot: string; // TimeSlot is a string, e.g., '06:00'
+  TimeSlot: string; 
 }
 
 interface AvailableTimeCategory {
-  TimeName: string; // e.g., 'Morning', 'Mid Day', 'Evening'
-  TimeCat: string; // e.g., '06:00 AM - 12:00 PM'
-  AvailableTimeSlots: AvailableTimeSlot[]; // Array of available time slots
+  TimeName: string; 
+  TimeCat: string;
+  AvailableTimeSlots: AvailableTimeSlot[]; 
 }
-//webdummydata
 
 export interface ControllerState {
   dates: DateItem[];
@@ -99,12 +90,6 @@ export interface ControllerState {
   isChecked: Boolean;
   number: string;
   buddyList: boolean;
-  // members: Member[];
-  currentPage: number;
-  startPage: number;
-  membersPerPage: number;
-  visiblePageLimit: number;
-  perPage: number;
   screenWidth: number;
   updatedMembersListData: {
     isMemberSelected: boolean;
@@ -135,8 +120,8 @@ export interface ControllerState {
   servicesOptions: Service[];
   serviceNames: string[];
   AvailableTimeCat: AvailableTimeCategory[];
-  DefaultTimeCat:string
-  IsLoading:boolean
+  DefaultTimeCat: string;
+  IsLoading: boolean;
   //webstateany
 }
 
@@ -186,9 +171,6 @@ class ReservationLogic extends Component<Props, ControllerState> {
       hover: null,
       isChecked: false,
       buddyList: true,
-      currentPage: 1,
-      startPage: 1,
-      perPage: 16,
       number: "",
       screenWidth: Dimensions.get("window").width,
       updatedMembersListData: [],
@@ -196,8 +178,6 @@ class ReservationLogic extends Component<Props, ControllerState> {
       currentDate: null,
       sixtyDaysLater: null,
       dateRange: [],
-      membersPerPage: 16,
-      visiblePageLimit: 10,
       showGuestModal: false,
       showplayedpopup: false,
       showThankModal: false,
@@ -206,21 +186,13 @@ class ReservationLogic extends Component<Props, ControllerState> {
       servicesOptions: null,
       serviceNames: null,
       AvailableTimeCat: null,
-      DefaultTimeCat:null,
-      IsLoading:false
+      DefaultTimeCat: null,
+      IsLoading: false,
       //webstate
     };
   }
 
-  
   componentDidMount(): void {
-    // if(Platform.OS === "web"){
-    //   this.props.setLoader()
-    //   setTimeout(() => {
-    //     this.props.setLoader()
-    //   }, 2500);
-    // }
-    // let name = this.props?.route?.params?.serviceDetails?.title
     this.setState({
       mainServiceName: this.props?.route?.params?.serviceDetails?.title,
     });
@@ -243,10 +215,10 @@ class ReservationLogic extends Component<Props, ControllerState> {
     snapshot?: any
   ) {
     if (prevProps.reservationData !== this.props.reservationData) {
+      this.setState({ IsLoading: true });
       const reservationData = this.props.reservationData;
-      
+
       if (reservationData) {
-        this.setState({IsLoading:true})
         const availableDates = reservationData?.AvailableDates || [];
         const lastDate = availableDates.length
           ? availableDates[availableDates.length - 1].Date
@@ -264,18 +236,21 @@ class ReservationLogic extends Component<Props, ControllerState> {
 
         if (this.state.serviceNames !== serviceNames) {
           this.setState({
-            serviceNames:serviceNames,
+            serviceNames: serviceNames,
             dateRange: availableDates,
             currentDate: reservationData?.DefaultDate,
             selectedItem: reservationData?.DefaultDate,
             sixtyDaysLater: lastDate,
             servicesOptions: reservationData?.AvailableServices,
             ProvidersData: ProvidersDataNames,
-            AvailableTimeCat:reservationData?.AvailableTimeCat?.AvailableTimeCat,
-            selectedTimePeriod:reservationData?.DefaultTimeCat
+            AvailableTimeCat:
+              reservationData?.AvailableTimeCat?.AvailableTimeCat,
+            selectedTimePeriod: reservationData?.DefaultTimeCat,
           });
         }
-          this.setState({IsLoading:false})
+        setTimeout(() => {
+          this.setState({ IsLoading: false });
+        }, 500);
       }
     }
 
@@ -364,7 +339,7 @@ class ReservationLogic extends Component<Props, ControllerState> {
 
   onDateChange = (date: string | number | Date) => {
     const formattedDate = moment(new Date(date)).format("MM/DD/YYYY");
-    const selectedItem:any = this.state.dateRange.find(
+    const selectedItem: any = this.state.dateRange.find(
       (d: any) => d.Date === formattedDate
     );
     const selectedIndex = this.state.dateRange.findIndex(
@@ -379,7 +354,6 @@ class ReservationLogic extends Component<Props, ControllerState> {
   };
 
   handleSelectTimePeriod = (id: string) => {
-
     this.setState({ selectedTimePeriod: id });
   };
 
@@ -454,8 +428,23 @@ class ReservationLogic extends Component<Props, ControllerState> {
       console.log("Selected Service:", this.state.selectedService);
     });
   };
+
+  formatTimeSlot(timeCat, timeSlot) {
+    const isPM = timeCat.includes("PM") && !timeCat.includes("AM -");
+    return `${timeSlot} ${isPM ? "PM" : "AM"}`;
+  }
   navigateToAddMembers = () => {
-    navigateToScreen(this.props, "AddMemberUI", true, {});
+    const memberData = {
+      service: this.state.serviceName || "Testing",
+      RequestedDate: moment(this?.state?.selectedDate).format("DD/MM/YYYY"),
+      RequestedTime: this.state.selectedTime
+        ? this.formatTimeSlot(
+            this.state.selectedTimePeriod,
+            this.state.selectedTime
+          )
+        : null,
+    };
+    navigateToScreen(this.props, "AddMemberUI", true, memberData);
   };
   selectService = (value: string) => {
     this.setState({
@@ -465,7 +454,7 @@ class ReservationLogic extends Component<Props, ControllerState> {
   };
   selectProvider = (value: string) => {
     console.log(value, "value");
-    
+
     this.setState({ providerName: value });
   };
 

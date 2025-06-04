@@ -282,15 +282,23 @@ export default class useMemberDirectoryLogic extends Component<
     //Need to check this code How to handle search in mobile due this facing issue in new Guest create
     if (Platform.OS !== "web") {
       if (this.state.selectedGuest === "Existing Guest") {
-          if (this.state.searchText !== "") {
-            this.searchTimeout = setTimeout(() => {
+        if (prevState.searchText !== this.state.searchText) {
+          this.searchTimeout = setTimeout(() => {
+            if (this.props.userType === "Member") {
               this.props.getMemberList({
                 pageCount: this.state.pageCount,
                 searchChar: "",
                 searchBy: this.state.searchText,
               });
-            }, 1000);
-          }
+            } else {
+              this.props.getExistingGuestList({
+                pageCount: this.state.pageCount,
+                searchChar: "",
+                searchBy: this.state.searchText,
+              });
+            }
+          }, 1000);
+        }
       }
     }
   }
@@ -339,6 +347,7 @@ export default class useMemberDirectoryLogic extends Component<
       viewPosition: 0.5,
     });
     const currentValue = membersMock[index];
+
     if (this.props.userType === "Member") {
       this.props.getMemberList({
         pageCount: 1,
@@ -744,8 +753,8 @@ export default class useMemberDirectoryLogic extends Component<
     }));
   };
 
-  onWebDateChange = (date:string) => {
-    const formattedDate:any = moment(new Date(date)).format("DD-MMM-YYYY");
+  onWebDateChange = (date: string) => {
+    const formattedDate: any = moment(new Date(date)).format("DD-MMM-YYYY");
     this.setState({ selectedDate: formattedDate });
     this.setState({ date: formattedDate });
     this.toggleCalendar();
@@ -785,7 +794,7 @@ export default class useMemberDirectoryLogic extends Component<
     //   isInvalid: false,
     //   errorMessage: "",
     // });
-   this.setState({searchText:""})
+    this.setState({ searchText: "" });
   };
   handleMemberDirtory = () => {
     this.props.setOpenMembersModel();

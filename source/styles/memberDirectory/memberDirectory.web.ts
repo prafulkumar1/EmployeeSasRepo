@@ -1,11 +1,10 @@
-import { isPlatformAndroid } from '@/components/constants/Matrices';
-import { Dimensions, StyleSheet } from 'react-native';
-import { responsiveHeight, responsiveWidth } from 'react-native-responsive-dimensions';
-const { width, height } = Dimensions.get('window');
+
+import { StyleSheet } from 'react-native';
+import { responsiveHeight, } from 'react-native-responsive-dimensions';
 
 export const styles = StyleSheet.create({
   memberItem: {
-    width: "25%",
+    width: "23%",
     alignItems: 'center',
     margin: '1%',
     marginBottom: 15,
@@ -18,7 +17,17 @@ export const styles = StyleSheet.create({
     backgroundColor: "#ccc",
     marginBottom: 5,
   },
-  stretch: { width: 40, height: 40, margin: 8 },
+  stretch: { width: 50, height: 50, margin: 8,borderRadius : 25 },
+  hoverselected: {
+    borderWidth: 2,
+    borderColor: "#2a4e7d",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 5,
+    elevation: 50,
+
+  },
   memberName: {
     fontSize: 14,
     fontWeight: '500',
@@ -269,7 +278,7 @@ export const styles = StyleSheet.create({
     color: "#6D6D6D",
     fontSize: 16,
     paddingTop: 10,
-    paddingBottom :10
+    paddingBottom: 10
   },
   genderoptionsStyles: {
     width: "100%",

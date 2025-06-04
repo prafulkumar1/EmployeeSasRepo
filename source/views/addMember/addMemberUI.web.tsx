@@ -4,7 +4,7 @@ import { styles } from "@/source/styles/addMember/addMember.web";
 import { connect } from "react-redux";
 import { Icon } from "@/components/ui/icon";
 import { CloseIcon, AddIcon } from "@/components/ui/icon";
-import { Text, Image, Modal } from "react-native";
+import { Text, Image, Modal, TextInput } from "react-native";
 import useAddMemberLogic from "@/source/controller/addMember/addMember";
 import {
   setClosememberModel,
@@ -27,7 +27,11 @@ import { setLoader } from "@/components/redux/reducers/uiSlice";
 import CbLoader from "@/components/cobalt/webCobaltLoader";
 
 const pageId = "AddMember";
-const addMemberList = [{id:1,memberType:"Member"},{id:2,memberType:"Guest"},{id:3,memberType:"TBD"}]
+const addMemberList = [
+  { id: 1, memberType: "Member" },
+  { id: 2, memberType: "Guest" },
+  { id: 3, memberType: "TBD" },
+];
 class AddMemberUI extends useAddMemberLogic {
   renderAddedMemberList = ({ item, index }) => {
     return (
@@ -103,7 +107,6 @@ class AddMemberUI extends useAddMemberLogic {
         visible={this.props.OpenAddmemberModel}
         // onRequestClose={this.toggleModal}
       >
-        
         <UI.ConnectedCbView
           style={styles.modalBackground}
           pageId={pageId}
@@ -151,7 +154,7 @@ class AddMemberUI extends useAddMemberLogic {
                 pageId={pageId}
                 id="playerListRow"
               >
-                {/* CIRCLE BUTTONS*/ }
+                {/* CIRCLE BUTTONS*/}
                 <UI.FlatList
                   data={this.state.membersCountList}
                   horizontal
@@ -185,7 +188,10 @@ class AddMemberUI extends useAddMemberLogic {
                           this?.state?.hover === "Addmember" ? "#000" : "#fff",
                       },
                     ]}
-                    onPress={() => {this.handleSetGuest("member")  ; this.props.setUserType("Member");}}
+                    onPress={() => {
+                      this.handleSetGuest("member");
+                      this.props.setUserType("Member");
+                    }}
                     onMouseEnter={() => this.setState({ hover: "Addmember" })}
                     onMouseLeave={() => this.setState({ hover: null })}
                   >
@@ -201,7 +207,10 @@ class AddMemberUI extends useAddMemberLogic {
                     ]}
                     onMouseEnter={() => this.setState({ hover: "addguest" })}
                     onMouseLeave={() => this.setState({ hover: null })}
-                    onPress={() => {this.handleSetGuest("Guest");   this.props.setUserType("Guest");}}
+                    onPress={() => {
+                      this.handleSetGuest("Guest");
+                      this.props.setUserType("Guest");
+                    }}
                   >
                     <UI.ConnectedCbText style={styles.popupButtonText}>
                       Guest
@@ -280,6 +289,9 @@ class AddMemberUI extends useAddMemberLogic {
                   multiline={true}
                   numberOfLines={4}
                   formId={pageId}
+                  onChange={(value) =>
+                    this.handlecomment(value)
+                  }
                 />
               </UI.ConnectedCbBox>
             </UI.ScrollView>
@@ -363,8 +375,8 @@ const mapStateToProps = (state: RootState) => {
     OpenAddmemberModel: state?.reservation?.OpenAddmemberModel,
     OpenMemberModel: state?.addMember?.OpenMemberModel,
     membersList: state.addMember.membersList,
-    selectedMembersList:state.addMember.selectedMembersList,
-    membersCount:state.addMember.membersCount,
+    selectedMembersList: state.addMember.selectedMembersList,
+    membersCount: state.addMember.membersCount,
   };
 };
 const mapDispatchToProps = {
@@ -381,7 +393,7 @@ const mapDispatchToProps = {
   resetSingleMemberDetails,
   setUserType,
   setAddMultiple,
-  setmembersCount
+  setmembersCount,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(AddMemberUI);

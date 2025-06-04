@@ -45,20 +45,20 @@ class MemberDirectoryUI extends useMemberDirectoryLogic {
   renderMemberItem = ({ item }: { item: any }) => {
     return (
       <UI.TouchableOpacity
-        style={[
-          styles.memberItem,
-          { backgroundColor: item.isMemberSelected ? "#e0e0e0" : "#fff" },
-        ]}
+        style={[styles.memberItem]}
         onPress={() => this.selectedMember(item)}
       >
         <UI.View>
           <Image
-            style={styles.stretch}
-            source={{
-              uri: item?.ProfilePic
-                ? item?.ProfilePic
-                : require("@/assets/images/profile.png"),
-            }}
+            style={[
+              styles.stretch,
+              item.isMemberSelected && styles.hoverselected,
+            ]}
+            source={
+              item?.ProfilePic
+                ? { uri: item?.ProfilePic }
+                : require("@/assets/images/profile.png")
+            }
           />
         </UI.View>
         <UI.ConnectedCbView>
@@ -234,7 +234,6 @@ class MemberDirectoryUI extends useMemberDirectoryLogic {
         : [];
     const { setFormFieldData } = this.props;
     const UpdatedMemberAndGuestData = this.getCurrentPageData();
-console.log(UpdatedMemberAndGuestData, "UpdatedMemberAndGuestData");
 
     return (
       <Modal

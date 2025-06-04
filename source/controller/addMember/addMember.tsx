@@ -32,10 +32,12 @@ interface IState {
   showThankModal: boolean;
   showGuestModal: boolean;
   addmemberloading: boolean;
+  commentText:string | null
   //Webcode
 }
 
 interface IProps {
+   route: any;
   navigation?: any;
   resetLoadedScreen?: () => void;
   isScreenLoaded?: boolean;
@@ -76,7 +78,7 @@ export default class useAddMemberLogic extends Component<IProps, IState> {
     this.addIconRefs = {};
     this.state = {
       isModalVisible: false,
-      timeLeft: 3000,
+      timeLeft: 750,
       timerRunning: false,
       membersCountList: [],
       isTimeOutModal: false,
@@ -95,6 +97,7 @@ export default class useAddMemberLogic extends Component<IProps, IState> {
       showThankModal: false,
       showGuestModal: false,
       addmemberloading: false,
+      commentText:""
       //webcode
     };
     this.interval = null;
@@ -333,5 +336,8 @@ export default class useAddMemberLogic extends Component<IProps, IState> {
     });
 
   };
+  handlecomment = (value : string) =>{
+    this.setState({commentText :value})
+  }
   //webcode
 }

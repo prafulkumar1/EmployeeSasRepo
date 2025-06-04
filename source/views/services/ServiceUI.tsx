@@ -110,7 +110,7 @@ class ServiceUI extends ServiceLogic {
           pageId={pageId}
           headerTitle={"Book A Lesson"}
           props={this.props}
-          goHome={() => this.navigateToService()}
+          // goHome={() => this.navigateToService()}
         />
         <StatusBar hidden={true} />
 

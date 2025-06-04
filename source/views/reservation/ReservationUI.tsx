@@ -352,7 +352,7 @@ class ReservationUI extends ReservationLogic {
           </UI.TouchableOpacity>
         </UI.ConnectedCbBox>
 
-        {!this.state.AvailableTimeCat || !this.state.dateRange || this.state.IsLoading  && (
+        {this.state.IsLoading  && (
           <UI.Box style={styles.loaderTrans}>
             <CbLoader />
           </UI.Box>

@@ -65,7 +65,7 @@ serviceName: {
     fontSize: 15,
     color: "#5e4c4c",
 },
-cardContainer: { justifyContent: "center", alignItems: "center", alignSelf: "center", marginTop: 20 },
+cardContainer: { justifyContent: "flex-start", alignItems: "center", alignSelf: "center", marginTop: 20 },
 topServiceContainer: { marginTop: 10, alignItems: "center" },
 serviceTopBar:{ width: '100%', alignItems: 'center' },
 serviceTabContainer: {
@@ -89,7 +89,7 @@ serviceTabContainer: {
     borderWidth:1,
     marginTop:100
   },
-  serviceCards:{ justifyContent: "center" , paddingBottom: responsiveHeight(20)},
+  serviceCards:{ justifyContent: "flex-start" , paddingBottom: responsiveHeight(20)},
   serviceDesc:{
     color: "#5e4c4c",
     fontSize: 16,
