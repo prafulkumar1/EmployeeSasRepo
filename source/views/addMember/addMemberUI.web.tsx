@@ -33,7 +33,7 @@ const addMemberList = [
   { id: 3, memberType: "TBD" },
 ];
 class AddMemberUI extends useAddMemberLogic {
-  renderAddedMemberList = ({ item, index }) => {
+  renderAddedMemberList = ({ item, index }) => {  
     return (
       <>
         <UI.ConnectedCbView
@@ -47,7 +47,7 @@ class AddMemberUI extends useAddMemberLogic {
             <UI.ConnectedCbView style={styles.iconcontainer}>
               <UI.TouchableOpacity
                 style={[{ width: 30, height: 30 }]}
-                onPress={() => this.props.removeMembersFromList(item.id)}
+                onPress={() => this.props.removeMembersFromList(item?.number)}
               >
                 <UI.Icon as={CloseIcon} size="sm" color="#ccc" />
               </UI.TouchableOpacity>
@@ -56,7 +56,7 @@ class AddMemberUI extends useAddMemberLogic {
                   if (ref) this.addIconRefs[item.id] = ref;
                 }}
                 style={[{ width: 30, height: 30 }]}
-                onPress={(e) => this.handleAddIconPress(item?.id, e)}
+                onPress={(e) => this.handleAddIconPress(item, e)}
               >
                 <UI.Icon as={AddIcon} size="sm" color="#08c3f8" />
               </UI.TouchableOpacity>

@@ -47,7 +47,7 @@ class AddMemberUI extends useAddMemberLogic {
           </UI.TouchableOpacity>
           <UI.TouchableOpacity
             style={styles.addIcon}
-            onPress={() => this.toggleModal(item.id)}
+            onPress={() => this.toggleModal(item)}
           >
             <Icon as={AddIcon} size="xl" color="#1dc6ff" />
           </UI.TouchableOpacity>

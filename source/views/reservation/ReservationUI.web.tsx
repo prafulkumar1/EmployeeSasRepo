@@ -186,8 +186,7 @@ class ReservationUI extends useReservationLogic {
         </UI.Box>
       );
     }
-    console.log(this.props.singleServiceItem, "singleServiceItem");
-    
+
     return (
       <UI.ScrollView style={[styles.mainContainer]}>
         <UI.ConnectedCbBox

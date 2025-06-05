@@ -15,8 +15,11 @@ import { ChevronLeftIcon, ChevronRightIcon, Icon } from "@/components/ui/icon";
 
 import {
   addMembersForReservation,
+  removeMembersFromList,
   resetLoadedScreen,
   resetSingleMemberDetails,
+  setMembersList,
+  setselectedMembersList,
   singleMemberDetails,
 } from "@/components/redux/reducers/addMemberReducer";
 import { KeyboardAvoidingView, Modal, Platform, TextInput } from "react-native";
@@ -424,6 +427,13 @@ const mapStateToProps = (state: RootState) => {
     userType: state.addMember.userType,
     getExistingGuestList: state.memberDirectory.memberList,
     GuestListPerBatch: state.memberDirectory.GuestListPerBatch,
+      memberDirectoryloading: state.memberDirectory.loading,
+    OpenMemberModel: state?.addMember?.OpenMemberModel,
+    ChangeToGuest: state?.addMember?.ChangeToGuest,
+    totalCount: state.memberDirectory.totalCount,
+    selectedId: state.addMember.selectedId,
+    AddMultiple: state.addMember.AddMultiple,
+    membersCount: state.addMember.membersCount,
   };
 };
 const mapDispatchToProps = {
@@ -435,6 +445,9 @@ const mapDispatchToProps = {
   setFormFieldData,
   resetMemberListPerBatch,
   getExistingGuestList,
+  setselectedMembersList,
+  setMembersList,
+  removeMembersFromList,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(MemberDirectoryUI);

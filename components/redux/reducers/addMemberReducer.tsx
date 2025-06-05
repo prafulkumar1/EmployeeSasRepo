@@ -83,17 +83,21 @@ const AddMemberSlice = createSlice({
       const { selectedId, selectedMembersList } = values;
 
       // Case 1: AddMultiple mode — match members by index
-      if (!selectedId && selectedMembersList?.length > 0) {
-        const updatedMembersList = values.membersList.map((item, index) => {
-          const match = selectedMembersList[index];
-          if (match) {
+      if ( selectedMembersList?.length > 1) {
+        const updatedMembersList = values?.membersList?.map((item) => {
+          const match = selectedMembersList.find(
+            (selected) => selected?.number === item.number
+          );
+          if (match && match?.singleMemberDetails) {
             return {
               ...item,
-              memberName: match.MemberName,
+              memberName:
+                match?.singleMemberDetails?.MemberName || item.memberName,
               isMemberSelected: true,
-              singleMemberDetails: match,
+              singleMemberDetails: match?.singleMemberDetails,
             };
           }
+
           return item;
         });
 
@@ -105,10 +109,14 @@ const AddMemberSlice = createSlice({
           ),
         };
       }
-
+      
       // Case 2: Single member selected using selectedId
       const updatedMembersList = values.membersList.map((item, index) => {
-        if (item?.id === values?.selectedId) {
+        const match = selectedMembersList.find(
+          (selected) => selected?.number === item.number
+        );
+
+        if (match) {
           const updatedMember = {
             ...item,
             memberName: values.singleMemberDetails?.MemberName,
@@ -129,10 +137,10 @@ const AddMemberSlice = createSlice({
       };
     },
 
-    addTbdToMemberList(state, action) {
+    addTbdToMemberList(state, action) { 
       // console.log("Before update:", JSON.stringify(state.membersList, null, 2));  // Logs before update
       state.membersList = state.membersList.map((item) => {
-        if (item.id === state.selectedId) {
+        if (item.number === state.selectedId) {
           const updatedMember = {
             ...item,
             memberName: "TBD",
@@ -156,8 +164,8 @@ const AddMemberSlice = createSlice({
       //  console.log("After update:", JSON.stringify(state.membersList, null, 2));  // Logs after update
     },
     removeMembersFromList(state, action) {
-      state.membersList = state.membersList.map((item, index) => {
-        if (item.id === action.payload) {
+      state.membersList = state?.membersList?.map((item, index) => {
+        if (item?.number === action?.payload) {
           const updatedMember = {
             ...item,
             memberName: `Reservation ${index + 1}`,
@@ -168,8 +176,8 @@ const AddMemberSlice = createSlice({
         }
         return item;
       });
-      state.selectedMembersList = state.selectedMembersList.filter(
-        (items) => items?.id === action.payload
+      state.selectedMembersList = state?.selectedMembersList?.filter(
+        (items) => items?.number !== action?.payload
       );
     },
     setUserType(state, action) {

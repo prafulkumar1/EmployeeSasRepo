@@ -46,7 +46,7 @@ interface IProps {
   setUserType?: (userType: string) => void;
   setMembersList?: (memberCount: number) => void;
   membersList?: { isMemberSelected: boolean; id: string; memberName: string }[];
-  removeMembersFromList?: (id: string) => void;
+  removeMembersFromList?: (id:any) => void;
   addTbdToMemberList?: () => void;
   selectedMembersList?: {
     id: string;
@@ -171,11 +171,11 @@ export default class useAddMemberLogic extends Component<IProps, IState> {
     }
   };
 
-  toggleModal = (id: string) => {
-    this.props.handleSelectedMember(id);
+  toggleModal = (item: any) => {
+    this.props.handleSelectedMember(item?.number);
     this.setState((prevState) => ({
       isModalVisible: !prevState.isModalVisible,
-      selectedId: id,
+      selectedId: item?.id,
     }));
   };
 
@@ -278,8 +278,9 @@ export default class useAddMemberLogic extends Component<IProps, IState> {
     });
     this.props.setAddMultiple(true)
   };
-  handleAddIconPress = (id: number, event: any) => {
-    this.props.handleSelectedMember(`${id}`);
+  handleAddIconPress = (item: any, event: any) => {
+       let id = item?.id
+    this.props.handleSelectedMember(item?.number);
     const ref = this.addIconRefs[id];
     if (ref && ref.measure) {
       this.setState({ popupVisibleIndex: null });

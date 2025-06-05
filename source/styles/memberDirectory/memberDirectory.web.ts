@@ -371,6 +371,13 @@ export const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: "bold",
   },
+  memberNameText: {
+  marginTop: 4,
+  fontSize: 12,
+  textAlign: 'center',
+  maxWidth: 70,
+      fontFamily: "SourceSansPro_Regular"
+},
 
   //errormodel
   modalOverlay: {

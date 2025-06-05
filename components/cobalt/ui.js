@@ -493,7 +493,6 @@ class CbSelectDropDown extends React.Component {
     this.customstyle = props.customstyle || {};
     this.dropdownCustom = props.dropdownCustom || {};
     this.selectItemId = props.selectItemId;
-    console.log(props.options, "consijnsjnjdnkjsnd");
   }
 
   componentDidUpdate(prevProps) {
@@ -532,8 +531,7 @@ class CbSelectDropDown extends React.Component {
      const optionsAsStrings = this?.props?.options?.map((item) =>
     typeof item === 'string' ? item : item.label
   );
-  console.log(optionsAsStrings, "optionsAsStrings");
-  
+
     return (
       <FlatList
         style={[styles.dropdown, this.props.dropdownCustom]}

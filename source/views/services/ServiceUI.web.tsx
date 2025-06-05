@@ -14,8 +14,6 @@ import CbLoader from "@/components/cobalt/webCobaltLoader";
 import { navigateToScreen } from "@/components/constants/Navigations";
 class ServiceUI extends ServiceLogic {
   renderItem = ({ item }) => {
-    console.log(item, "item");
-    
     return (
       <UI.TouchableOpacity
         style={[styles.card]}

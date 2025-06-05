@@ -21,6 +21,7 @@ import {
 import useMemberDirectoryLogic from "@/source/controller/memberDirectory/memberDirectory";
 import {
   addMembersForReservation,
+  removeMembersFromList,
   resetLoadedScreen,
   resetSingleMemberDetails,
   setAddMultiple,
@@ -196,35 +197,56 @@ class MemberDirectoryUI extends useMemberDirectoryLogic {
     );
   };
   renderSelectedCircles = () => {
+    const { selectedMembers } = this.state;
+
     return (
       <UI.ConnectedCbView style={styles.circleRow}>
-        {this.state.selectedMembers.map((item, index) => (
-          <UI.ConnectedCbView key={index} style={styles.circleContainer}>
-            <Image
-              source={
-                item && item?.ProfilePic
-                  ? { uri: item?.ProfilePic } // This assumes ProfilePic is a valid URL string
-                  : require("@/assets/images/login.jpg")
-              }
-              style={styles.circleImage}
-            />
-            {item && (
-              <UI.TouchableOpacity
-                style={styles.cancelButton}
-                onPress={() => this.removeSelectedMember(item, index)}
-              >
-                <UI.ConnectedCbText style={styles.cancelText}>
-                  ×
+        {selectedMembers?.map((item, index) => {
+          const hasDetails = !!item?.singleMemberDetails;
+          const isTBD = item?.memberName === "TBD";
+          const showClose = hasDetails || isTBD;
+
+          const profilePic =
+            hasDetails && item?.singleMemberDetails?.ProfilePic
+              ? { uri: item?.singleMemberDetails?.ProfilePic }
+              : require("@/assets/images/login.jpg");
+
+          const displayName = hasDetails
+            ? item?.singleMemberDetails?.DisplayName ||
+              item?.singleMemberDetails?.MemberName
+            : isTBD
+            ? "TBD"
+            : "";
+
+          return (
+            <UI.ConnectedCbView key={index} style={styles.circleContainer}>
+              <Image source={profilePic} style={styles.circleImage} />
+
+              {showClose && (
+                <UI.TouchableOpacity
+                  style={styles.cancelButton}
+                  onPress={() => this.removeSelectedMember(item, index)}
+                >
+                  <UI.ConnectedCbText style={styles.cancelText}>
+                    ×
+                  </UI.ConnectedCbText>
+                </UI.TouchableOpacity>
+              )}
+
+              {displayName !== "" && (
+                <UI.ConnectedCbText style={styles.memberNameText}>
+                  {displayName}
                 </UI.ConnectedCbText>
-              </UI.TouchableOpacity>
-            )}
-          </UI.ConnectedCbView>
-        ))}
+              )}
+            </UI.ConnectedCbView>
+          );
+        })}
       </UI.ConnectedCbView>
     );
   };
 
   render() {
+
     let pageConfigJson = global.appConfigJsonArray.find(
       (item) => item?.PageId === pageId
     );
@@ -234,7 +256,6 @@ class MemberDirectoryUI extends useMemberDirectoryLogic {
         : [];
     const { setFormFieldData } = this.props;
     const UpdatedMemberAndGuestData = this.getCurrentPageData();
-
     return (
       <Modal
         animationType="fade"
@@ -438,6 +459,7 @@ class MemberDirectoryUI extends useMemberDirectoryLogic {
                       keyExtractor={(item, index) => index.toString()}
                       numColumns={4}
                       scrollEnabled={false}
+                      extraData={this.state.updatedMembersListData}
                     />
                   ) : (
                     <UI.Box style={styles.emptyListContainer}>
@@ -678,6 +700,7 @@ const mapStateToProps = (state: RootState) => {
     GuestListPerBatch: state.memberDirectory.GuestListPerBatch,
     totalCount: state.memberDirectory.totalCount,
     addMemberList: state.addMember.membersList,
+    selectedId: state.addMember.selectedId,
     selectedMembersList: state.addMember.selectedMembersList,
     singleItemDetails: state.addMember.singleMemberDetails,
     userType: state.addMember.userType,
@@ -699,6 +722,7 @@ const mapDispatchToProps = {
   setAddMultiple,
   setselectedMembersList,
   setMembersList,
+  removeMembersFromList,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(MemberDirectoryUI);
