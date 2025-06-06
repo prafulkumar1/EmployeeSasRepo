@@ -16,6 +16,9 @@ const initialState = {
   ChangeToGuest: "",
   membersCount: 3,
   AddMultiple: false,
+  SaveAppointment : null,
+  ReservationData:null,
+  SaveAppointmentMessage:null
 };
 
 export const getMemberDetails = createAsyncThunk(
@@ -32,6 +35,24 @@ export const getMemberDetails = createAsyncThunk(
         }
       } else {
         return rejectWithValue(memberDetailsResponse.response);
+      }
+    }
+  }
+);
+export const SaveAppointment = createAsyncThunk(
+  "SaveAppointment",
+  async (_, { getState, rejectWithValue, fulfillWithValue }) => {
+    const params = {};
+    const SaveAppointmentResponse = await postApiCall("", "", params);
+    if (SaveAppointmentResponse) {
+      if (SaveAppointmentResponse.statusCode === 200) {
+        if (SaveAppointmentResponse.response) {
+          return fulfillWithValue(SaveAppointmentResponse.response);
+        } else {
+          return rejectWithValue(SaveAppointmentResponse.response);
+        }
+      } else {
+        return rejectWithValue(SaveAppointmentResponse.response);
       }
     }
   }
@@ -193,6 +214,16 @@ const AddMemberSlice = createSlice({
       const { userType } = action.payload;
       state.ChangeToGuest = userType;
     },
+    UpdateTheSaveAppointment(state, action) {
+      const { userType } = action.payload;
+      state.ChangeToGuest = userType;
+    },
+    setReservationData(state, action) {
+      state.ReservationData = action.payload;
+    },
+    setSaveAppointmentMessage(state, action) {
+      state.SaveAppointmentMessage = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -204,6 +235,17 @@ const AddMemberSlice = createSlice({
         state.memberResponse = action.payload;
       })
       .addCase(getMemberDetails.rejected, (state, action: any) => {
+        state.loading = false;
+        state.errorMessage = action?.payload?.ResponseMessage;
+      })
+      .addCase(SaveAppointment.pending, (state, action) => {
+        state.loading = true;
+      })
+      .addCase(SaveAppointment.fulfilled, (state, action) => {
+        state.loading = false;
+        // state.memberResponse = action.payload;
+      })
+      .addCase(SaveAppointment.rejected, (state, action: any) => {
         state.loading = false;
         state.errorMessage = action?.payload?.ResponseMessage;
       });
@@ -226,5 +268,7 @@ export const {
   setmembersCount,
   setAddMultiple,
   setselectedMembersList,
+  setReservationData,
+  setSaveAppointmentMessage
 }: any = AddMemberSlice.actions;
 export default AddMemberSlice.reducer;

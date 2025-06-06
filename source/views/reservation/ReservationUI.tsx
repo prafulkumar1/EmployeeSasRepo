@@ -13,6 +13,7 @@ import {
 } from "@/components/redux/reducers/reservationReducer";
 import { StatusBar } from "expo-status-bar";
 import CbLoader from "@/components/cobalt/cobaltLoader";
+import { setReservationData } from "@/components/redux/reducers/addMemberReducer";
 
 const pageId = "Reservation";
 
@@ -178,16 +179,16 @@ class ReservationUI extends ReservationLogic {
     );
   };
   render() {
-    const serviceClassName = this?.props?.singleServiceItem?.[0]?.ServiceClass?.find(
-      (ServiceClass) => ServiceClass.ServiceClassID === this?.props?.ServiceClassID
-    )?.ServiceClassName;
-    
+    const serviceClassName =
+      this?.props?.singleServiceItem?.[0]?.ServiceClass?.find(
+        (ServiceClass) =>
+          ServiceClass.ServiceClassID === this?.props?.ServiceClassID
+      )?.ServiceClassName;
+
     return (
       <UI.Box style={styles.mainContainer}>
         <UI.ConnectedCbHeader
-          headerTitle={
-            serviceClassName ? serviceClassName : null
-          }
+          headerTitle={serviceClassName ? serviceClassName : null}
           goHome={() => this.navigateToService()}
           goBack={() => this.props.navigation?.goBack()}
         />
@@ -273,15 +274,40 @@ class ReservationUI extends ReservationLogic {
               </UI.ConnectedCbBox>
             </UI.ConnectedCbBox>
           )}
-          <UI.ConnectedCbSelectDropDown
-            options={this?.state?.serviceNames}
-            customstyle={[styles.serviceBtn]}
-            onSelect={(value: string) => this.selectService(value)}
-            placeholder={"Select the Service"}
-            setAddMemberIndex={this.setAddMemberIndex}
-            addMemberIndex={this.state.addMemberIndex}
-            selectItemId={0}
-          />
+          <UI.Box style={styles.container}>
+            <UI.Box style={styles.row}>
+              <UI.ConnectedCbSelectDropDown
+                options={this?.state?.serviceNames}
+                customstyle={[styles.serviceBtn]}
+                onSelect={(value: string) => this.selectService(value)}
+                placeholder={"Select the Service"}
+                setAddMemberIndex={this.setAddMemberIndex}
+                addMemberIndex={this.state.addMemberIndex}
+                selectItemId={0}
+              />
+              {/* Tooltip Container with relative positioning */}
+              <UI.Box style={styles.tooltipWrapper}>
+                <UI.TouchableOpacity
+                  onPress={this.toggleserviceTooltip}
+                  style={styles.circle1}
+                  activeOpacity={0.7}
+                >
+                  <UI.Text style={styles.iText}>i</UI.Text>
+                </UI.TouchableOpacity>
+              </UI.Box>
+
+              {this.state.toolServicetipVisible && (
+                <UI.Box style={styles.tooltipPopup}>
+                  <UI.Text style={styles.tooltipHeader}>
+                    Additional Information
+                  </UI.Text>
+                  <UI.Text style={styles.tooltipText}>
+                    Select your preferred provider from the list.
+                  </UI.Text>
+                </UI.Box>
+              )}
+            </UI.Box>
+          </UI.Box>
 
           <UI.ConnectedCbBox
             id="genderBox"
@@ -302,15 +328,42 @@ class ReservationUI extends ReservationLogic {
             />
           </UI.ConnectedCbBox>
 
-          <UI.ConnectedCbSelectDropDown
-            options={this.state.ProvidersData}
-            customstyle={[styles.dropDownBtn]}
-            onSelect={(value: string) => this.selectProvider(value)}
-            placeholder={"Select the Provider"}
-            setAddMemberIndex={this.setAddMemberIndex}
-            addMemberIndex={this.state.addMemberIndex}
-            selectItemId={1}
-          />
+          <UI.Box style={styles.container}>
+            <UI.Box style={styles.row}>
+              <UI.ConnectedCbSelectDropDown
+                options={this.state.ProvidersData}
+                customstyle={[styles.dropDownBtn]}
+                onSelect={(value) => this.selectProvider(value)}
+                placeholder={"Select the Provider"}
+                setAddMemberIndex={this.setAddMemberIndex}
+                addMemberIndex={this.state.addMemberIndex}
+                selectItemId={1}
+              />
+
+              {/* Tooltip Container with relative positioning */}
+              <UI.Box style={styles.tooltipWrapper}>
+                <UI.TouchableOpacity
+                  onPress={this.toggleTooltip}
+                  // style={styles.tooltipIcon}
+                  style={styles.circle}
+                  activeOpacity={0.7}
+                >
+                  <UI.Text style={styles.iText}>i</UI.Text>
+                </UI.TouchableOpacity>
+              </UI.Box>
+
+              {this.state.tooltipVisible && (
+                <UI.Box style={styles.tooltipPopup}>
+                  <UI.Text style={styles.tooltipHeader}>
+                    Additional Information
+                  </UI.Text>
+                  <UI.Text style={styles.tooltipText}>
+                    Select your preferred provider from the list.
+                  </UI.Text>
+                </UI.Box>
+              )}
+            </UI.Box>
+          </UI.Box>
 
           <UI.FlatList
             data={this.state?.AvailableTimeCat}
@@ -352,7 +405,7 @@ class ReservationUI extends ReservationLogic {
           </UI.TouchableOpacity>
         </UI.ConnectedCbBox>
 
-        {this.state.IsLoading  && (
+        {this.state.IsLoading && (
           <UI.Box style={styles.loaderTrans}>
             <CbLoader />
           </UI.Box>
@@ -375,6 +428,7 @@ const mapStateToProps = (state: RootState) => {
 const mapDispatchToProps = {
   getAppConfiguration,
   getReservationsData,
+  setReservationData
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(ReservationUI);

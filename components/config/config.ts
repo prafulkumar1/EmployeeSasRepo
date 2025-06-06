@@ -38,4 +38,7 @@ export const endpoints = {
     BOOKING_CONFIG_DATA: {
         GET_BOOKING_CONFIG_DATA: "Bookings/GetBookingConfigData"
     },
+    APPOINTMENT_DATA: {
+        SAVE_APPOINTMENT_DATA: "Bookings/SaveBookingAppointment"
+    },
 }

@@ -23,10 +23,12 @@ interface Props {
   setOpenAddmemberModel?: () => void;
   setClosememberModel?: () => void;
   setOpenMembersModel?: () => void;
+  setReservationData?: (ReservationData: any) => void;
   setLoader?: () => void;
   OpenAddmemberModel?: boolean;
   OpenMemberModel?: boolean;
   closeMemberModel?: boolean;
+  ThankYouModel?: boolean;
   singleServiceItem?: SingleBookingType;
   reservationData?: any;
   ServiceClassID?: any;
@@ -45,13 +47,13 @@ interface Service {
 }
 
 interface AvailableTimeSlot {
-  TimeSlot: string; 
+  TimeSlot: string;
 }
 
 interface AvailableTimeCategory {
-  TimeName: string; 
+  TimeName: string;
   TimeCat: string;
-  AvailableTimeSlots: AvailableTimeSlot[]; 
+  AvailableTimeSlots: AvailableTimeSlot[];
 }
 
 export interface ControllerState {
@@ -122,6 +124,9 @@ export interface ControllerState {
   AvailableTimeCat: AvailableTimeCategory[];
   DefaultTimeCat: string;
   IsLoading: boolean;
+  tooltipVisible: boolean;
+  toolServicetipVisible: boolean;
+  tempreservationData: any;
   //webstateany
 }
 
@@ -188,6 +193,9 @@ class ReservationLogic extends Component<Props, ControllerState> {
       AvailableTimeCat: null,
       DefaultTimeCat: null,
       IsLoading: false,
+      tooltipVisible: false,
+      toolServicetipVisible: false,
+      tempreservationData: null,
       //webstate
     };
   }
@@ -217,6 +225,7 @@ class ReservationLogic extends Component<Props, ControllerState> {
     if (prevProps.reservationData !== this.props.reservationData) {
       this.setState({ IsLoading: true });
       const reservationData = this.props.reservationData;
+      this.setState({ tempreservationData: reservationData });
 
       if (reservationData) {
         const availableDates = reservationData?.AvailableDates || [];
@@ -433,19 +442,33 @@ class ReservationLogic extends Component<Props, ControllerState> {
     const isPM = timeCat.includes("PM") && !timeCat.includes("AM -");
     return `${timeSlot} ${isPM ? "PM" : "AM"}`;
   }
+  // navigateToAddMembers = () => {
+  //      console.log(this.state.tempreservationData, "tempreservationData");
+
+  //   const memberData = {
+  //     service: this.state.serviceName || "Testing",
+  //     RequestedDate: moment(this?.state?.selectedDate).format("DD/MM/YYYY"),
+  //     RequestedTime: this.state.selectedTime
+  //       ? this.formatTimeSlot(
+  //           this.state.selectedTimePeriod,
+  //           this.state.selectedTime
+  //         )
+  //       : null,
+  //       gender:this.state.selectedGender,
+  //       provider:this.state.providerName,
+  //       selectedTimePeriod: this.state.selectedTimePeriod,
+  //       ServiceID:null,
+  //       ProviderID:null,
+  //   };
+  //   navigateToScreen(this.props, "AddMemberUI", true, memberData);
+  // };
+
   navigateToAddMembers = () => {
-    const memberData = {
-      service: this.state.serviceName || "Testing",
-      RequestedDate: moment(this?.state?.selectedDate).format("DD/MM/YYYY"),
-      RequestedTime: this.state.selectedTime
-        ? this.formatTimeSlot(
-            this.state.selectedTimePeriod,
-            this.state.selectedTime
-          )
-        : null,
-    };
+    const memberData = this.getMemberData();
+      this.props.setReservationData(memberData);
     navigateToScreen(this.props, "AddMemberUI", true, memberData);
   };
+
   selectService = (value: string) => {
     this.setState({
       serviceName: value,
@@ -453,8 +476,6 @@ class ReservationLogic extends Component<Props, ControllerState> {
     });
   };
   selectProvider = (value: string) => {
-    console.log(value, "value");
-
     this.setState({ providerName: value });
   };
 
@@ -526,6 +547,53 @@ class ReservationLogic extends Component<Props, ControllerState> {
 
   navigateToService = () => {
     this.props?.navigation?.navigate("ServiceUI");
+  };
+
+  toggleTooltip = () => {
+    this.setState((prev) => ({ tooltipVisible: !prev.tooltipVisible }));
+  };
+  toggleserviceTooltip = () => {
+    this.setState((prev) => ({
+      toolServicetipVisible: !prev.toolServicetipVisible,
+    }));
+  };
+  handleNavigate = () => {
+    const memberData = this.getMemberData();
+    this.props.setReservationData(memberData);
+    this.props.setOpenAddmemberModel();
+  };
+  getMemberData = () => {
+    const {
+      serviceName,
+      providerName,
+      selectedDate,
+      selectedTime,
+      selectedTimePeriod,
+      selectedGender,
+      tempreservationData,
+    } = this.state;
+
+    const { AvailableServices, AvailableProviders } = tempreservationData || {};
+
+    const matchedService = AvailableServices?.find(
+      (service) => service.ServiceName === serviceName
+    );
+    const matchedProvider = AvailableProviders?.find(
+      (provider) => provider.ProviderName === providerName
+    );
+
+    return {
+      service: serviceName || "",
+      RequestedDate: moment(selectedDate).format("DD/MM/YYYY"),
+      RequestedTime: selectedTime
+        ? this.formatTimeSlot(selectedTimePeriod, selectedTime)
+        : null,
+      gender: selectedGender,
+      provider: providerName,
+      selectedTimePeriod: selectedTimePeriod,
+      ServiceID: matchedService?.ServiceID || null,
+      ProviderID: matchedProvider?.ProviderID || null,
+    };
   };
 }
 

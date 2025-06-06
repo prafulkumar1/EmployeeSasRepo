@@ -259,6 +259,11 @@ export const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  closeIcon:{
+    width: 30,
+    height: 30,
+
+  },
   modalContainer: {
     width: '70%',
     height: '98%',
@@ -310,5 +315,24 @@ export const styles = StyleSheet.create({
   },
   MemberTxt: {
     width: "70%", paddingHorizontal: 8
+  },
+    modalTitleContainer: {
+    flexDirection: 'row',
+    width: '100%',
+    padding: 10,
+    justifyContent: 'flex-end',
+    alignItems: 'flex-end',
+  },
+  modalTitle: {
+    fontSize: 20,
+    fontWeight: '600',
+    color: '#666',
+  },
+  CloseModel: {
+    width: 30,
+    height: 30,
+    alignItems: "center",
+    justifyContent: "center",
+
   },
 });

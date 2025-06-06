@@ -1,4 +1,4 @@
-import { MemberListType } from "@/components/constants/Types";
+import { ApiResponse, MemberListType } from "@/components/constants/Types";
 import { postApiCall } from "@/components/utlis/api";
 import React, { Component } from "react";
 import { Dimensions, Platform } from "react-native";
@@ -160,17 +160,7 @@ interface IState {
 interface SS {}
 
 type FormField = "firstName" | "lastName" | "Phone" | "email";
-interface ApiResponse {
-  response: {
-    ResponseCode: string;
-    ResponseMessage: string;
-    BrokenRules: {
-      Fields: string[];
-    };
-  };
-  statusCode: number;
-  statusText: string;
-}
+
 
 const membersMock = [
   { id: "All" },
@@ -218,7 +208,7 @@ export default class useMemberDirectoryLogic extends Component<
     this.state = {
       activeTab: 0,
       pageCount: 1,
-      checked: false,
+      checked: true,
       updatedMembersListData: [],
       updatedGuestListData: [],
       singleMemberDetails: null,
@@ -429,6 +419,7 @@ export default class useMemberDirectoryLogic extends Component<
       checked: !prevState.checked,
     }));
   };
+
   handleInputChange = (id: FormField, value: string) => {
     this.setState({ [id]: value } as Pick<IState, FormField>);
   };
@@ -439,7 +430,7 @@ export default class useMemberDirectoryLogic extends Component<
 
   addMemberForReservation = () => {
     const { AddMultiple, selectedMembersList, singleItemDetails } = this.props;
-  
+
     // Condition for AddMultiple = true and at least one member selected
     if (AddMultiple && selectedMembersList && selectedMembersList.length > 0) {
       this.props.resetLoadedScreen();
@@ -552,8 +543,136 @@ export default class useMemberDirectoryLogic extends Component<
     }
   };
 
+  // selectedMember = (memberData: any) => {
+  //   const { updatedMembersListData, updatedGuestListData, selectedMembers } = this.state;
+
+  //   const {
+  //     userType,
+  //     AddMultiple,
+  //     membersCount,
+  //     singleMemberDetails,
+  //     setselectedMembersList,
+  //   } = this.props;
+
+  //   let updateList =
+  //     userType !== "Member" ? updatedGuestListData : updatedMembersListData;
+
+  //   // SINGLE SELECT MODE
+  //   if (!AddMultiple) {
+  //     singleMemberDetails(memberData);
+  //     const updatedData = updateList.map((item) => ({
+  //       ...item,
+  //       isMemberSelected: item.ID === memberData?.ID,
+  //     }));
+  //     const updatedSelectedMembers = [
+  //       {
+  //         number: this.props.selectedId,
+  //         memberName:
+  //           memberData?.MemberName ||
+  //           memberData?.DisplayName ||
+  //           "Reservation 1",
+  //         id: `${Date.now()}_${Math.random().toString(36).substring(2, 9)}`,
+  //         isMemberSelected: true,
+  //         singleMemberDetails: memberData,
+  //       },
+  //     ];
+  //     const newState =
+  //       userType !== "Member"
+  //         ? {
+  //             updatedMembersListData: [],
+  //             updatedGuestListData: updatedData,
+  //             singleMemberDetails: memberData,
+  //           }
+  //         : {
+  //             updatedMembersListData: updatedData,
+  //             updatedGuestListData: [],
+  //             singleMemberDetails: memberData,
+  //           };
+
+  //     this.setState(newState, () => {
+  //       setselectedMembersList(updatedSelectedMembers);
+  //     });
+  //     return;
+  //   }
+
+  //   // MULTI SELECT MODE
+  //   const isAlreadySelected = memberData?.isMemberSelected;
+  //   const selectedCount = selectedMembers.filter(
+  //     (item) => item?.isMemberSelected === true
+  //   ).length;
+  //   // Block selection if limit reached
+  //   if (selectedCount >= membersCount && !isAlreadySelected) {
+  //     this.setState(
+  //       {
+  //         errorMessagePopup: true,
+  //         errorMessageTxt: `You can only select up to ${membersCount} members.`,
+  //       },
+  //       () => {
+  //         setTimeout(() => {
+  //           this.setState({ errorMessagePopup: false, errorMessageTxt: "" });
+  //         }, 2000);
+  //       }
+  //     );
+  //     return;
+  //   }
+
+  //   // Update member list with toggle
+  //   const updatedData = updateList.map((item) =>
+  //     item.ID === memberData.ID
+  //       ? { ...item, isMemberSelected: !item.isMemberSelected }
+  //       : item
+  //   );
+
+  //   // Update selectedMembers array based on selection
+  //   const updatedSelectedMembers = [...selectedMembers];
+
+  //   if (isAlreadySelected) {
+  //     // Deselect: clear the matching slot
+  //     for (let i = 0; i < updatedSelectedMembers.length; i++) {
+  //       if (
+  //         updatedSelectedMembers[i].singleMemberDetails?.ID === memberData.ID
+  //       ) {
+  //         updatedSelectedMembers[i] = {
+  //           ...updatedSelectedMembers[i],
+  //           isMemberSelected: false,
+  //           singleMemberDetails: null,
+  //         };
+  //         break;
+  //       }
+  //     }
+  //   } else {
+  //     // Select: place in first unselected slot
+  //     const firstEmptyIndex = updatedSelectedMembers.findIndex(
+  //       (item) => !item.isMemberSelected
+  //     );
+
+  //     if (firstEmptyIndex !== -1) {
+  //       updatedSelectedMembers[firstEmptyIndex] = {
+  //         ...updatedSelectedMembers[firstEmptyIndex],
+  //         isMemberSelected: true,
+  //         singleMemberDetails: memberData,
+  //       };
+  //     }
+  //   }
+
+  //   // Update state and callback
+  //   this.setState(
+  //     {
+  //       updatedMembersListData: userType !== "Member" ? [] : updatedData,
+  //       updatedGuestListData: userType !== "Member" ? updatedData : [],
+  //       selectedMembers: updatedSelectedMembers,
+  //     },
+  //     () => {
+  //       const filtered = updatedSelectedMembers.filter(
+  //         (item) => item.singleMemberDetails !== null
+  //       );
+
+  //       setselectedMembersList(filtered);
+  //     }
+  //   );
+  // };
   selectedMember = (memberData: any) => {
-    const { updatedMembersListData, updatedGuestListData, selectedMembers } = this.state;
+    const { updatedMembersListData, selectedMembers } = this.state;
 
     const {
       userType,
@@ -563,44 +682,44 @@ export default class useMemberDirectoryLogic extends Component<
       setselectedMembersList,
     } = this.props;
 
-    let updateList =
-      userType !== "Member" ? updatedGuestListData : updatedMembersListData;
-
     // SINGLE SELECT MODE
     if (!AddMultiple) {
-      singleMemberDetails(memberData);
-      const updatedData = updateList.map((item) => ({
+      const addBuddyValue = this.state.checked ? 1 : 0;
+      // Inject "addBuddy" into the member data
+      const memberWithAddBuddy = {
+        ...memberData,
+        addBuddy: addBuddyValue,
+      };
+
+      // Pass modified member data to callback
+      singleMemberDetails(memberWithAddBuddy);
+
+      const updatedData = updatedMembersListData?.map((item) => ({
         ...item,
-        isMemberSelected: item.ID === memberData?.ID,
+        isMemberSelected: item.ID === memberWithAddBuddy?.ID,
       }));
+
       const updatedSelectedMembers = [
         {
           number: this.props.selectedId,
           memberName:
-            memberData?.MemberName ||
-            memberData?.DisplayName ||
+            memberWithAddBuddy?.MemberName ||
+            memberWithAddBuddy?.DisplayName ||
             "Reservation 1",
           id: `${Date.now()}_${Math.random().toString(36).substring(2, 9)}`,
           isMemberSelected: true,
-          singleMemberDetails: memberData,
+          singleMemberDetails: memberWithAddBuddy,
         },
       ];
-      const newState =
-        userType !== "Member"
-          ? {
-              updatedMembersListData: [],
-              updatedGuestListData: updatedData,
-              singleMemberDetails: memberData,
-            }
-          : {
-              updatedMembersListData: updatedData,
-              updatedGuestListData: [],
-              singleMemberDetails: memberData,
-            };
 
+      const newState = {
+        updatedMembersListData: updatedData,
+        singleMemberDetails: memberWithAddBuddy,
+      };
       this.setState(newState, () => {
         setselectedMembersList(updatedSelectedMembers);
       });
+
       return;
     }
 
@@ -624,9 +743,14 @@ export default class useMemberDirectoryLogic extends Component<
       );
       return;
     }
+    //  Inject addBuddy based on checked state
+    const memberWithAddBuddy = {
+      ...memberData,
+      addBuddy: this.state.checked ? 1 : 0,
+    };
 
     // Update member list with toggle
-    const updatedData = updateList.map((item) =>
+    const updatedData = updatedMembersListData?.map((item) =>
       item.ID === memberData.ID
         ? { ...item, isMemberSelected: !item.isMemberSelected }
         : item
@@ -659,6 +783,123 @@ export default class useMemberDirectoryLogic extends Component<
         updatedSelectedMembers[firstEmptyIndex] = {
           ...updatedSelectedMembers[firstEmptyIndex],
           isMemberSelected: true,
+          singleMemberDetails: memberWithAddBuddy,
+        };
+      }
+    }
+
+    // Update state and callback
+    this.setState(
+      {
+        updatedMembersListData: updatedData,
+        selectedMembers: updatedSelectedMembers,
+      },
+      () => {
+        const filtered = updatedSelectedMembers.filter(
+          (item) => item.singleMemberDetails !== null
+        );
+        setselectedMembersList(filtered);
+      }
+    );
+  };
+
+  selectedGuest = (memberData: any) => {
+    const { updatedGuestListData, selectedMembers } = this.state;
+
+    const {
+      userType,
+      AddMultiple,
+      membersCount,
+      singleMemberDetails,
+      setselectedMembersList,
+    } = this.props;
+
+    // SINGLE SELECT MODE
+    if (!AddMultiple) {
+      singleMemberDetails(memberData);
+      const updatedData = updatedGuestListData?.map((item) => ({
+        ...item,
+        isMemberSelected: item.MemberGuestID === memberData?.MemberGuestID,
+      }));
+      const updatedSelectedMembers = [
+        {
+          number: this.props.selectedId,
+          memberName:
+            memberData?.MemberName ||
+            memberData?.DisplayName ||
+            "Reservation 1",
+          id: `${Date.now()}_${Math.random().toString(36).substring(2, 9)}`,
+          isMemberSelected: true,
+          singleMemberDetails: memberData,
+        },
+      ];
+      const newState = {
+        updatedGuestListData: updatedData,
+        singleMemberDetails: memberData,
+      };
+
+      this.setState(newState, () => {
+        setselectedMembersList(updatedSelectedMembers);
+      });
+      return;
+    }
+
+    // MULTI SELECT MODE
+    const isAlreadySelected = memberData?.isMemberSelected;
+    const selectedCount = selectedMembers.filter(
+      (item) => item?.isMemberSelected === true
+    ).length;
+    // Block selection if limit reached
+    if (selectedCount >= membersCount && !isAlreadySelected) {
+      this.setState(
+        {
+          errorMessagePopup: true,
+          errorMessageTxt: `You can only select up to ${membersCount} members.`,
+        },
+        () => {
+          setTimeout(() => {
+            this.setState({ errorMessagePopup: false, errorMessageTxt: "" });
+          }, 2000);
+        }
+      );
+      return;
+    }
+
+    // Update member list with toggle
+    const updatedData = updatedGuestListData?.map((item) =>
+      item.MemberGuestID === memberData.MemberGuestID
+        ? { ...item, isMemberSelected: !item.isMemberSelected }
+        : item
+    );
+
+    // Update selectedMembers array based on selection
+    const updatedSelectedMembers = [...selectedMembers];
+
+    if (isAlreadySelected) {
+      // Deselect: clear the matching slot
+      for (let i = 0; i < updatedSelectedMembers.length; i++) {
+        if (
+          updatedSelectedMembers[i].singleMemberDetails?.MemberGuestID ===
+          memberData.MemberGuestID
+        ) {
+          updatedSelectedMembers[i] = {
+            ...updatedSelectedMembers[i],
+            isMemberSelected: false,
+            singleMemberDetails: null,
+          };
+          break;
+        }
+      }
+    } else {
+      // Select: place in first unselected slot
+      const firstEmptyIndex = updatedSelectedMembers.findIndex(
+        (item) => !item.isMemberSelected
+      );
+
+      if (firstEmptyIndex !== -1) {
+        updatedSelectedMembers[firstEmptyIndex] = {
+          ...updatedSelectedMembers[firstEmptyIndex],
+          isMemberSelected: true,
           singleMemberDetails: memberData,
         };
       }
@@ -667,19 +908,18 @@ export default class useMemberDirectoryLogic extends Component<
     // Update state and callback
     this.setState(
       {
-        updatedMembersListData: userType !== "Member" ? [] : updatedData,
-        updatedGuestListData: userType !== "Member" ? updatedData : [],
+        updatedGuestListData: updatedData,
         selectedMembers: updatedSelectedMembers,
       },
       () => {
         const filtered = updatedSelectedMembers.filter(
           (item) => item.singleMemberDetails !== null
         );
-   
         setselectedMembersList(filtered);
       }
     );
   };
+
   removeSelectedMember = async (item: any, index: number) => {
     const { selectedMembers, updatedMembersListData } = this.state;
     const itemId = item?.singleMemberDetails?.ID;
@@ -703,7 +943,7 @@ export default class useMemberDirectoryLogic extends Component<
     // 2. Remove the selected member from local selectedMembers array
     const updatedSelectedMembersArray = [...selectedMembers];
     updatedSelectedMembersArray[index] = {
-      number: index+1,
+      number: index + 1,
       memberName: `Reservation ${index + 1}`,
       id: `${Date.now()}_${Math.random().toString(36).substring(2, 9)}`,
       isMemberSelected: false,
@@ -714,6 +954,50 @@ export default class useMemberDirectoryLogic extends Component<
       {
         selectedMembers: updatedSelectedMembersArray,
         updatedMembersListData: updatedUpdatedMembersListData,
+      },
+      () => {
+        const nonNullSelectedMembers = updatedSelectedMembersArray.filter(
+          (item) => item !== null
+        );
+        this.props.setselectedMembersList(nonNullSelectedMembers);
+
+        // 🔥 Dispatch Redux action to update global membersList
+        this.props.removeMembersFromList(item?.number);
+      }
+    );
+  };
+  removeSelectedGuest = async (item: any, index: number) => {
+    const { selectedMembers, updatedGuestListData } = this.state;
+    const itemId = item?.singleMemberDetails?.MemberGuestID;
+
+    // 1. Update local updatedMembersListData
+    const updatedUpdatedMembersListData = updatedGuestListData.map((member) => {
+      const memberId = member?.MemberGuestID;
+
+      if (memberId === itemId) {
+        return {
+          ...member,
+          isMemberSelected: false,
+        };
+      }
+
+      return member;
+    });
+
+    // 2. Remove the selected member from local selectedMembers array
+    const updatedSelectedMembersArray = [...selectedMembers];
+    updatedSelectedMembersArray[index] = {
+      number: index + 1,
+      memberName: `Reservation ${index + 1}`,
+      id: `${Date.now()}_${Math.random().toString(36).substring(2, 9)}`,
+      isMemberSelected: false,
+    };
+
+    // 3. Update local state
+    this.setState(
+      {
+        selectedMembers: updatedSelectedMembersArray,
+        updatedGuestListData: updatedUpdatedMembersListData,
       },
       () => {
         const nonNullSelectedMembers = updatedSelectedMembersArray.filter(

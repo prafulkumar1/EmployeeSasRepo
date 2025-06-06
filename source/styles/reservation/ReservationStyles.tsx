@@ -1,13 +1,16 @@
 import { isPlatformAndroid } from "@/components/constants/Matrices";
 import { Platform, StyleSheet } from "react-native";
-import { responsiveHeight, responsiveWidth } from "react-native-responsive-dimensions";
+import {
+  responsiveHeight,
+  responsiveWidth,
+} from "react-native-responsive-dimensions";
 
 export const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
     backgroundColor: "#fff",
     paddingBottom: 100,
-    borderWidth:1,
+    borderWidth: 1,
   },
   headerTitle: {
     width: "100%",
@@ -61,7 +64,7 @@ export const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    marginHorizontal:responsiveWidth(4),
+    marginHorizontal: responsiveWidth(4),
   },
   radioOuter: {
     height: 26,
@@ -69,7 +72,7 @@ export const styles = StyleSheet.create({
     borderRadius: 12,
     borderWidth: 2,
     borderColor: "#ccc",
-    margin:4,
+    margin: 4,
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "#fff",
@@ -116,7 +119,7 @@ export const styles = StyleSheet.create({
     shadowOffset: { width: 1, height: 1 },
     shadowOpacity: 0.2,
     shadowRadius: 3,
-    width:responsiveWidth(45.5),
+    width: responsiveWidth(45.5),
     paddingVertical: 10,
   },
   timePeriodBtnTxt: {
@@ -208,7 +211,7 @@ export const styles = StyleSheet.create({
     flexWrap: "wrap",
     // justifyContent: "space-between",
     paddingTop: 20,
-    marginBottom:responsiveHeight(5)
+    marginBottom: responsiveHeight(5),
   },
   slotBox: {
     width: "23%",
@@ -223,9 +226,82 @@ export const styles = StyleSheet.create({
     shadowOpacity: 0.2,
     shadowRadius: 3,
   },
-  dropDownBtn: { width: "100%", marginBottom: 30,zIndex:1 },
-  serviceBtn: { width: "100%",zIndex:2 },
+  dropDownBtn: { width: "90%", marginBottom: 30, zIndex: 1 },
+  serviceBtn: { width: "90%", zIndex: 2 },
   timePeriodContainers: { flex: 1, maxHeight: 160, minHeight: 80 },
-  calenderLoader:{justifyContent:"center",alignItems:"center",alignSelf:"center",paddingTop:25},
-   loaderTrans:{ position: "absolute", alignSelf: "center", flex: 1, top: responsiveHeight(50) },
+  calenderLoader: {
+    justifyContent: "center",
+    alignItems: "center",
+    alignSelf: "center",
+    paddingTop: 25,
+  },
+  loaderTrans: {
+    position: "absolute",
+    alignSelf: "center",
+    flex: 1,
+    top: responsiveHeight(50),
+  },
+  tooltipIcon: {
+    marginLeft: 8,
+  },
+  row: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  tooltipText: {
+    color: "#000",
+    fontSize: 13,
+  },
+  tooltipWrapper: {
+    position: "relative",
+    justifyContent: "center",
+    marginBottom: 5,
+  },
+  tooltipHeader: {
+    color: "#333",
+    fontSize: 15,
+    fontWeight: 500,
+  },
+  tooltipPopup: {
+    position: "absolute",
+    top: 45,
+    left: 100,
+    backgroundColor: "#fff",
+    padding: 10,
+    marginTop: 4,
+    zIndex: 9999,
+    maxHeight: 800,
+    elevation: 2,
+    shadowOffset: { width: 1, height: 1 },
+    shadowOpacity: 0.2,
+    shadowRadius: 3,
+
+  },
+  circle: {
+    width: 30,
+    height: 30,
+    borderRadius: 15, // circle shape
+    backgroundColor: "#fff", // iOS blue
+    alignItems: "center",
+    justifyContent: "center",
+    borderWidth:1,
+    marginBottom :20,
+    marginHorizontal:5
+  },
+  circle1: {
+    width: 30,
+    height: 30,
+    borderRadius: 15, // circle shape
+    backgroundColor: "#fff", // iOS blue
+    alignItems: "center",
+    justifyContent: "center",
+    borderWidth:1,
+    marginHorizontal:5
+  },
+  iText: {
+    color: "#000",
+    fontWeight: "bold",
+    fontSize: 20,
+    lineHeight: 24,
+  },
 });

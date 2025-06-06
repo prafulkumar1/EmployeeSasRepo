@@ -47,7 +47,7 @@ class AddMemberUI extends useAddMemberLogic {
             <UI.ConnectedCbView style={styles.iconcontainer}>
               <UI.TouchableOpacity
                 style={[{ width: 30, height: 30 }]}
-                onPress={() => this.props.removeMembersFromList(item?.number)}
+               onPress={() => this.props.removeMembersFromList(item?.number)}
               >
                 <UI.Icon as={CloseIcon} size="sm" color="#ccc" />
               </UI.TouchableOpacity>
@@ -300,7 +300,7 @@ class AddMemberUI extends useAddMemberLogic {
               pageId={pageId}
               id="SubmitContainer"
             >
-              <UI.TouchableOpacity style={styles.SubmitBtn}>
+              <UI.TouchableOpacity style={styles.SubmitBtn} onPress={this.handleSubmitReservation}>
                 <UI.ConnectedCbText
                   style={styles.submitTxt}
                   pageId={pageId}
@@ -377,6 +377,7 @@ const mapStateToProps = (state: RootState) => {
     membersList: state.addMember.membersList,
     selectedMembersList: state.addMember.selectedMembersList,
     membersCount: state.addMember.membersCount,
+    ReservationData: state.addMember.ReservationData,
   };
 };
 const mapDispatchToProps = {

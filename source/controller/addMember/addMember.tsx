@@ -1,5 +1,6 @@
 import { navigateToScreen } from "@/components/constants/Navigations";
-import { MemberListType } from "@/components/constants/Types";
+import { ApiResponse, MemberListType } from "@/components/constants/Types";
+import { postApiCall } from "@/components/utlis/api";
 import * as BackgroundFetch from "expo-background-fetch";
 import * as TaskManager from "expo-task-manager";
 import { Component } from "react";
@@ -32,12 +33,20 @@ interface IState {
   showThankModal: boolean;
   showGuestModal: boolean;
   addmemberloading: boolean;
-  commentText:string | null
+  commentText: string | null;
   //Webcode
+}
+interface SingleMemberDetails {
+  MemberID: string;
+  ID: string;
+  FirstName: string;
+  LastName: string;
+  // Add other fields as needed
+  [key: string]: any; // optional catch-all if fields are dynamic
 }
 
 interface IProps {
-   route: any;
+  route: any;
   navigation?: any;
   resetLoadedScreen?: () => void;
   isScreenLoaded?: boolean;
@@ -45,8 +54,13 @@ interface IProps {
   handleSelectedMember?: (id: string) => void;
   setUserType?: (userType: string) => void;
   setMembersList?: (memberCount: number) => void;
-  membersList?: { isMemberSelected: boolean; id: string; memberName: string }[];
-  removeMembersFromList?: (id:any) => void;
+  membersList?: {
+    isMemberSelected: boolean;
+    id: string;
+    memberName: string;
+    singleMemberDetails?: SingleMemberDetails | null;
+  }[];
+  removeMembersFromList?: (id: any) => void;
   addTbdToMemberList?: () => void;
   selectedMembersList?: {
     id: string;
@@ -62,16 +76,19 @@ interface IProps {
   setClosememberModel?: () => void;
   setLoader?: () => void;
   setChangeToGuest?: ({ userType }) => void;
-  setAddMultiple?: ( AddMultiple : boolean) => void;
-  setmembersCount?: ( AddMultiple : number) => void;
+  setAddMultiple?: (AddMultiple: boolean) => void;
+  setmembersCount?: (AddMultiple: number) => void;
+  setSaveAppointmentMessage?: (SaveAppointmentMessage: string) => void;
   membersCount: number;
+  ReservationData: any;
+  SaveAppointmentMessage: string;
 }
 
 const BACKGROUND_TASK = "background-timer-task";
 
 export default class useAddMemberLogic extends Component<IProps, IState> {
   private interval: NodeJS.Timeout | null;
-  protected addIconRefs: { [key: string]: any }; 
+  protected addIconRefs: { [key: string]: any };
 
   constructor(props: IProps) {
     super(props);
@@ -97,7 +114,7 @@ export default class useAddMemberLogic extends Component<IProps, IState> {
       showThankModal: false,
       showGuestModal: false,
       addmemberloading: false,
-      commentText:""
+      commentText: "",
       //webcode
     };
     this.interval = null;
@@ -105,18 +122,18 @@ export default class useAddMemberLogic extends Component<IProps, IState> {
 
   componentDidMount(): void {
     const updateCountList = Array.from(
-    { length: this.props.membersCount },
-    (_, index) => {
-      // Set the last member as active based on the length of the membersCount
-      const isActive = index === this.props.membersCount - 1;
+      { length: this.props.membersCount },
+      (_, index) => {
+        // Set the last member as active based on the length of the membersCount
+        const isActive = index === this.props.membersCount - 1;
 
-      return {
-        number: index + 1,
-        isCountActive: isActive,
-        id: `${Date.now()}_${Math.random().toString(36).substring(2, 9)}`,
-      };
-    }
-  );
+        return {
+          number: index + 1,
+          isCountActive: isActive,
+          id: `${Date.now()}_${Math.random().toString(36).substring(2, 9)}`,
+        };
+      }
+    );
     this.props.setMembersList(this.props.membersCount);
     this.setState({ membersCountList: updateCountList });
     this.startTimer();
@@ -230,12 +247,12 @@ export default class useAddMemberLogic extends Component<IProps, IState> {
 
   handleMembersCount = (id: string, memberCount: number) => {
     this.setState((prevState) => ({
-      membersCountList: prevState.membersCountList.map((item) => ({
+      membersCountList: prevState?.membersCountList?.map((item) => ({
         ...item,
-        isCountActive: item.id === id ? true : false,
+        isCountActive: item?.id === id ? true : false,
       })),
     }));
- 
+
     this.props.setMembersList(memberCount);
     this.props.setmembersCount(memberCount);
   };
@@ -245,8 +262,9 @@ export default class useAddMemberLogic extends Component<IProps, IState> {
     });
   };
 
-  handleSubmitReservation = () => {
-    if (this.props.selectedMembersList.length === 0) {
+  //SUBMIT
+  handleSubmitReservation = async () => {
+    if (this?.props?.selectedMembersList?.length === 0) {
       this.setState(
         {
           errorMessagePopup: true,
@@ -259,9 +277,73 @@ export default class useAddMemberLogic extends Component<IProps, IState> {
         }
       );
     } else {
-      this.setState({ isSuccessModalOpen: !this.state.isSuccessModalOpen });
+      const cleanedMemberDetails = (this?.props?.membersList || [])
+        .filter(
+          (member) => member?.isMemberSelected && member?.singleMemberDetails
+        )
+        .map((member) => {
+          const { isMemberSelected, ...restDetails } =
+            member?.singleMemberDetails;
+          return restDetails;
+        });
+
+      const reservation = this?.props?.ReservationData || {};
+
+      const ParamsData = {
+        AppointmentID: "",
+        PlayersList: cleanedMemberDetails,
+        SelectedDate: reservation?.RequestedDate || "",
+        SelectedTime: reservation?.RequestedTime || "",
+        SelectedBookingTypeID: reservation?.ServiceID || "",
+        SelectedServiceClassID: reservation?.ServiceID || "",
+        SelectedService: reservation?.ServiceID || "",
+        SelectedGender: reservation?.gender || "",
+        SelectedProvider: reservation?.ProviderID || "",
+        SelectedTimeCat: reservation?.selectedTimePeriod || "",
+        BMSUserActivityID: "4F22794F-554B-4449-B12D-36D71FDC7868",
+      };
+      const response = await postApiCall(
+        "APPOINTMENT_DATA",
+        "SAVE_APPOINTMENT_DATA",
+        ParamsData
+      );
+      const apiResponse = response as ApiResponse;
+
+      if (apiResponse?.response?.ResponseCode === "Fail") {
+        const errorMessage =
+          apiResponse?.response?.ResponseMessage || "An error occurred.";
+        this.setState(
+          {
+            errorMessagePopup: true,
+            errorMessageTxt: errorMessage,
+          },
+          () => {
+            setTimeout(() => {
+              this.setState({ errorMessagePopup: false, errorMessageTxt: "" });
+            }, 2000);
+          }
+        );
+      } else if (apiResponse?.response?.ResponseCode === "success") {
+        this.props.setSaveAppointmentMessage(
+          apiResponse?.response?.ResponseMessage
+        );
+        this.setState({ isSuccessModalOpen: true });
+      } else {
+        this.setState(
+          {
+            errorMessagePopup: true,
+            errorMessageTxt: "Unexpected error occurred.",
+          },
+          () => {
+            setTimeout(() => {
+              this.setState({ errorMessagePopup: false, errorMessageTxt: "" });
+            }, 2000);
+          }
+        );
+      }
     }
   };
+
   navigateToService = () => {
     navigateToScreen(this.props, "ServiceUI", true, {});
   };
@@ -276,10 +358,10 @@ export default class useAddMemberLogic extends Component<IProps, IState> {
     this.setState({
       showplayedpopup: !showplayedpopup,
     });
-    this.props.setAddMultiple(true)
+    this.props.setAddMultiple(true);
   };
   handleAddIconPress = (item: any, event: any) => {
-       let id = item?.id
+    let id = item?.id;
     this.props.handleSelectedMember(item?.number);
     const ref = this.addIconRefs[id];
     if (ref && ref.measure) {
@@ -301,10 +383,10 @@ export default class useAddMemberLogic extends Component<IProps, IState> {
       }));
     }
   };
- 
-  handleGlobalClosePopUp = () =>{
-   this.setState({ popupVisibleIndex: null });
-  }
+
+  handleGlobalClosePopUp = () => {
+    this.setState({ popupVisibleIndex: null });
+  };
   handleRemoveMember = (indexToRemove: number) => {
     const { selectedCount } = this.state;
 
@@ -322,23 +404,22 @@ export default class useAddMemberLogic extends Component<IProps, IState> {
   };
 
   handleSetGuest = (userType: string) => {
-    if(userType === "TBD") {
+    if (userType === "TBD") {
       // this.setState({ isModalVisible: !this.state.isModalVisible }, () => {
-        this.props.addTbdToMemberList();
+      this.props.addTbdToMemberList();
       // });
-    }else{
+    } else {
       this.props.setOpenMembersModel();
     }
     this.props.setChangeToGuest({ userType: userType });
-      this.props.setUserType(userType);
+    this.props.setUserType(userType);
     this.setState({ popupVisibleIndex: null });
     this.setState({
       showplayedpopup: false,
     });
-
   };
-  handlecomment = (value : string) =>{
-    this.setState({commentText :value})
-  }
+  handlecomment = (value: string) => {
+    this.setState({ commentText: value });
+  };
   //webcode
 }

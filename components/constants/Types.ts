@@ -46,3 +46,14 @@ export interface BookingType {
   BookingTypeName: string;
   ServiceClass: ServiceType[];
 }
+export interface ApiResponse {
+  response: {
+    ResponseCode: string;
+    ResponseMessage: string;
+    BrokenRules: {
+      Fields: string[];
+    };
+  };
+  statusCode: number;
+  statusText: string;
+}

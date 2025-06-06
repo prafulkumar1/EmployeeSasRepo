@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import { RootState } from "@/components/redux/store";
 import { Icon } from "@/components/ui/icon";
 import { CloseIcon, AddIcon } from "@/components/ui/icon";
-import { Image, Modal, TextInput } from "react-native";
+import { Image, Modal } from "react-native";
 import useAddMemberLogic from "@/source/controller/addMember/addMember";
 import { styles } from "@/source/styles/addMember/addMember";
 import MemberDirectoryUI from "../memberDirectory/memberDirectoryUI";
@@ -15,6 +15,8 @@ import {
   resetSingleMemberDetails,
   setmembersCount,
   setMembersList,
+  setReservationData,
+  setSaveAppointmentMessage,
   setUserType,
 } from "@/components/redux/reducers/addMemberReducer";
 import { LinearGradient } from "expo-linear-gradient";
@@ -41,7 +43,7 @@ class AddMemberUI extends useAddMemberLogic {
         <UI.Box style={styles.addOrRemoveBtn}>
           <UI.TouchableOpacity
             style={styles.memberActionIcons}
-            onPress={() => this.props.removeMembersFromList(item.id)}
+              onPress={() => this.props.removeMembersFromList(item?.number)}
           >
             <Icon as={CloseIcon} size="xl" color="#b1b1b1" />
           </UI.TouchableOpacity>
@@ -96,11 +98,11 @@ class AddMemberUI extends useAddMemberLogic {
         <UI.Box style={styles.card}>
           <UI.Text style={styles.title}>THANK YOU</UI.Text>
           <UI.Text style={styles.subtitle}>
-            Your Reservation has been Confirmed for
+           {this.props.SaveAppointmentMessage}
           </UI.Text>
-          <UI.Text style={styles.subtitle}>
+          {/* <UI.Text style={styles.subtitle}>
             {moment()?.format("dddd, MMM D")}
-          </UI.Text>
+          </UI.Text> */}
         </UI.Box>
       </LinearGradient>
     );
@@ -333,6 +335,8 @@ const mapStateToProps = (state: RootState) => {
     membersList: state.addMember.membersList,
     selectedMembersList: state.addMember.selectedMembersList,
     membersCount: state.addMember.membersCount,
+    SaveAppointmentMessage: state.addMember.SaveAppointmentMessage,
+    ReservationData: state.addMember.ReservationData,
   };
 };
 const mapDispatchToProps = {
@@ -344,7 +348,9 @@ const mapDispatchToProps = {
   resetSingleMemberDetails,
   setUserType,
   setmembersCount,
-  setClosememberModel
+  setClosememberModel,
+  setSaveAppointmentMessage,
+  setReservationData
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(AddMemberUI);

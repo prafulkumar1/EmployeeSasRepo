@@ -58,7 +58,11 @@ class MemberDirectoryUI extends useMemberDirectoryLogic {
       >
         <UI.TouchableOpacity
           style={styles.profileBtn}
-          onPress={() => this.selectedMember(item)}
+         onPress={
+          this.props.userType !== "Member"
+            ? () => this.selectedGuest(item)
+            : () => this.selectedMember(item)
+        }
         >
           <UI.Box style={styles.profileLogo}>
             <UI.Image

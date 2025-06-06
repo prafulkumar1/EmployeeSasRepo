@@ -16,7 +16,10 @@ import {
 } from "@/components/redux/reducers/reservationReducer";
 import AddMemberUIWeb from "../addMember/addMemberUI.web";
 import MemberDirectoryUI from "../memberDirectory/memberDirectoryUI.web";
-import { setOpenMembersModel } from "@/components/redux/reducers/addMemberReducer";
+import {
+  setOpenMembersModel,
+  setReservationData,
+} from "@/components/redux/reducers/addMemberReducer";
 import { setLoader } from "@/components/redux/reducers/uiSlice";
 import CbLoader from "@/components/cobalt/webCobaltLoader";
 
@@ -134,7 +137,6 @@ class ReservationUI extends useReservationLogic {
       this.state?.AvailableTimeCat?.length % 2 !== 0 && isLastCard;
     const isSelected = this.state.selectedTimePeriod === item.TimeCat;
 
-
     return (
       <UI.ConnectedCbView
         style={[
@@ -158,7 +160,7 @@ class ReservationUI extends useReservationLogic {
               { color: isSelected ? "#fff" : "#000" },
             ]}
           >
-           {item.TimeCat} ({item?.AvailableTimeSlots?.length})
+            {item.TimeCat} ({item?.AvailableTimeSlots?.length})
           </Text>
         </UI.TouchableOpacity>
       </UI.ConnectedCbView>
@@ -178,7 +180,8 @@ class ReservationUI extends useReservationLogic {
     if (
       !this?.state?.serviceNames ||
       !this.state.dateRange ||
-      !this?.state?.AvailableTimeCat || this.state.IsLoading
+      !this?.state?.AvailableTimeCat ||
+      this.state.IsLoading
     ) {
       return (
         <UI.Box style={{ flex: 1 }}>
@@ -301,7 +304,7 @@ class ReservationUI extends useReservationLogic {
         >
           <UI.TouchableOpacity
             style={styles.addMemberBtn}
-            onPress={() => this.props.setOpenAddmemberModel()}
+            onPress={this.handleNavigate}
           >
             <UI.ConnectedCbText style={styles.addMemberBtnTxt}>
               {" "}
@@ -311,7 +314,7 @@ class ReservationUI extends useReservationLogic {
         </UI.ConnectedCbView>
 
         {/* Conditionally show AddMemberUIWeb only on Web and if modal open */}
-        {this.props.OpenAddmemberModel && <AddMemberUIWeb />}
+        {this.props.OpenAddmemberModel && <AddMemberUIWeb route={undefined} />}
 
         {/*MODEL FOR THE TIME OUT*/}
         {this.props.closeMemberModel && (
@@ -383,7 +386,7 @@ class ReservationUI extends useReservationLogic {
         <Modal
           animationType="fade"
           transparent={true}
-          visible={this.state.showThankModal}
+          visible={this.props.ThankYouModel}
           onRequestClose={this.toggleThankModal}
         >
           <UI.View style={styles.modalBackground}>
@@ -392,43 +395,32 @@ class ReservationUI extends useReservationLogic {
                 styles.modalContainer,
                 {
                   height: "50%",
-                  justifyContent: "center",
-                  alignItems: "center",
                 },
               ]}
             >
-              <UI.TouchableOpacity
-                onPress={this.toggleThankModal}
-                style={styles.closeIcon}
-                {...(Platform.OS === "web"
-                  ? {
-                      onMouseEnter: () => this.setState({ hover: "close" }),
-                      onMouseLeave: () => this.setState({ hover: null }),
-                    }
-                  : {})}
+              <UI.ConnectedCbView style={styles.modalTitleContainer}>
+                <UI.TouchableOpacity
+                  // onPress={() => this.props.setOpenAddmemberModel()}
+                  style={styles.CloseModel}
+                >
+                  <Icon as={CloseIcon} size="sm" />
+                </UI.TouchableOpacity>
+              </UI.ConnectedCbView>
+              <UI.ConnectedCbView
+                style={{ justifyContent: "center", alignItems: "center" }}
               >
-                <Icon
-                  as={CloseIcon}
-                  size="sm"
-                  style={{
-                    color: this.state.hover === "close" ? "#000" : "#fff",
-                  }}
-                />
-              </UI.TouchableOpacity>
-
-              <Image source={require("@/assets/images/icons/tennis.jpg")} />
-              <Text style={[styles.Thankyou, { marginVertical: 10 }]}>
-                Thank you
-              </Text>
-              <Text style={[styles.txt2, { marginVertical: 10 }]}>
-                Your couple massage service is Reservation has beeen confirmed
-                for Tuesday, june 24, 2025
-              </Text>
+                <Image source={require("@/assets/images/icons/tennis.jpg")} />
+                <Text style={[styles.Thankyou, { marginVertical: 10 }]}>
+                  Thank you
+                </Text>
+                <Text style={[styles.txt2, { marginVertical: 10 }]}>
+                  Your couple massage service is Reservation has beeen confirmed
+                  for Tuesday, june 24, 2025
+                </Text>
+              </UI.ConnectedCbView>
             </UI.View>
           </UI.View>
         </Modal>
-
-        {}
       </UI.ScrollView>
     );
   }
@@ -441,6 +433,7 @@ const mapStateToProps = (state: RootState) => {
     OpenMemberModel: state?.addMember?.OpenMemberModel,
     closeMemberModel: state?.reservation?.closeMemberModel,
     reservationData: state?.reservation?.reservationData,
+    ThankYouModel: state?.reservation?.ThankYouModel,
     singleServiceItem: state?.services?.singleServiceItem,
   };
 };
@@ -451,6 +444,7 @@ const mapDispatchToProps = {
   setOpenMembersModel,
   setLoader,
   getReservationsData,
+  setReservationData,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(ReservationUI);

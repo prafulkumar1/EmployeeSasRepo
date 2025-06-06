@@ -63,10 +63,13 @@ export const loadPageConfigurations =
 //TO get the all reservations Data
 export const getReservationsData = createAsyncThunk(
   "getReservationsData",
-  async ({BookingTypeID,ServiceClassID}:{BookingTypeID: string,ServiceClassID: string}, { getState, rejectWithValue, fulfillWithValue }) => {
+  async ({BookingTypeID,ServiceClassID,ProviderId,serviceId , ChangedDate}:{BookingTypeID: string,ServiceClassID: string, serviceId:string, ProviderId:string, ChangedDate:any}, { getState, rejectWithValue, fulfillWithValue }) => {
     const params = {
       SelectedBookingTypeID: BookingTypeID,
       SelectedServiceClassID: ServiceClassID,
+      SelectedService:serviceId,
+      SelectedProvider:ProviderId,
+      SelectedDate:ChangedDate
     };
     const ReservationResponse = await postApiCall(
       "BOOKING_CONFIG_DATA",

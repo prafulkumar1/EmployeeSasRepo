@@ -523,14 +523,13 @@ class CbSelectDropDown extends React.Component {
       selecteditem: item,
       showDropdown: false,
     });
-
-    this.onSelect(this.state.selecteditem);
+    this.onSelect(item);
   };
 
   renderDropdown = () => {
-     const optionsAsStrings = this?.props?.options?.map((item) =>
-    typeof item === 'string' ? item : item.label
-  );
+    const optionsAsStrings = this?.props?.options?.map((item) =>
+      typeof item === "string" ? item : item.label
+    );
 
     return (
       <FlatList

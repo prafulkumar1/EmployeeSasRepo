@@ -47,7 +47,11 @@ class MemberDirectoryUI extends useMemberDirectoryLogic {
     return (
       <UI.TouchableOpacity
         style={[styles.memberItem]}
-        onPress={() => this.selectedMember(item)}
+        onPress={
+          this.props.userType !== "Member"
+            ? () => this.selectedGuest(item)
+            : () => this.selectedMember(item)
+        }
       >
         <UI.View>
           <Image
@@ -225,7 +229,12 @@ class MemberDirectoryUI extends useMemberDirectoryLogic {
               {showClose && (
                 <UI.TouchableOpacity
                   style={styles.cancelButton}
-                  onPress={() => this.removeSelectedMember(item, index)}
+                  // onPress={() => this.removeSelectedMember(item, index)}
+                  onPress={
+                    this.props.userType !== "Member"
+                      ? () => this.removeSelectedGuest(item, index)
+                      : () => this.removeSelectedMember(item, index)
+                  }
                 >
                   <UI.ConnectedCbText style={styles.cancelText}>
                     ×
@@ -246,7 +255,6 @@ class MemberDirectoryUI extends useMemberDirectoryLogic {
   };
 
   render() {
-
     let pageConfigJson = global.appConfigJsonArray.find(
       (item) => item?.PageId === pageId
     );
@@ -401,7 +409,7 @@ class MemberDirectoryUI extends useMemberDirectoryLogic {
                           id="checkboxclick"
                         >
                           <UI.TouchableOpacity
-                            onPress={this.handleCheckBox}
+                            onPress={this.toggleCheckbox}
                             activeOpacity={1}
                           >
                             <Checkbox

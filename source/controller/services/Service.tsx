@@ -32,26 +32,26 @@ export default class ServiceLogic extends Component<IProps, IState> {
     }
   }
   componentDidUpdate(prevProps: IProps) {
-    if (prevProps.serviceClassList !== this.props.serviceClassList) {
+    if (prevProps?.serviceClassList !== this?.props?.serviceClassList) {
       this.setState({
-        serviceTypes: this.props.serviceClassList,
-        activeTab: this.props.serviceClassList[0].BookingTypeName,
+        serviceTypes: this?.props?.serviceClassList,
+        activeTab: this?.props?.serviceClassList[0]?.BookingTypeName,
       });
     }
 
     if (
-      this.props.Isshowbookintype === 0 &&
-      prevProps.serviceClassList !== this.props.serviceClassList &&
-      Array.isArray(this.props.serviceClassList)
+      this?.props?.Isshowbookintype === 0 &&
+      prevProps?.serviceClassList !== this?.props?.serviceClassList &&
+      Array.isArray(this?.props?.serviceClassList)
     ) {
-      const result = this.props.serviceClassList.filter(
+      const result = this?.props?.serviceClassList?.filter(
         (item) =>
-          Array.isArray(item.ServiceClass) && item.ServiceClass.length === 0
+          Array?.isArray(item?.ServiceClass) && item?.ServiceClass?.length === 0
       );
-      if (this.props.storeSingleService) {
-        this.props.storeSingleService(result);
+      if (this?.props?.storeSingleService) {
+        this?.props?.storeSingleService(result);
       }
-      if (result.length > 0) {
+      if (result?.length > 0) {
         navigateToScreen(this.props, "ReservationUI", true, {
           serviceDetails: result,
         });
