@@ -18,7 +18,15 @@ interface Props {
   loading: boolean;
   addMemberIndex: number;
   loadPageConfigurations: ({ pageId, controlId }) => void;
-  getReservationsData: ({ BookingTypeID, ServiceClassID }) => void;
+  getReservationsData: ({
+    BookingTypeID,
+    ServiceClassID,
+    Providername,
+    servicename,
+    ChangedDate,
+    SelectedGender,
+    SelectedTimeCat,
+  }) => void;
   route: any;
   setOpenAddmemberModel?: () => void;
   setClosememberModel?: () => void;
@@ -127,6 +135,7 @@ export interface ControllerState {
   tooltipVisible: boolean;
   toolServicetipVisible: boolean;
   tempreservationData: any;
+  BookingIds: { ServiceClassId: string; BookingId: string };
   //webstateany
 }
 
@@ -196,6 +205,7 @@ class ReservationLogic extends Component<Props, ControllerState> {
       tooltipVisible: false,
       toolServicetipVisible: false,
       tempreservationData: null,
+      BookingIds: null,
       //webstate
     };
   }
@@ -216,7 +226,14 @@ class ReservationLogic extends Component<Props, ControllerState> {
       BookingTypeID: BookingId,
       ServiceClassID: ServiceClassId,
     });
+    this.setState({
+      BookingIds: {
+        ServiceClassId: ServiceClassId,
+        BookingId: BookingId,
+      },
+    });
   }
+
   componentDidUpdate(
     prevProps: Readonly<Props>,
     prevState: Readonly<ControllerState>,
@@ -243,20 +260,19 @@ class ReservationLogic extends Component<Props, ControllerState> {
             (Provider) => Provider.ProviderName
           ) || [];
 
-        if (this.state.serviceNames !== serviceNames) {
-          this.setState({
-            serviceNames: serviceNames,
-            dateRange: availableDates,
-            currentDate: reservationData?.DefaultDate,
-            selectedItem: reservationData?.DefaultDate,
-            sixtyDaysLater: lastDate,
-            servicesOptions: reservationData?.AvailableServices,
-            ProvidersData: ProvidersDataNames,
-            AvailableTimeCat:
-              reservationData?.AvailableTimeCat?.AvailableTimeCat,
-            selectedTimePeriod: reservationData?.DefaultTimeCat,
-          });
-        }
+        // if (this.state.serviceNames !== serviceNames) {
+        this.setState({
+          serviceNames: serviceNames,
+          dateRange: availableDates,
+          currentDate: reservationData?.DefaultDate,
+          selectedItem: reservationData?.DefaultDate,
+          sixtyDaysLater: lastDate,
+          servicesOptions: reservationData?.AvailableServices,
+          ProvidersData: ProvidersDataNames,
+          AvailableTimeCat: reservationData?.AvailableTimeCat?.AvailableTimeCat,
+          selectedTimePeriod: reservationData?.DefaultTimeCat,
+        });
+        // }
         setTimeout(() => {
           this.setState({ IsLoading: false });
         }, 500);
@@ -348,17 +364,28 @@ class ReservationLogic extends Component<Props, ControllerState> {
 
   onDateChange = (date: string | number | Date) => {
     const formattedDate = moment(new Date(date)).format("MM/DD/YYYY");
-    const selectedItem: any = this.state.dateRange.find(
-      (d: any) => d.Date === formattedDate
+    const selectedItem: any = this?.state?.dateRange?.find(
+      (d: any) => d?.Date === formattedDate
     );
-    const selectedIndex = this.state.dateRange.findIndex(
-      (d: any) => d.Date === formattedDate
+    const selectedIndex = this?.state?.dateRange?.findIndex(
+      (d: any) => d?.Date === formattedDate
     );
+    console.log(selectedItem, "selectedItem");
+    
     if (selectedItem) {
-      this.setState({ selectedItem: selectedItem?.Date }, () => {
+      this?.setState({ selectedItem: selectedItem?.Date }, () => {
         this.scrollToIndex(selectedIndex);
       });
     }
+    this.props.getReservationsData({
+      BookingTypeID: this.state.BookingIds.BookingId,
+      ServiceClassID: this.state.BookingIds.ServiceClassId,
+      ChangedDate: selectedItem,
+      servicename: "",
+      SelectedGender: "",
+      Providername: "",
+      SelectedTimeCat: "",
+    });
     this.toggleCalendar();
   };
 
@@ -465,7 +492,7 @@ class ReservationLogic extends Component<Props, ControllerState> {
 
   navigateToAddMembers = () => {
     const memberData = this.getMemberData();
-      this.props.setReservationData(memberData);
+    this.props.setReservationData(memberData);
     navigateToScreen(this.props, "AddMemberUI", true, memberData);
   };
 

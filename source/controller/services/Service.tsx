@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import { Component } from "react";
 import { navigateToScreen } from "@/components/constants/Navigations";
 import { BookingType, ServiceType } from "@/components/constants/Types";
 

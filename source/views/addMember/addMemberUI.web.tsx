@@ -377,7 +377,8 @@ const mapStateToProps = (state: RootState) => {
     membersList: state.addMember.membersList,
     selectedMembersList: state.addMember.selectedMembersList,
     membersCount: state.addMember.membersCount,
-    ReservationData: state.addMember.ReservationData,
+    ReservationData: state.addMember.ReservationData, 
+    SaveAppointmentMessage: state.addMember.SaveAppointmentMessage,
   };
 };
 const mapDispatchToProps = {
