@@ -93,6 +93,7 @@ export const styles = StyleSheet.create({
     marginLeft: 10,
     fontSize: 16,
     color: "#6D6D6D",
+    fontFamily: "SourceSansPro_SemiBold"
   },
   providerTxt: {
     fontSize: 16,

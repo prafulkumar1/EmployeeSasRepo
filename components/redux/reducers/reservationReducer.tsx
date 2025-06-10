@@ -35,15 +35,17 @@ export const getAppConfiguration = createAsyncThunk(
     }
   }
 );
-export const loadPageConfigurations =
-  (payload: { pageID: string; controlId: string }) =>
-  (_: any, getState: any) => {
-    const { pageID, controlId } = payload;
-    const state = getState();
-    const pageConfig = state.reservation.AppConfigJson?.find(
-      (item: { PageId: string }) => item.PageId === pageID
-    );
-    if (!pageConfig) return null;
+export const loadPageConfigurations = (payload: {pageID:string,controlId:string}) => (_: any, getState:any) => {
+ // console.log(payload,"---->>payloadddddddd")
+  const {pageID,controlId} = payload
+  const state = getState();
+  //console.log(JSON.stringify(state.reservation.AppConfigJson),"--->>1234")
+  const pageConfig = state.reservation.AppConfigJson?.find(
+    (item:{PageId:string}) => item.PageId === pageID
+  );
+   // console.log(pageConfig,"--->11111")
+
+  if (!pageConfig) return null;
 
     const pageConfigJson = pageConfig.Controls.map((control: any) => {
       try {
@@ -57,6 +59,7 @@ export const loadPageConfigurations =
     const controlConfig = pageConfigJson.find(
       (item: { id: string }) => item?.id === controlId
     );
+  //console.log("Controlconfig",pageID,controlId,controlConfig)
     return controlConfig;
   };
 

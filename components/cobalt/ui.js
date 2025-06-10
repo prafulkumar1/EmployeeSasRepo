@@ -482,6 +482,7 @@ class CbSelectDropDown extends React.Component {
       selectedIndex: props.selectedIndex || null,
       selecteditem: null,
       showDropdown: false,
+      ControlConfig: [],
     };
 
     this.options = props.options || [];
@@ -493,7 +494,23 @@ class CbSelectDropDown extends React.Component {
     this.customstyle = props.customstyle || {};
     this.dropdownCustom = props.dropdownCustom || {};
     this.selectItemId = props.selectItemId;
+     this.id = props.id;
+    this.pageID = props.pageId;
   }
+  componentDidMount() {
+    setTimeout(() => {
+      this.loadPageConfig();
+    }, 500);
+  }
+  loadPageConfig = () => {
+    try {
+      const ControlConfig = this.props?.loadPageConfigurations({
+        pageID: this.pageID,
+        controlId: this.id,
+      });
+      this.setState({ ControlConfig });
+    } catch (error) {}
+  };
 
   componentDidUpdate(prevProps) {
     if (
@@ -526,7 +543,7 @@ class CbSelectDropDown extends React.Component {
     this.onSelect(item);
   };
 
-  renderDropdown = () => {
+  renderDropdown = (StyleProps) => {
     const optionsAsStrings = this?.props?.options?.map((item) =>
       typeof item === "string" ? item : item.label
     );
@@ -535,13 +552,15 @@ class CbSelectDropDown extends React.Component {
       <FlatList
         style={[styles.dropdown, this.props.dropdownCustom]}
         data={optionsAsStrings}
+        style={StyleProps?.dropdown || styles.dropdown}
+        data={this.options}
         keyExtractor={(_, index) => index.toString()}
         renderItem={({ item, index }) => (
           <TouchableOpacity
-            style={[styles.dropdownItem, this.props.dropdownItemStyle]}
+            style={StyleProps?.dropdownItem || styles.dropdownItem}
             onPress={() => this.selectItem(item)}
           >
-            <Text style={styles.dropdownText}>{item}</Text>
+            <Text style={StyleProps?.dropdownText || styles.dropdownText}>{item}</Text>
           </TouchableOpacity>
         )}
       />
@@ -549,22 +568,26 @@ class CbSelectDropDown extends React.Component {
   };
 
   render() {
-    const { selectedIndex, showDropdown, selecteditem } = this.state;
+    const { selectedIndex, showDropdown, ControlConfig, selecteditem } = this.state;
+   //console.log("_________>>>>>>",ControlConfig)
+    const Placeholder = ControlConfig?.placeholder;
+    const DropdownIconSource = ControlConfig?.DropdownIconSource
     const selectedValue =
-      selecteditem !== null ? selecteditem : this.placeholder;
+      selectedIndex !== null
+        ? this.options[selectedIndex]?.label
+        : (Placeholder || this.placeholder);
+    const Styles = ControlConfig?.Styles;
+    const StyleProps = transformStyles(Styles);
     return (
-      <View style={this.props.customstyle}>
+      <View style={StyleProps?.customstyle || this.props.customstyle}>
         <TouchableOpacity
           onPress={this.toggleDropdown}
-          style={[styles.selector]}
+          style={StyleProps?.selector || styles.selector}
         >
-          <Text style={styles.selectorText}>{selectedValue}</Text>
-          <View style={{ width: 20, height: 20 }}>
-            <Icon as={ChevronDownIcon} size="sm" />
-          </View>
+          <Text style={StyleProps?.selectorText || styles.selectorText}>{selectedValue}</Text>
+         { DropdownIconSource ? <Image source={{ uri: DropdownIconSource}} style={StyleProps?.ddIocn || styles.ddIocn} />:<Image alt='image' source={require("@/assets/images/icons/Down_Arrow_Icon3x.png")} style={StyleProps?.ddIocn || styles.ddIocn} /> }
         </TouchableOpacity>
-
-        {showDropdown && this.renderDropdown()}
+        {showDropdown && this.renderDropdown(StyleProps)}
       </View>
     );
   }
@@ -639,6 +662,7 @@ class CbText extends React.Component {
     const StrikeThrough = ControlConfig?.StrikeThrough || this.strikeThrough;
     const Styles = ControlConfig?.Styles;
     const StyleProps = transformStyles(Styles);
+   console.log("--------->",ControlConfig)
     const dynamicStyle =
       StyleProps && Object.keys(StyleProps).length > 0
         ? Object.values(StyleProps)[0]
@@ -694,6 +718,7 @@ class CbImage extends React.Component {
   render() {
     const { ControlConfig } = this.state;
     const source = ControlConfig?.ImageSource || this.source;
+    
     const Styles = ControlConfig?.Styles;
     const StyleProps = transformStyles(Styles);
     const dynamicStyle =
@@ -702,8 +727,9 @@ class CbImage extends React.Component {
         : this.styles;
     const jsx = this.imageJsx;
     const ResizeMode = ControlConfig?.resizeMode || this.resizeMode;
+   // console.log("This is sourcre ",ControlConfig,source,this.id, this.pageID)
     if (source) {
-      if (source.endsWith(".svg")) {
+      if (source.endsWith('.svg')) {
         return <SvgUri source={{ uri: source }} />;
       } else {
         return (
@@ -753,9 +779,11 @@ class CbImageBackground extends React.Component {
 
   render() {
     const { ControlConfig } = this.state;
+   
     const { children } = this.props;
     const sourceprop = ControlConfig?.source || this.source;
     const Styles = ControlConfig?.Styles;
+     //console.log("This is sourcre 12343",sourceprop, ControlConfig)
     const StyleProps = transformStyles(Styles);
     const dynamicStyle =
       StyleProps && Object.keys(StyleProps).length > 0
@@ -914,6 +942,7 @@ class CbView extends React.Component {
     const { ControlConfig } = this.state;
     const Styles = ControlConfig?.Styles;
     const StyleProps = transformStyles(Styles);
+    
     const dynamicStyle =
       StyleProps && Object.keys(StyleProps).length > 0
         ? Object.values(StyleProps)[0]
@@ -922,7 +951,6 @@ class CbView extends React.Component {
       ...this.flattenStyle(dynamicStyle),
       ...this.flattenStyle(this.Conditionalstyle),
     };
-
     return <View style={combinedStyle}>{this.props.children}</View>;
   }
 }

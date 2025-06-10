@@ -2,7 +2,16 @@ import { navigateToScreen } from "@/components/constants/Navigations";
 import { Component, createRef } from "react";
 import moment from "moment";
 import { Dimensions, FlatList } from "react-native";
-import { SingleBookingType } from "@/components/constants/Types";
+import { ServiceType } from "@/components/constants/Types";
+import { useFormContext,FormContext } from '@/components/cobalt/event';
+
+const pageId = "Reservation";
+//webinterface
+interface Member {
+  id: string;
+  name: string;
+}
+//webinterface
 
 export interface DateItem {
   id: string;
@@ -17,6 +26,7 @@ interface Props {
   slotData: DateItem[];
   loading: boolean;
   addMemberIndex: number;
+  loadPageConfigurations: (values:{ pageID: string; controlId: string; }) => void;
   loadPageConfigurations: ({ pageId, controlId }) => void;
   getReservationsData: ({
     BookingTypeID,
@@ -28,41 +38,82 @@ interface Props {
     SelectedTimeCat,
   }) => void;
   route: any;
-  setOpenAddmemberModel?: () => void;
-  setClosememberModel?: () => void;
-  setOpenMembersModel?: () => void;
-  setReservationData?: (ReservationData: any) => void;
-  setLoader?: () => void;
-  OpenAddmemberModel?: boolean;
-  OpenMemberModel?: boolean;
-  closeMemberModel?: boolean;
-  ThankYouModel?: boolean;
-  singleServiceItem?: SingleBookingType;
-  reservationData?: any;
-  ServiceClassID?: any;
+  setOpenAddmemberModel?:()=>void
+  setClosememberModel?:()=>void
+  setOpenMembersModel?:()=>void
+  OpenAddmemberModel?:boolean
+  OpenMemberModel?:boolean
+  closeMemberModel?:boolean
+  singleServiceItem?:ServiceType
+  
 }
 
-interface Provider {
-  ProviderID: string;
-  ProviderImage: string;
-  ProviderName: string;
-}
-[];
-interface Service {
-  ServiceID: string;
-  ServiceImage: string;
-  ServiceName: string;
-}
+//webdummydata
+const mappedDates = [
+  { id: "1", title: "Item 1" },
+  { id: "2", title: "Item 2" },
+  { id: "3", title: "Item 3" },
+  { id: "4", title: "Item 4" },
+  { id: "5", title: "Item 5" },
+  { id: "6", title: "Item 5" },
+  { id: "7", title: "Item 5" },
+  { id: "8", title: "Item 5" },
+  { id: "9", title: "Item 5" },
+  { id: "10", title: "Item 5" },
+  { id: "11", title: "Item 5" },
+  { id: "12", title: "Item 5" },
+  { id: "13", title: "Item 5" },
+  { id: "14", title: "Item 5" },
+  { id: "15", title: "Item 5" },
+  { id: "16", title: "Item 5" },
+  { id: "17", title: "Item 5" },
+  { id: "18", title: "Item 5" },
+];
 
-interface AvailableTimeSlot {
-  TimeSlot: string;
-}
+const servicesOptions = [
+  { label: "30-Min Aerobic Instruction", value: "30-Min Aerobic Instruction" },
+  { label: "90-Min Aerobic Instruction", value: "90-Min Aerobic Instruction" },
+  // { label: "Hydra Facial Treatment", value: "hydra_facial" },
+];
 
-interface AvailableTimeCategory {
-  TimeName: string;
-  TimeCat: string;
-  AvailableTimeSlots: AvailableTimeSlot[];
-}
+const providersdummyData = [
+  { label: "Simon Travers", value: "massage_1hr" },
+  { label: "Jessica Reed", value: "deep_cleansing" },
+  { label: "Michael Carter", value: "Personal Training" },
+  { label: "Daniel Harris", value: "hydra_facial" },
+];
+const HeaderData = {
+  Tennis: {
+    values: ["First", "Second"],
+    image: "https://via.placeholder.com/30?text=T",
+  },
+  "Tennis Booking": {
+    values: ["First Booking", "Second Booking"],
+    image: "https://via.placeholder.com/30?text=TB",
+  },
+  Salon: {
+    values: ["Hair", "Nails"],
+    image: "https://via.placeholder.com/30?text=S",
+  },
+  Spa: {
+    values: ["Body", "Head"],
+    image: "https://via.placeholder.com/30?text=S",
+  },
+  "Pickle clinic": {
+    values: ["Hair", "Nails"],
+    image: "https://via.placeholder.com/30?text=S",
+  },
+  "Pickle Ball": {
+    values: ["Hair", "Nails"],
+    image: "https://via.placeholder.com/30?text=S",
+  },
+  Sport: {
+    values: ["golf", "cricket"],
+    image: "https://via.placeholder.com/30?text=S",
+  },
+};
+
+//webdummydata
 
 export interface ControllerState {
   dates: DateItem[];
@@ -126,21 +177,15 @@ export interface ControllerState {
   showplayedpopup: boolean;
   showThankModal: boolean;
   selectedKey: null | any;
-  ProvidersData: Provider[];
-  servicesOptions: Service[];
-  serviceNames: string[];
-  AvailableTimeCat: AvailableTimeCategory[];
-  DefaultTimeCat: string;
-  IsLoading: boolean;
-  tooltipVisible: boolean;
-  toolServicetipVisible: boolean;
-  tempreservationData: any;
-  BookingIds: { ServiceClassId: string; BookingId: string };
-  //webstateany
+  CalenderDateConfig: any;
+  TimePeriodsConfig: any;
+  TimeSlotsConfig: any;
+  //webstate
 }
 
 class ReservationLogic extends Component<Props, ControllerState> {
   flatListRef = createRef<FlatList>();
+  static contextType = FormContext;
   //webcode
   dummydata: any;
   HeaderData: any;
@@ -196,21 +241,103 @@ class ReservationLogic extends Component<Props, ControllerState> {
       showplayedpopup: false,
       showThankModal: false,
       selectedKey: null,
-      ProvidersData: null,
-      servicesOptions: null,
-      serviceNames: null,
-      AvailableTimeCat: null,
-      DefaultTimeCat: null,
-      IsLoading: false,
-      tooltipVisible: false,
-      toolServicetipVisible: false,
-      tempreservationData: null,
-      BookingIds: null,
+      CalenderDateConfig: null,
+      TimePeriodsConfig: null,
+      TimeSlotsConfig:null,
       //webstate
     };
+    //wecode
+    this.dummydata = mappedDates;
+    this.servicesOptions = servicesOptions;
+    this.providersdummyData = providersdummyData;
+    this.HeaderData = HeaderData;
+    //wecode
   }
 
+  timeData = [
+    {
+      id: "morning",
+      label: "Morning",
+      time: "06:00 AM-12:00 PM (8)",
+      slots: [
+        { id: "1", label: "06:00" },
+        { id: "2", label: "07:00" },
+        { id: "3", label: "08:00", disabled: true },
+        { id: "4", label: "08:30" },
+        { id: "5", label: "09:00" },
+        { id: "6", label: "09:30" },
+        { id: "7", label: "10:00" },
+        { id: "8", label: "10:30" },
+        { id: "9", label: "11:00" },
+      ],
+    },
+    {
+      id: "midday",
+      label: "Mid Day",
+      time: "12:00 PM-6:00 PM (9)",
+      slots: [
+        { id: "1", label: "12:00" },
+        { id: "2", label: "01:00" },
+        { id: "3", label: "02:00", disabled: true },
+        { id: "4", label: "03:30" },
+        { id: "5", label: "04:00" },
+      ],
+    },
+    {
+      id: "evening",
+      label: "Evening",
+      time: "06:00 PM-11:00 PM (0)",
+      slots: [],
+    },
+  ];
+  //web handlers functions
+  formatDate = (date) => {
+    const day = date.getDate().toString().padStart(2, "0"); // Pad single digits with leading zero
+    const monthNames = [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec",
+    ];
+    const month = monthNames[date.getMonth()]; // Get full month name
+    const year = date.getFullYear(); // Get full year
+
+    return `${day}-${month}-${year}`; // Format as DD-MMMM-YYYY
+  };
+  //web handlers functions
+ loadPageConfig = () => {
+      try {
+        //console.log(this.props,"---->>>propspspspspspsp")
+        const CalenderDateControlConfig = this.props?.loadPageConfigurations({
+          pageID: pageId,
+          controlId:"CalenderDateContainer",
+        });
+        const TimePeriodsControlConfig = this.props?.loadPageConfigurations({
+          pageID: pageId,
+          controlId:"TimePeriodsContainer",
+        });
+        const TimeSlotsControlConfig = this.props?.loadPageConfigurations({
+          pageID: pageId,
+          controlId:"TimeSlotsContainer",
+        });
+        //console.log("BmsControlconfig",JSON.stringify(ControlConfig))
+        this.setState({ CalenderDateConfig:CalenderDateControlConfig });
+        this.setState({TimePeriodsConfig : TimePeriodsControlConfig});
+        this.setState({TimeSlotsConfig : TimeSlotsControlConfig});
+      } catch (error) {}
+    };
   componentDidMount(): void {
+    // let name = this.props?.route?.params?.serviceDetails?.title
+    // console.log(this.props?.route?.params?.serviceDetails,"---1111111")
+    this.loadPageConfig()
     this.setState({
       mainServiceName: this.props?.route?.params?.serviceDetails?.title,
     });

@@ -8,12 +8,12 @@ export const styles = StyleSheet.create({
       paddingBottom: 80
     },
     subContainer:{paddingHorizontal:10,paddingVertical:10,position:"absolute",bottom:0,flexDirection:"row",justifyContent:"space-between",width:"100%"},
-    profileLabel:{
+    profileTxt:{
       fontFamily:"SourceSansPro_Bold",
       fontSize:18,
       color:"#fff"
     },
-    profileTxt:{
+   profileLabel :{
       fontFamily:"SourceSansPro_Regular",
       fontSize:14,
       color:"#fff"
@@ -29,7 +29,7 @@ export const styles = StyleSheet.create({
       color:"#fff"
     },
     backLogo:{ height: 280, width: "100%",position: "relative",},
-    bellIcon:{width: 25, height: 25,zIndex:1 },
+    HeaderIconcontainer:{width: 25, height: 25,zIndex:1 },
     profileImgBtn:{ position:"absolute",bottom:75,marginLeft:10,width: 70, height: 70, borderRadius: 35, borderWidth: 2, borderColor: "#fff", marginVertical: 15 },
     profileImg:{ width: "100%", height: "100%", borderRadius: 35 },
     viewNewsBtn:{
@@ -124,7 +124,6 @@ export const styles = StyleSheet.create({
     headerContainer:{flexDirection:"row",justifyContent:"space-between",alignItems:"center",marginTop:30,marginHorizontal:15},
     iconStyle:{ width: 20, height: 20, resizeMode: "contain", tintColor: "#fff" },
     overLay: {
-      ...StyleSheet.absoluteFillObject,
       backgroundColor: "rgba(0, 0, 0, 0.1)",
       zIndex: 1,
     },

@@ -1,78 +1,162 @@
-import { Component } from "react";
+import React, { Component,useState,useContext,useEffect } from "react";
+import { Dimensions, ScaledSize } from "react-native";
 import { navigateToScreen } from "@/components/constants/Navigations";
-import { BookingType, ServiceType } from "@/components/constants/Types";
+import { ServiceType } from "@/components/constants/Types";
+import { useFormContext,FormContext } from '@/components/cobalt/event';
+
 
 const pageId = "Service";
 
 interface IProps {
-  getServiceClasses?: () => void;
-  storeSingleService?: (serviceDetails: any) => void;
-  storeServiceClassID?: (ServiceClassID: any) => void;
-  serviceClassList: BookingType[];
-  Isshowbookintype: number;
+    getServiceClasses?:() =>void
+    storeSingleService?:(serviceDetails:ServiceType) => void
+    serviceClassList:{
+      "BookingTypeID": string
+      "BookingTypeName": string
+      "ServiceClass": ServiceType[]
+    }[]
+    loadPageConfigurations:(values:{
+        pageID: string,
+        controlId:string
+      }) => void
+      getAppConfiguration:() =>void
 }
 
 interface IState {
-  activeTab: string | null;
-  serviceTypes: BookingType[] | null;
+  activeTab: any;
+  serviceTypes: { type: string; id: number; isSelected: boolean }[];
+  ServiceTabHeaderConfig:any
 }
 
+const serviceTypes = [
+  { type: "Fitness", id: 1, isSelected: true },
+  { type: "Spa", id: 3, isSelected: false },
+  { type: "Salon", id: 2, isSelected: false },
+];
+
+const cards = [
+  {
+    title: "Aerobic Instruction",
+    duration: "1 HR",
+    icon: require("@/assets/images/icons/Home3x.png"),
+  },
+  {
+    title: "Personal Training",
+    duration: "1.5 HR",
+    icon: require("@/assets/images/icons/Home3x.png"),
+  },
+  {
+    title: "Nutrition Programs",
+    duration: "1/2 HR",
+    icon: require("@/assets/images/icons/Home3x.png"),
+  },
+  {
+    title: "Private Tai Chi Training 55 Min ",
+    duration: "1 HR",
+    icon: require("@/assets/images/icons/Home3x.png"),
+  },
+  // { title: "LESSON SAM W 1.5 HR", duration: "1.5 HR", icon: require("@/assets/images/icons/Home3x.png") },
+  // { title: "LESSON SAM W 1/2 HR", type: "image", image: "https://t3.ftcdn.net/jpg/02/87/04/00/360_F_287040077_U2ckmhpzeyqDHiybj0dfCfX6NRCEKdoe.jpg" },
+  // { title: "TENNIS/PICKLEBALL", type: "image", image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRhKyPqI6cJ_Jsh7pVwPo_geO3nhUDkreoQSg&s", },
+];
+
+const ServiceData = {
+  BookingTypes: [
+    {
+      BookingTypeID: "cd123bjdbcjd",
+      BookingTypeName: "Tennis",
+      ServiceClass: [
+        {
+          ServiceClassID: "cd123bjdbcjd",
+          ServiceClassName: "Lesson",
+          ServiceClassImage: "https://res.cloudinary.com/people-matters/image/upload/q_auto,f_auto/v1545238540/1545238539.jpg",
+          ServiceClassDiscription: "this is a service",
+        },
+        {
+          ServiceClassID: "cd123bjdbcjd",
+          ServiceClassName: "Lesson2",
+          ServiceClassImage: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRWztHZDKiYmBbSz5YifbfbioTtUTqEefwE4Q&s.jpg",
+          ServiceClassDiscription: "this is a service2",
+        },
+        {
+          ServiceClassID: "cd123bjdbcjd",
+          ServiceClassName: "Lesson",
+          ServiceClassImage: "https://res.cloudinary.com/people-matters/image/upload/q_auto,f_auto/v1545238540/1545238539.jpg",
+          ServiceClassDiscription: "this is a service",
+        },
+        {
+          ServiceClassID: "cd123bjdbcjd",
+          ServiceClassName: "Lesson2",
+          ServiceClassImage: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRWztHZDKiYmBbSz5YifbfbioTtUTqEefwE4Q&s.jpg",
+          ServiceClassDiscription: "this is a service2",
+        },
+        {
+          ServiceClassID: "cd123bjdbcjd",
+          ServiceClassName: "Lesson",
+          ServiceClassImage: "",
+          ServiceClassDiscription: "this is a service",
+        },
+      ],
+    },
+    {
+      BookingTypeID: "cd123bjdbcjd",
+      BookingTypeName: "Spa",
+      ServiceClass: [
+        {
+          ServiceClassID: "cd123bjdbcjd",
+          ServiceClassName: "Spa Lesson",
+          ServiceClassImage: "https://example.com/images/living_room.jpg",
+          ServiceClassDiscription: "this is a service",
+        },
+        {
+          ServiceClassID: "cd123bjdbcjd",
+          ServiceClassName: "Spa Lesson2",
+          ServiceClassImage: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRWztHZDKiYmBbSz5YifbfbioTtUTqEefwE4Q&s.jpg",
+          ServiceClassDiscription: "this is a service2",
+        },
+      ],
+    },
+  ],
+};
+
+
 export default class ServiceLogic extends Component<IProps, IState> {
+
+    static contextType = FormContext;
+ // context!: React.ContextType<typeof FormContext>; // For TypeScript
+  dimensionChanges: any;
+  cards = cards;
+  ServiceData = ServiceData;
   constructor(props: IProps) {
     super(props);
     this.state = {
       activeTab: null,
-      serviceTypes: [],
+      serviceTypes: serviceTypes,
+      ServiceTabHeaderConfig: null,
     };
   }
-
-  componentDidMount() {
-    if (this.props.getServiceClasses) {
-      this.props.getServiceClasses();
-    }
-  }
-  componentDidUpdate(prevProps: IProps) {
-    if (prevProps?.serviceClassList !== this?.props?.serviceClassList) {
-      this.setState({
-        serviceTypes: this?.props?.serviceClassList,
-        activeTab: this?.props?.serviceClassList[0]?.BookingTypeName,
-      });
-    }
-
-    if (
-      this?.props?.Isshowbookintype === 0 &&
-      prevProps?.serviceClassList !== this?.props?.serviceClassList &&
-      Array.isArray(this?.props?.serviceClassList)
-    ) {
-      const result = this?.props?.serviceClassList?.filter(
-        (item) =>
-          Array?.isArray(item?.ServiceClass) && item?.ServiceClass?.length === 0
-      );
-      if (this?.props?.storeSingleService) {
-        this?.props?.storeSingleService(result);
-      }
-      if (result?.length > 0) {
-        navigateToScreen(this.props, "ReservationUI", true, {
-          serviceDetails: result,
+  loadPageConfig = () => {
+      try {
+        //console.log(this.props,"---->>>propspspspspspsp")
+        const ControlConfig = this.props?.loadPageConfigurations({
+          pageID: pageId,
+          controlId:"ServiceTabHeader",
         });
-      }
-    }
+       // console.log("BmsControlconfig",JSON.stringify(ControlConfig))
+        this.setState({ ServiceTabHeaderConfig:ControlConfig });
+      } catch (error) {}
+    };
+ async componentDidMount() {
+    await this.props.getAppConfiguration()
+  setTimeout(() => {
+    this.loadPageConfig()
+  }, 1000);
+  this.setState({activeTab :ServiceData.BookingTypes[0].BookingTypeName})
   }
-  navigateToReservation = (serviceDetails: ServiceType) => {
-    this.props.storeServiceClassID(serviceDetails?.ServiceClassID);
-    const result = this.props.serviceClassList.find((item) =>
-      item.ServiceClass.some(
-        (service) => service.ServiceClassID === serviceDetails?.ServiceClassID
-      )
-    );
-
-    if (this.props.storeSingleService) {
-      this.props.storeSingleService([result]);
-    }
-    if (result) {
-      navigateToScreen(this.props, "ReservationUI", true, {
-        serviceDetails: [result],
-      });
-    }
+  navigateToReservation = (serviceDetails:ServiceType) => {
+    navigateToScreen(this.props, "ReservationUI", true, {
+      serviceDetails: serviceDetails,
+    });
+    this.props.storeSingleService(serviceDetails)
   };
 }

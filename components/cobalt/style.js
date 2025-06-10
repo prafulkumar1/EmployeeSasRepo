@@ -1,11 +1,16 @@
 import { StyleSheet } from "react-native";
 import { responsiveWidth,responsiveHeight, responsiveFontSize } from "react-native-responsive-dimensions";
-import { horizontalScale, isPlatformAndroid, isPlatformIos } from "../constants/Matrices";
+import { height, horizontalScale, isPlatformAndroid, isPlatformIos } from "../constants/Matrices";
 
 export const styles = StyleSheet.create({
   subContainer: {
     width: "94%",
     marginVertical:responsiveHeight(1)
+  },
+  ddIocn :{
+    width: 15,
+    height: 15,
+    resizeMode: 'contain'
   },
   mealTypeTitle: {
     fontSize: 20,

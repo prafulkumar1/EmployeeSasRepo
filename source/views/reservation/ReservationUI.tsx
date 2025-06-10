@@ -7,52 +7,53 @@ import { ActivityIndicator } from "react-native";
 import moment from "moment";
 import { connect } from "react-redux";
 import { RootState } from "@/components/redux/store";
-import {
-  getAppConfiguration,
-  getReservationsData,
-} from "@/components/redux/reducers/reservationReducer";
+import { getAppConfiguration,loadPageConfigurations } from "@/components/redux/reducers/reservationReducer";
 import { StatusBar } from "expo-status-bar";
-import CbLoader from "@/components/cobalt/cobaltLoader";
-import { setReservationData } from "@/components/redux/reducers/addMemberReducer";
+import { transformStyles } from "@/components/constants/Matrices";
+
 
 const pageId = "Reservation";
 
 class ReservationUI extends ReservationLogic {
-  renderHorizontalCalender = ({ item, index }) => {
-    const isSelected = this.state.selectedItem === item?.Date;
-    const [day, month, Date] = item?.Dateslot?.split(" ");
+  renderHorizontalCalender = ({ item }) => {
+    const isSelected = this.state.selectedDateId === item.id;
+    const isToday = item?.fullDate === moment()?.format("YYYY-MM-DD");
+    const showHighlight = isSelected || (!this.state.selectedDateId && isToday);
+     const { CalenderDateConfig } = this.state;
+     //console.log("$$$$ServiceMainConfig",CalenderDateConfig)
+     const  CalenderDateStyles= transformStyles(CalenderDateConfig?.Styles);
 
     return (
-      <UI.TouchableOpacity
-        activeOpacity={1}
-        onPress={() => this.handleItemPress(item, index)}
-      >
-        <UI.Box
+      <UI.TouchableOpacity activeOpacity={1} onPress={() => this.handleSelectDate(item.id)}>
+        <UI.Box 
           style={[
-            styles.dateBox,
+            CalenderDateStyles?.dateBox || styles.dateBox,
             {
-              backgroundColor:
-                this.state.selectedItem === item?.Date ? "#00C2FF" : "#fff",
+              backgroundColor: isSelected
+                ? (CalenderDateConfig?.Activecolor || "#00c6ff")
+                : !this.state.selectedDateId && isToday
+                ? (CalenderDateConfig?.Activecolor || "#00c6ff")
+                : (CalenderDateConfig?.Inactivecolor || "#fff"),
             },
           ]}
         >
-          <UI.Text
-            style={[styles.day, { color: isSelected ? "#fff" : "#4B5154" }]}
+          <UI.Text 
+            style={[CalenderDateStyles?.day || styles.day, { color: showHighlight ? (CalenderDateConfig?.ActiveTextcolor || "#fff") : (CalenderDateConfig?.InactiveDayTextcolor || "#4B5154") }]}
           >
             {day}
           </UI.Text>
           <UI.Text
             style={[
-              styles.mnthAndDate,
-              { color: isSelected ? "#fff" : "#000" },
+              CalenderDateStyles?.mnthAndDate || styles.mnthAndDate,
+              { color: showHighlight ? (CalenderDateConfig?.ActiveTextcolor || "#fff") : (CalenderDateConfig?.InactiveTextcolor || "#000") },
             ]}
           >
             {month}
           </UI.Text>
           <UI.Text
             style={[
-              styles.mnthAndDate,
-              { color: isSelected ? "#fff" : "#000" },
+             CalenderDateStyles?.mnthAndDate || styles.mnthAndDate,
+              { color: showHighlight ? (CalenderDateConfig?.ActiveTextcolor || "#fff") : (CalenderDateConfig?.InactiveTextcolor || "#000") },
             ]}
           >
             {Date}
@@ -70,22 +71,10 @@ class ReservationUI extends ReservationLogic {
         activeOpacity={0}
         onPress={() => this.setState({ selectedGender: item?.gender })}
       >
-        <UI.ConnectedCbBox
-          id="optionContainer"
-          pageId={pageId}
-          style={styles.optionContainer}
-        >
-          <UI.ConnectedCbBox
-            id="radioOuter"
-            pageId={pageId}
-            style={styles.radioOuter}
-          >
+        <UI.ConnectedCbBox id="GenderoptionContainer" pageId={pageId} style={styles.optionContainer}>
+          <UI.ConnectedCbBox id="GenderradioOuter" pageId={pageId} style={styles.radioOuter}>
             {selectedGender === item?.gender && (
-              <UI.ConnectedCbBox
-                id="radioInner"
-                pageId={pageId}
-                style={styles.radioInner}
-              />
+              <UI.ConnectedCbBox id="GenderradioInner" pageId={pageId} style={styles.radioInner} />
             )}
           </UI.ConnectedCbBox>
           <UI.ConnectedCbText
@@ -102,38 +91,32 @@ class ReservationUI extends ReservationLogic {
 
   renderTimePeriods = ({ item, index }) => {
     const isLesson = item.type !== "image";
-    const isLastCard = index === this.state?.AvailableTimeCat.length - 1;
-    const shouldAlignLeft =
-      this.state?.AvailableTimeCat.length % 2 !== 0 && isLastCard;
-    const isSelected = this.state.selectedTimePeriod === item.TimeCat;
-
+    const isLastCard = index === this.timeData.length - 1;
+    const shouldAlignLeft = this.timeData.length % 2 !== 0 && isLastCard;
+    const isSelected = this.state.selectedTimePeriod === item.id;
+       const { TimePeriodsConfig } = this.state;
+        const TimePeriodsStyles= transformStyles(TimePeriodsConfig?.Styles);
     return (
       <UI.ConnectedCbBox
         id="timePeriodContainer"
         pageId={pageId}
         style={[
-          styles.timePeriodContainer,
+          TimePeriodsStyles?.timePeriodContainer || styles.timePeriodContainer,
           shouldAlignLeft && { alignItems: "center" },
         ]}
       >
-        <UI.ConnectedCbText
-          id="timePeriodTxt"
-          pageId={pageId}
-          style={styles.timePeriodTxt}
-        >
-          {item.TimeName}
-        </UI.ConnectedCbText>
+        <UI.ConnectedCbText id="timePeriodTxt" pageId={pageId} style={TimePeriodsStyles?.timePeriodTxt || styles.timePeriodTxt}>{item.label}</UI.ConnectedCbText>
         <UI.TouchableOpacity
           style={[
-            styles.timeSlotsBtn,
-            { backgroundColor: isSelected ? "#00c6ff" : "#fff" },
+           TimePeriodsStyles?.timeSlotsBtn ||  styles.timeSlotsBtn,
+            { backgroundColor: isSelected ? (TimePeriodsConfig?.Activecolor || "#00c6ff") : (TimePeriodsConfig?.Inactivecolor || "#fff") },
           ]}
           onPress={() => this.handleSelectTimePeriod(item.TimeCat)}
         >
           <UI.Text
             style={[
-              styles.timePeriodBtnTxt,
-              { color: isSelected ? "#fff" : "#000" },
+             TimePeriodsStyles?.timePeriodBtnTxt ||  styles.timePeriodBtnTxt,
+              { color: isSelected ? (TimePeriodsConfig?.ActiveTextcolor || "#fff") : (TimePeriodsConfig?.InactiveTextcolor || "#000") },
             ]}
           >
             {item.TimeCat} ({item?.AvailableTimeSlots?.length})
@@ -145,20 +128,22 @@ class ReservationUI extends ReservationLogic {
 
   renderSlot = (item: any, index: number) => {
     const isDisabled = item.disabled;
-    const isSelectedTime = this.state.selectedTime === item.TimeSlot;
+    const isSelectedTime = this.state.selectedTime === item.label;
+    const { TimeSlotsConfig } = this.state;
+        const TimeSlotsStyles= transformStyles(TimeSlotsConfig?.Styles);
 
     return (
       <UI.TouchableOpacity
         key={index}
-        style={[styles.slotBox, isSelectedTime && styles.selectedSlot]}
+        style={[(TimeSlotsStyles?.slotBox || styles.slotBox), isSelectedTime && (TimeSlotsStyles?.selectedSlot || styles.selectedSlot)]}
         disabled={isDisabled}
         onPress={() => this.handleSelectTime(item.TimeSlot, item.disabled)}
       >
         <UI.Text
           style={[
-            styles.slotText,
-            isSelectedTime && styles.selectedText,
-            isDisabled && styles.disabledText,
+            (TimeSlotsStyles?.slotText || styles.slotText),
+            isSelectedTime && (TimeSlotsStyles?.selectedText || styles.selectedText),
+            isDisabled && (TimeSlotsStyles?.disabledText || styles.disabledText),
           ]}
         >
           {item.TimeSlot}
@@ -274,43 +259,22 @@ class ReservationUI extends ReservationLogic {
               </UI.ConnectedCbBox>
             </UI.ConnectedCbBox>
           )}
-          <UI.Box style={styles.container}>
-            <UI.Box style={styles.row}>
-              <UI.ConnectedCbSelectDropDown
-                options={this?.state?.serviceNames}
-                customstyle={[styles.serviceBtn]}
-                onSelect={(value: string) => this.selectService(value)}
-                placeholder={"Select the Service"}
-                setAddMemberIndex={this.setAddMemberIndex}
-                addMemberIndex={this.state.addMemberIndex}
-                selectItemId={0}
-              />
-              {/* Tooltip Container with relative positioning */}
-              <UI.Box style={styles.tooltipWrapper}>
-                <UI.TouchableOpacity
-                  onPress={this.toggleserviceTooltip}
-                  style={styles.circle1}
-                  activeOpacity={0.7}
-                >
-                  <UI.Text style={styles.iText}>i</UI.Text>
-                </UI.TouchableOpacity>
-              </UI.Box>
-
-              {this.state.toolServicetipVisible && (
-                <UI.Box style={styles.tooltipPopup}>
-                  <UI.Text style={styles.tooltipHeader}>
-                    Additional Information
-                  </UI.Text>
-                  <UI.Text style={styles.tooltipText}>
-                    Select your preferred provider from the list.
-                  </UI.Text>
-                </UI.Box>
-              )}
-            </UI.Box>
-          </UI.Box>
+          <UI.ConnectedCbSelectDropDown
+            id="ServiceSelector"
+            pageId={pageId}
+            options={this.servicesOptions}
+            customstyle={[
+              styles.serviceBtn,
+            ]}
+            onSelect={(value: string) => this.selectService(value)}
+            placeholder={"Select the Service"}
+            setAddMemberIndex={this.setAddMemberIndex}
+            addMemberIndex={this.state.addMemberIndex}
+            selectItemId={0}
+          />
 
           <UI.ConnectedCbBox
-            id="genderBox"
+            id="GenderBoxContainer"
             pageId={pageId}
             style={styles.container}
           >
@@ -375,7 +339,7 @@ class ReservationUI extends ReservationLogic {
           />
 
           <UI.ConnectedCbBox
-            id="gridContainer"
+            id="SlotgridContainer"
             pageId={pageId}
             style={styles.gridContainer}
           >
@@ -427,8 +391,7 @@ const mapStateToProps = (state: RootState) => {
 };
 const mapDispatchToProps = {
   getAppConfiguration,
-  getReservationsData,
-  setReservationData
-};
+   loadPageConfigurations
+}
 
 export default connect(mapStateToProps, mapDispatchToProps)(ReservationUI);

@@ -132,83 +132,60 @@ class AddMemberUI extends useAddMemberLogic {
     const { service, RequestedDate, RequestedTime } = this.props.route.params;
     if (!this.props.isScreenLoaded) {
       return (
-        <UI.Box style={styles.mainContainer}>
-          <UI.ImageBackground
-            style={styles.backLogo}
-            source={{
-              uri: "https://images.unsplash.com/photo-1535131749006-b7f58c99034b?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8Z29sZnxlbnwwfHwwfHx8MA%3D%3D",
-            }}
-          >
-            <UI.Box style={styles.overLay} />
-            <UI.Box style={styles.headerContainer}>
-              <UI.TouchableOpacity
-                style={styles.backIon}
-                onPress={() => this.props.navigation.goBack()}
-              >
-                <Image
-                  source={require("@/assets/images/icons/Back.png")}
-                  style={styles.iconStyle}
-                />
-              </UI.TouchableOpacity>
-              <UI.TouchableOpacity
-                style={styles.bellIcon}
-                onPress={() => this.navigateToService()}
-              >
-                <Image
-                  source={require("@/assets/images/icons/Home3x.png")}
-                  style={styles.iconStyle}
-                />
-              </UI.TouchableOpacity>
-            </UI.Box>
-            <UI.Box style={styles.subContainer}>
+        <UI.ConnectedCbBox id="Addmembermaincontainer" pageId={pageId}   style={styles.mainContainer}>
+          <UI.ConnectedCbImageBackground id="AddmemberBGImage" pageId={pageId}  style={styles.backLogo} source={{ uri: "https://images.unsplash.com/photo-1535131749006-b7f58c99034b?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8Z29sZnxlbnwwfHwwfHx8MA%3D%3D" }}>
+            <UI.ConnectedCbBox id="AddmemberOverlay" pageId={pageId} style={styles.overLay} />
+            <UI.ConnectedCbBox id="AddmemberHeadercontainer" pageId={pageId} style={styles.headerContainer}>
+              <UI.ConnectedCbBox id="AddmemberHIconcontainer" pageId={pageId} style={styles.HeaderIconcontainer} >
+                <UI.TouchableOpacity onPress={()=>this.props.navigation.goBack()}>
+                      <UI.ConnectedCbImage id="AddmemberHIconBack" pageId={pageId}  style={styles.iconStyle}
+                      imageJsx={ <UI.Image alt="image" source={require("@/assets/images/icons/Back.png")} style={styles.iconStyle}/>} />
+                </UI.TouchableOpacity>
+              </UI.ConnectedCbBox>
+               <UI.ConnectedCbBox id="AddmemberHIconcontainer" pageId={pageId} style={styles.HeaderIconcontainer}>
+                <UI.TouchableOpacity  onPress={()=>this.navigateToService()}>             
+                    <UI.ConnectedCbImage id="AddmemberHIconHome" pageId={pageId} style={styles.iconStyle} 
+                   imageJsx={ <UI.Image alt="image" source={require("@/assets/images/icons/Home3x.png")} style={styles.iconStyle}/>}/>             
+                </UI.TouchableOpacity>
+            </UI.ConnectedCbBox>
+            </UI.ConnectedCbBox>
+            <UI.ConnectedCbBox id="Addmembersubcontainer" pageId={pageId} style={styles.subContainer}>
               <UI.TouchableOpacity>
-                <UI.Text style={styles.profileTxt}>Service</UI.Text>
-                <UI.Text style={styles.profileLabel}>
-                  {service ? service : null}
-                </UI.Text>
+                <UI.ConnectedCbText id="AddmemberServicelabel" pageId={pageId} style={styles.profileLabel}>Service</UI.ConnectedCbText>
+                <UI.ConnectedCbText id="AddmemberProfiletext" pageId={pageId} style={styles.profileTxt}>Deep Cleaning</UI.ConnectedCbText>
               </UI.TouchableOpacity>
               <UI.Box>
-                <UI.Text style={styles.profileTxt}>Requested Date</UI.Text>
-                <UI.Text style={styles.profileLabel}>
-                  {RequestedDate ? RequestedDate : null}
-                </UI.Text>
+                <UI.ConnectedCbText id="AddmemberDatelabel" pageId={pageId}  style={styles.profileLabel}>Requested Date</UI.ConnectedCbText>
+                <UI.ConnectedCbText id="AddmemberProfiletext" pageId={pageId} style={styles.profileTxt}>04/17/2025</UI.ConnectedCbText>
               </UI.Box>
               <UI.Box>
-                <UI.Text style={styles.profileTxt}>Request Time</UI.Text>
-                <UI.Text style={styles.profileLabel}>
-                  {RequestedTime ? RequestedTime : null}
-                </UI.Text>
+                <UI.ConnectedCbText id="AddmemberTimelabel" pageId={pageId} style={styles.profileLabel}>Request Time</UI.ConnectedCbText>
+                <UI.ConnectedCbText id="AddmemberProfiletext" pageId={pageId} style={styles.profileTxt}>8:30 PM</UI.ConnectedCbText>
               </UI.Box>
-            </UI.Box>
-          </UI.ImageBackground>
-
-          <UI.ScrollView
-            style={styles.memberContainer}
-            contentContainerStyle={{
-              flexGrow: 1,
-              paddingBottom: responsiveHeight(20),
-            }}
-          >
-            <UI.TouchableOpacity style={styles.timeContainer}>
-              <UI.Text style={styles.timeTxt}>
-                {this.formatTime(this.state.timeLeft)}
-              </UI.Text>
+            </UI.ConnectedCbBox>
+          </UI.ConnectedCbImageBackground>
+  
+          <UI.ScrollView style={styles.memberContainer}>
+  
+            <UI.TouchableOpacity >
+              <UI.ConnectedCbBox id="AddmemberTimeContainer" pageId={pageId} style={styles.timeContainer}>
+                <UI.ConnectedCbText id="AddmemberTimetext" pageId={pageId} style={styles.timeTxt}>{this.formatTime(this.state.timeLeft)}</UI.ConnectedCbText>
+              </UI.ConnectedCbBox>
             </UI.TouchableOpacity>
-
-            <UI.Box style={styles.addMemberContainer}>
-              <UI.Text style={styles.addMemberTxt}>Add Members</UI.Text>
+  
+            <UI.ConnectedCbBox id="AddmemberCountContainer" pageId={pageId} style={styles.addMemberContainer}>
+              <UI.ConnectedCbText id="Addmembertext" pageId={pageId}  style={styles.addMemberTxt}>Add Members</UI.ConnectedCbText>
               <UI.FlatList
                 data={this.state.membersCountList}
                 horizontal
                 style={{ minHeight: 40, maxHeight: 60 }}
                 renderItem={this.renderAddMember}
               />
-              <UI.Text style={styles.addMessageTxt}>
-                Please click on "+" to select Members,Guests or My Buddies
-              </UI.Text>
-            </UI.Box>
-
-            {this.props.membersList.length > 0 && (
+              <UI.ConnectedCbText id="AddMessagetext" pageId={pageId} style={styles.addMessageTxt}>Please click on "+" to select Members,Guests or My Buddies</UI.ConnectedCbText>
+            </UI.ConnectedCbBox>
+            
+            {
+              this.props.membersList.length > 0 &&
               <UI.Box>
                 <UI.Text style={styles.labelMember}>Members</UI.Text>
                 <UI.FlatList
@@ -320,8 +297,9 @@ class AddMemberUI extends useAddMemberLogic {
                 {this.state.errorMessageTxt}
               </UI.Text>
             </UI.Box>
-          </Modal>
-        </UI.Box>
+          </Modal> 
+  
+        </UI.ConnectedCbBox>
       );
     } else {
       return <MemberDirectoryUI props={this.props} />;
